@@ -1,0 +1,58 @@
+.file-reader {
+    width: 85%;
+    height: 100%;
+    background-color: black;
+    overflow-y: auto;
+}
+
+.reader {
+    background-color: black;
+    color: white;
+    overflow-y: auto;
+}
+
+
+.line-of-code {
+    background-color: transparent;
+    display: flex;
+    zoom: 1;
+    width: 100%;
+    height: fit-content;
+    padding-bottom: 5px;
+}
+
+.line-number {
+    height: 100%;
+    width: fit-content;
+    padding-right: 15px;
+    padding-left: 15px;
+    color: gray;
+}
+
+.code {
+    font-size: 20px;
+    width: 100%;
+    zoom: 1;
+    height: 100%;
+    background-color: transparent;
+    color: white;
+    border: none;
+}
+
+.search {
+    position: fixed;
+    top: 5%;
+    left: 75%;
+    width: 22%;
+    height: 10%;
+}
+
+.word {
+    outline: none;
+    background-color: transparent;
+    width: fit-content;
+    height: fit-content;
+    border: none;
+    color: rgb(207, 207, 207);
+    font-size: 20px;
+}

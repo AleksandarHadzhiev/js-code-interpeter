@@ -1,0 +1,11 @@
+{
+    "scripts": {
+        "test": "jest"
+    },
+    "dependencies": {
+        "@xterm/xterm": "^5.5.0",
+        "acorn": "^8.15.0",
+        "eslint": "^9.37.0",
+        "jest": "^30.2.0"
+    }
+}

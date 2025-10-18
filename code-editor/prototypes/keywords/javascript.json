@@ -1,0 +1,200 @@
+{
+  ">": "#569CD6",
+  "reservedWords": [
+
+    {
+      "word": ">",
+      "color": "#569CD6"
+    },
+    {
+      "word": ">=",
+      "color": "#569CD6"
+    },
+    {
+      "word": "==",
+      "color": "#569CD6"
+    },
+    {
+      "word": "===",
+      "color": "#569CD6"
+    },
+    {
+      "word": "<=",
+      "color": "#569CD6"
+    },
+    {
+      "word": "<",
+      "color": "#569CD6"
+    },
+    {
+      "word": "{",
+      "color": "#663399"
+    },
+    {
+      "word": "}",
+      "color": "#663399"
+    },
+    {
+      "word": "(",
+      "color": "#FFE87C"
+    },
+    {
+      "word": ")",
+      "color": "#FFE87C"
+    },
+    {
+      "word": "break",
+      "color": "#569CD6"
+    },
+    {
+      "word": "case",
+      "color": "#569CD6"
+    },
+    {
+      "word": "catch",
+      "color": "#569CD6"
+    },
+    {
+      "word": "class",
+      "color": "#569CD6"
+    },
+    {
+      "word": "const",
+      "color": "#569CD6"
+    },
+    {
+      "word": "continue",
+      "color": "#569CD6"
+    },
+    {
+      "word": "debugger",
+      "color": "#569CD6"
+    },
+    {
+      "word": "default",
+      "color": "#569CD6"
+    },
+    {
+      "word": "delete",
+      "color": "#569CD6"
+    },
+    {
+      "word": "do",
+      "color": "#569CD6"
+    },
+    {
+      "word": "else",
+      "color": "#569CD6"
+    },
+    {
+      "word": "enum",
+      "color": "#569CD6"
+    },
+    {
+      "word": "export",
+      "color": "#569CD6"
+    },
+    {
+      "word": "extends",
+      "color": "#569CD6"
+    },
+    {
+      "word": "false",
+      "color": "#569CD6"
+    },
+    {
+      "word": "finally",
+      "color": "#569CD6"
+    },
+    {
+      "word": "for",
+      "color": "#569CD6"
+    },
+    {
+      "word": "function",
+      "color": "#569CD6"
+    },
+    {
+      "word": "if",
+      "color": "#569CD6"
+    },
+    {
+      "word": "import",
+      "color": "#569CD6"
+    },
+    {
+      "word": "in",
+      "color": "#569CD6"
+    },
+    {
+      "word": "instanceof",
+      "color": "#569CD6"
+    },
+    {
+      "word": "let",
+      "color": "#569CD6"
+    },
+    {
+      "word": "new",
+      "color": "#569CD6"
+    },
+    {
+      "word": "null",
+      "color": "#569CD6"
+    },
+    {
+      "word": "return",
+      "color": "#569CD6"
+    },
+    {
+      "word": "super",
+      "color": "#569CD6"
+    },
+    {
+      "word": "switch",
+      "color": "#569CD6"
+    },
+    {
+      "word": "this",
+      "color": "#569CD6"
+    },
+    {
+      "word": "throw",
+      "color": "#569CD6"
+    },
+    {
+      "word": "true",
+      "color": "#569CD6"
+    },
+    {
+      "word": "try",
+      "color": "#569CD6"
+    },
+    {
+      "word": "typeof",
+      "color": "#569CD6"
+    },
+    {
+      "word": "var",
+      "color": "#569CD6"
+    },
+    {
+      "word": "void",
+      "color": "#569CD6"
+    },
+    {
+      "word": "while",
+      "color": "#569CD6"
+    },
+    {
+      "word": "with",
+      "color": "#569CD6"
+    },
+    {
+      "word": "yield",
+      "color": "#569CD6"
+    }
+  ]
+}
+
+

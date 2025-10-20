@@ -64,13 +64,19 @@ class WordBuilder {
             return this._buildSpanElementWithSpecifiedColor("rgb(54, 101, 255)")
     }
 
-
     _buildSpanElementWithSpecifiedColor(color) {
         const span = document.createElement('span')
         span.setAttribute('id', this.id)
         span.textContent = this.content
         span.style = `color: ${color}; font-size: 24px;`
         return span
+    }
+}
+
+class Word {
+    constructor(value, color) {
+        this.value = value;
+        this.color = color;
     }
 }
 

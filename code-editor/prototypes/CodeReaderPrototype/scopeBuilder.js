@@ -184,19 +184,6 @@ class Hint {
     }
 }
 
-class Word {
-    constructor(value, scope) {
-        this.value = value;
-        this.scope = scope;
-        // this.link = link;
-    }
-
-    reassignLink(newLink) {
-        this.link = newLink;
-    }
-
-}
-
 class ScopeType {
     FILE = "file";
     CLASS = "class";
@@ -251,6 +238,7 @@ class ScopeTracker {
         }
         if (scope != this.currentScope)
             this._changeToNewScope(scope)
+        line.transformWordsOnLineToWordObjectsWithScope(this.currentScope)
         this._insertLineIntoScopeAndCloseScopeWhenNeeded(line)
     }
 
@@ -412,12 +400,25 @@ class ScopeTracker {
     }
 }
 
+class Word {
+    constructor(value, scope) {
+        this.value = value;
+        this.scope = scope;
+        // this.link = link;
+    }
+
+    reassignLink(newLink) {
+        this.link = newLink;
+    }
+}
+
 class CodeLine {
     constructor(id, value) {
         this.id = id
         this.value = value
         this.row = this.calculateRow()
         this.words = []
+        this.wordsAsObjects = []
         this.buildWordsBasedOnCharacters(this.value.split(''), this.words)
     }
 
@@ -428,6 +429,7 @@ class CodeLine {
     buildWordsBasedOnCharacters(characters, words) {
         let word = ''
         characters.forEach((character) => {
+            // Needs Reworking for STRING value -> "" breaks if there is some sort of space inside, also there should be change in FinalForm for it as well.
             if (keywords.sentencePointers.includes(character)) {
                 word = this.addToWordsAndReset(word, character)
             }
@@ -445,6 +447,17 @@ class CodeLine {
         })
         if (word.trim() != "")
             words.push(word)
+    }
+
+    transformWordsOnLineToWordObjectsWithScope(scope) {
+        this.words.forEach((value) => {
+            console.log(value)
+            const word = new Word(value, scope)
+            this.wordsAsObjects.push(word)
+            // there should be some sort of check to see what the word is: variable, function, keyword, class, Object, etc.
+            // the type should be added to the word.
+            // IT is also here where the word should be checked if it is trying to change the value of a const variable.
+        })
     }
 
     addToWordsAndReset(word, character) {
@@ -717,14 +730,14 @@ function buildHintMessage(hint, line, index) {
     return message
 }
 
-writer.addEventListener('input', (event) => {
-    scopeTracker.cleanTracker()
-    const content = event.target.value
-    const lines = content.split('\n');
-    checkLines(lines)
-    checkForHints()
-    console.log(scopeTracker)
-})
+// writer.addEventListener('input', (event) => {
+//     scopeTracker.cleanTracker()
+//     const content = event.target.value
+//     const lines = content.split('\n');
+//     checkLines(lines)
+//     checkForHints()
+//     console.log(scopeTracker)
+// })
 
 // checkLines(lines)
 // console.log(scopeTracker)

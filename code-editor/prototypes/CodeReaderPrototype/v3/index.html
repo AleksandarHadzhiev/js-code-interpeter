@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <title>Online IDE</title>
+</head>
+
+<body>
+    <custom-preview id="preview"></custom-preview>
+    <main id="code-editor">
+        <div id="writer-container">
+            <div id="lines"></div>
+            <textarea id="writer"></textarea>
+        </div>
+        <custom-reader id="reader-container"></custom-reader>
+    </main>
+    <script type="module" src="./index.js"></script>
+    <script type="module" src="./component/preview.js"></script>
+    <script type="module" src="./component/reader.js"></script>
+</body>
+
+</html>

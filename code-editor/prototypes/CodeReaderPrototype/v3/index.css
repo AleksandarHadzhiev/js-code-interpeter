@@ -1,0 +1,128 @@
+* {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+body {
+    display: block;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+#code-editor {
+    position: absolute;
+    top: 0%;
+    height: 100%;
+    width: 100%;
+    left: 0%;
+    background-color: black;
+}
+
+#writer-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    overflow-y: auto;
+    height: 100%;
+    z-index: 0;
+}
+
+#lines {
+    width: 5%;
+    height: fit-content;
+    font-size: 24px;
+    line-height: 1.2;
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+}
+
+.line-number {
+    width: fit-content;
+    height: fit-content;
+    font-size: 24px;
+    padding: 0%;
+    margin: 0%;
+    color: gray;
+    display: flex;
+}
+
+#writer {
+    font-size: 24px;
+    line-height: 1.2;
+    font-family: 'Courier New', Courier, monospace;
+    position: absolute;
+    background-color: transparent;
+    caret-color: red;
+    overflow: auto;
+    white-space: nowrap;
+    opacity: 0.5;
+    height: 100%;
+    width: 95%;
+    outline: none;
+    border: none;
+    left: 5%;
+    z-index: 1;
+}
+
+#reader-container {
+    top: 0%;
+    font-size: 24px;
+    line-height: 1.2;
+    font-family: 'Courier New', Courier, monospace;
+    position: absolute;
+    background-color: transparent;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    color: red;
+    height: 100%;
+    width: 95%;
+    left: 5%;
+    z-index: 0;
+}
+
+#preview {
+    top: 0%;
+    right: 0%;
+    font-size: 16px;
+    line-height: 1.2;
+    font-family: 'Courier New', Courier, monospace;
+    position: absolute;
+    background-color: black;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    color: red;
+    max-height: 100%;
+    height: fit-content;
+    width: 15%;
+    z-index: 1;
+    zoom: 30%;
+}
+
+/* 
+#preview {
+    position: absolute;
+    right: 0%;
+    width: 20%;
+    max-height: 100%;
+    z-index: 1;
+    transform: scale(0.3);
+} */
+
+.line {
+    display: flex;
+    flex-direction: row;
+    width: fit-content;
+    height: fit-content;
+}

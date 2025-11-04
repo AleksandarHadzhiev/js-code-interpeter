@@ -155,7 +155,6 @@ class HintTracker {
     switchDisplaySettingsForHintWithMessageToSpecificMode(hint, message, mode) {
         let hintsForRow = this.caughtProblems.get(hint.id)
         hintsForRow = hintsForRow.updateHintMatchingSpecifiedMessageToSpecificMode(message, mode)
-        console.log(hintsForRow)
         this.caughtProblems.set(hint.id, hintsForRow)
     }
 
@@ -451,7 +450,6 @@ class CodeLine {
 
     transformWordsOnLineToWordObjectsWithScope(scope) {
         this.words.forEach((value) => {
-            console.log(value)
             const word = new Word(value, scope)
             this.wordsAsObjects.push(word)
             // there should be some sort of check to see what the word is: variable, function, keyword, class, Object, etc.

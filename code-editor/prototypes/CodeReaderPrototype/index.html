@@ -10,23 +10,19 @@
 
 <body>
     <nav class="tabs"></nav>
-    <main id="reader-container" class="code-reader">
-        <div id="lines-tracker" class="lines-tracker"></div>
-        <pre id="code" class="code">
-        </pre>
-        <textarea id="code-writer" class="code-writer"></textarea>
-
+    <main id="container" class="code-reader">
+        <div id="writer-container">
+            <div id="lines-tracker" class="lines-tracker"></div>
+            <textarea id="writer" class="code-writer"></textarea>
+        </div>
+        <div id="reader-container" class="code"></div>
     </main>
     <footer class="terminal-container">
         <textarea class="terminal">
 
         </textarea>
     </footer>
-    <!-- <script type="module" src="index.js"></script> -->
-    <!-- <script type="module" src="finalForm.js"></script> -->
-    <script type="module" src="lineBuilder.js"></script>
-    <!-- <script type="module" src="scopeBuilder.js"></script> -->
-
+    <script type="module" src="app.js"></script>
 </body>
 
 </html>

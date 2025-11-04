@@ -77,7 +77,7 @@ export default class CodeBuilder {
         }
     }
 
-    updatePreviousAndCurrent(newLines, changesTracker) {
+    updatePreviousAndCurrentLines(newLines, changesTracker) {
         const indexOfPreviousLine = changesTracker.newFirstLineOfChange - 2 // - 2 because we talk about indexes not number of lines
         const contentOfPreviousLine = newLines[indexOfPreviousLine]
         this.updateLineAtIndexWithNewContent(indexOfPreviousLine, contentOfPreviousLine)

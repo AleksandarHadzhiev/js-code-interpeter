@@ -1,16 +1,16 @@
-import TextChangesTracker from "./textChangesTracker.js"
-import LineBuilder from "./lineBuilder.js";
+import CodeBuilder from "./CodeBuilder.js";
+import PositionChangesTracker from "./PositionChangesTracker.js";
 
-export default class FrontendRunner {
+export default class ViewBuilder {
     constructor(viewToAddTo) {
         this.numberOfOldLines = 0;
-        this.changesTracker = new TextChangesTracker()
-        this.lineBuilder = new LineBuilder(viewToAddTo)
+        this.changesTracker = new PositionChangesTracker()
+        this.codeBuilder = new CodeBuilder(viewToAddTo)
     }
 
     buildCodeForLines(lines) {
         if (this.numberOfOldLines == 0)
-            this.lineBuilder.buildLines(lines)
+            this.codeBuilder.buildLines(lines)
         else
             this._updateOldLinesWithNewLines(lines)
         this.numberOfOldLines = lines.length
@@ -25,7 +25,7 @@ export default class FrontendRunner {
 
     _updateWhenNumbersOfLiensStaysTheSame(newLines) {
         if (this.changesTracker.firstLineOfChange == this.changesTracker.lastLineOfChange) this._handleEdgeCases(newLines)
-        else this.lineBuilder.updateLinesBetweenStartingAndEndingLine(
+        else this.codeBuilder.updateLinesBetweenStartingAndEndingLine(
             this.changesTracker.firstLineOfChange - 1,
             newLines.length - 1, newLines)
     }
@@ -34,17 +34,17 @@ export default class FrontendRunner {
         const line = this.changesTracker.firstLineOfChange != this.changesTracker.newFirstLineOfChange ?
             this.changesTracker.newFirstLineOfChange : this.changesTracker.firstLineOfChange
         const index = line - 1;
-        this.lineBuilder.updateLineAtIndexWithNewContent(index, newLines[index])
+        this.codeBuilder.updateLineAtIndexWithNewContent(index, newLines[index])
     }
 
     _updateWhenNumbersOfLinesIsDecreased(newLines, differenceInSize) {
         differenceInSize = differenceInSize * -1;
-        this.lineBuilder.bringToSameSize(differenceInSize, this.changesTracker)
+        this.codeBuilder.bringToSameSize(differenceInSize, this.changesTracker)
         if (this.changesTracker.lastLineOfChange - 1 >= newLines.length)
-            this.lineBuilder.updateLinesBetweenStartingAndEndingLine(
+            this.codeBuilder.updateLinesBetweenStartingAndEndingLine(
                 this.changesTracker.firstLineOfChange - 1, newLines.length - 1, newLines
             )
-        else this.lineBuilder.updateLinesBetweenStartingAndEndingLine(
+        else this.codeBuilder.updateLinesBetweenStartingAndEndingLine(
             this.changesTracker.newFirstLineOfChange - 1,
             this.changesTracker.lastLineOfChange - 1, newLines
         )
@@ -52,14 +52,14 @@ export default class FrontendRunner {
 
     _updateWheNumbersOfLinesIsIncreased(newLines, differenceInSize) {
         if (this.changesTracker.firstLineOfChange == this.numberOfOldLines)
-            this.lineBuilder.updateLinesBetweenStartingAndEndingLine(
+            this.codeBuilder.updateLinesBetweenStartingAndEndingLine(
                 this.changesTracker.firstLineOfChange - 1, newLines.length - 1, newLines
             )
-        else if (differenceInSize == 1) this.lineBuilder.updatePreviousAndCurrent(newLines, this.changesTracker)
-        else if (this.changesTracker.firstLineOfChange == 1 && this.changesTracker.lastLineOfChange == this.numberOfOldLines) this.lineBuilder.refresh(newLines)
+        else if (differenceInSize == 1) this.codeBuilder.updatePreviousAndCurrentLines(newLines, this.changesTracker)
+        else if (this.changesTracker.firstLineOfChange == 1 && this.changesTracker.lastLineOfChange == this.numberOfOldLines) this.codeBuilder.refreshWithNewLines(newLines)
         else if (this.changesTracker.firstLineOfChange == this.changesTracker.lastLineOfChange && this.changesTracker.lastLineOfChange <= this.numberOfOldLines)
-            this.lineBuilder.updateWhenNewContentIsMoreLinesAndItIsDirectInsertion(differenceInSize, newLines, this.changesTracker)
+            this.codeBuilder.updateWhenNewContentIsMoreLinesAndItIsDirectInsertion(differenceInSize, newLines, this.changesTracker)
         else if (this.changesTracker.firstLineOfChange < this.changesTracker.lastLineOfChange && this.changesTracker.lastLineOfChange <= this.numberOfOldLines)
-            this.lineBuilder.updateWhenNewContentIsMoreLinesAndItIsInsertionBetweenLines(differenceInSize, newLines, this.changesTracker)
+            this.codeBuilder.updateWhenNewContentIsMoreLinesAndItIsInsertionBetweenLines(differenceInSize, newLines, this.changesTracker)
     }
 }

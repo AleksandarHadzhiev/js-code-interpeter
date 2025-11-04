@@ -1,9 +1,5 @@
 import WordColorDefiner from "./WordColorDefiner.js";
 
-// WordBuilder Does More than one thing
-// He creates the words
-// He combines them into one whole line and returns them to the line...
-// SPLIT THE RESPONSIBILITIES
 export default class WordBuilder {
     constructor() {
         this.color = "transparent"

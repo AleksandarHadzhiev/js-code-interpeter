@@ -5,6 +5,7 @@ export default class WordBuilder {
         this.color = "transparent"
         this.colorDefiner = null;
         this.commentInit = 0;
+        this.isComment = false;
     }
 
     buildWordAtIndexInWordsAsHTML(word, index, words) {
@@ -14,16 +15,20 @@ export default class WordBuilder {
     }
 
     _trackCommentSection(word) {
-        if (word == "/")
+        if (word == "/") {
             this.commentInit += 1
-        else this.commentInit = 0
+        }
+        if (this.commentInit >= 2) this.isComment = true
+        if (word != "/") {
+            this.commentInit = 0
+        }
     }
 
     _buildWordElementForWordAtIndex(word, index) {
-        if (word == " ") {
+        if (word.trim() == "") {
             return `<span style="font-sieze: 24px">&nbsp;</span>`
         }
-        else if (this.commentInit >= 2) {
+        else if (this.isComment) {
             return `<span style="font-sieze: 24px; color: gray">${word}</span>`
         }
         else if (word == '\t') {

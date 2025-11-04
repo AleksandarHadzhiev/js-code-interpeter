@@ -52,7 +52,7 @@ body {
     font-family: 'Courier New', Courier, monospace;
     position: absolute;
     background-color: transparent;
-    color: red;
+    color: transparent;
     caret-color: red;
     overflow: auto;
     white-space: nowrap;
@@ -108,4 +108,11 @@ body {
     margin: 0%;
     color: gray;
     display: flex;
+}
+
+.line {
+    display: flex;
+    flex-direction: row;
+    width: fit-content;
+    height: fit-content;
 }

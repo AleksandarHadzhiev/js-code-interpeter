@@ -80,6 +80,7 @@ export default class WordColorDefiner {
             this.color = new BaseColorPicker().pickColorBasedOnWordType(word)
             this._updateColorIfWortAdIndexIsAFunctionCall(index)
         }
+        return this.color
     }
 
     _closeInsertionIfWordIsClosingBracket(word) {

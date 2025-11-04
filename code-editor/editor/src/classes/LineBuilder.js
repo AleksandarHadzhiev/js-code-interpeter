@@ -19,6 +19,7 @@ export default class LineBUilder {
         this.words.forEach((word, index) => {
             innerHTML += builder.buildWordAtIndexInWordsAsHTML(word, index, this.words)
         });
+
         return innerHTML
     }
 }

@@ -1,6 +1,6 @@
 import ViewBuilder from "../classes/ViewBuilder.js"
 
-export default class CustomPreview extends HTMLElement {
+class CustomPreview extends HTMLElement {
     constructor() {
         super()
         this.viewBuilder = new ViewBuilder(this)

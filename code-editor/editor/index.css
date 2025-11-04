@@ -82,3 +82,20 @@ body {
     z-index: 1;
     zoom: 30%;
 }
+
+#reader {
+    top: 0%;
+    font-size: 24px;
+    line-height: 1.2;
+    font-family: 'Courier New', Courier, monospace;
+    position: absolute;
+    background-color: transparent;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    color: red;
+    height: 100%;
+    width: 95%;
+    left: 5%;
+    z-index: 0;
+}

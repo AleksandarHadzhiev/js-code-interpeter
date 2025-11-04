@@ -1,5 +1,5 @@
-import WordsSplitter from "./WordsSplitter.js"
-import WordBuilder from "./WordBuilder.js";
+import WordsSplitter from "./words/WordsSplitter.js"
+import WordBuilder from "./words/WordBuilder.js";
 
 export default class LineBUilder {
     constructor(content) {

@@ -63,3 +63,22 @@ body {
     left: 5%;
     z-index: 1;
 }
+
+#preview {
+    top: 0%;
+    right: 0%;
+    font-size: 16px;
+    line-height: 1.2;
+    font-family: 'Courier New', Courier, monospace;
+    position: absolute;
+    background-color: black;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    color: red;
+    max-height: 100%;
+    height: fit-content;
+    width: 15%;
+    z-index: 1;
+    zoom: 30%;
+}

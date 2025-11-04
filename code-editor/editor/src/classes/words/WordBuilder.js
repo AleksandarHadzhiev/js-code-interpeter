@@ -1,5 +1,3 @@
-import WordColorDefiner from "./WordColorDefiner.js";
-
 export default class WordBuilder {
     constructor() {
         this.color = "transparent"
@@ -8,10 +6,9 @@ export default class WordBuilder {
         this.isComment = false;
     }
 
-    buildWordAtIndexInWordsAsHTML(word, index, words) {
+    buildWordAtIndexInWordsAsHTML(word, index, colorDefiner) {
         this._trackCommentSection(word)
-        this.colorDefiner = new WordColorDefiner(words)
-        return this._buildWordElementForWordAtIndex(word, index)
+        return this._buildWordElementForWordAtIndex(word, index, colorDefiner)
     }
 
     _trackCommentSection(word) {
@@ -24,7 +21,7 @@ export default class WordBuilder {
         }
     }
 
-    _buildWordElementForWordAtIndex(word, index) {
+    _buildWordElementForWordAtIndex(word, index, colorDefiner) {
         if (word.trim() == "") {
             return `<span style="font-sieze: 24px">&nbsp;</span>`
         }
@@ -35,7 +32,7 @@ export default class WordBuilder {
             return `<span style="font-sieze: 24px">&emsp;</span>`
         }
         else {
-            this.color = this.colorDefiner.defineColorForWordAtIndex(word, index)
+            this.color = colorDefiner.defineColorForWordAtIndex(word, index)
             return `<span style="font-sieze: 24px; color: ${this.color}">${word}</span>`
         }
     }

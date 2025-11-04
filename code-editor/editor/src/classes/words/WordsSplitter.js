@@ -2,7 +2,7 @@ export default class WordsSplitter {
 
     splitLineIntoWords(line) {
         const regex = /`|\b\w+\b|[.\s |;|,|=|<|(|)|[|]|\{|\}|\;|\:|\>|\?|\!|"|']+|\W{1}/g;
-        return this._splitLineUsingRegex(line, regex)
+        return this._splitLineIntoWordsUsingRegex(line, regex)
     }
 
     _splitLineIntoWordsUsingRegex(line, regex) {

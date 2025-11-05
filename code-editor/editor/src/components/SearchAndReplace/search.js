@@ -1,6 +1,7 @@
 class Search extends HTMLElement {
     constructor() {
         super()
+        this.foundElements = []
         const container = this._buildMainContainer()
         this.appendChild(container)
     }
@@ -9,7 +10,9 @@ class Search extends HTMLElement {
         const mainContainer = document.createElement('div')
         mainContainer.classList.add("search-container")
         const searchBar = this._buildSearchBar()
+        const foundElementsContainer = this._buildFoundElementsContainer()
         mainContainer.appendChild(searchBar)
+        mainContainer.appendChild(foundElementsContainer)
         return mainContainer
     }
 
@@ -21,6 +24,20 @@ class Search extends HTMLElement {
             console.log('writing')
         })
         return searchBar
+    }
+
+    _buildFoundElementsContainer() {
+        const container = document.createElement('div')
+        container.classList.add('found-elements')
+        container.appendChild(this._buildInfoElement())
+        return container
+    }
+
+    _buildInfoElement() {
+        const info = document.createElement('p')
+        info.classList.add('info')
+        info.innerHTML = `0 : ${this.foundElements.length}`
+        return info
     }
 }
 

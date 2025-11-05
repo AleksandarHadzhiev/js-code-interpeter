@@ -42,7 +42,7 @@ export default class ViewBuilder {
         this.codeBuilder.bringToSameSize(differenceInSize, this.changesTracker)
         if (this.changesTracker.lastLineOfChange - 1 >= newLines.length)
             this.codeBuilder.updateLinesBetweenStartingAndEndingLine(
-                this.changesTracker.firstLineOfChange - 1, newLines.length - 1, newLines
+                this.changesTracker.newFirstLineOfChange - 1, newLines.length - 1, newLines
             )
         else this.codeBuilder.updateLinesBetweenStartingAndEndingLine(
             this.changesTracker.newFirstLineOfChange - 1,

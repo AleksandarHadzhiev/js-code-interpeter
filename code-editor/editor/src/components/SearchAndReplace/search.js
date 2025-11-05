@@ -8,7 +8,19 @@ class Search extends HTMLElement {
     _buildMainContainer() {
         const mainContainer = document.createElement('div')
         mainContainer.classList.add("search-container")
+        const searchBar = this._buildSearchBar()
+        mainContainer.appendChild(searchBar)
         return mainContainer
+    }
+
+    _buildSearchBar() {
+        const searchBar = document.createElement('input')
+        searchBar.classList.add('search-bar')
+        searchBar.placeholder = "Search for..."
+        searchBar.addEventListener('input', () => {
+            console.log('writing')
+        })
+        return searchBar
     }
 }
 

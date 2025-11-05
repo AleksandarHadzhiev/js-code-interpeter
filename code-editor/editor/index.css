@@ -116,3 +116,14 @@ body {
     width: fit-content;
     height: fit-content;
 }
+
+#search {
+    display: none;
+    position: absolute;
+    right: 20%;
+    top: 5%;
+    background-color: white;
+    border: red solid 2px;
+    width: 35%;
+    height: 10%;
+}

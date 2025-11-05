@@ -118,12 +118,28 @@ body {
 }
 
 #search {
-    display: none;
+    /* display: none; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     position: absolute;
     right: 20%;
     top: 5%;
-    background-color: white;
-    border: red solid 2px;
+    background-color: rgb(68, 68, 68);
+    border: gray solid 2px;
+    border-radius: 5px;
     width: 35%;
     height: 10%;
+}
+
+.search-container {
+    width: 95%;
+    height: 45%;
+    display: flex;
+    background-color: rgb(34, 34, 34);
+    color: white;
+    font-size: 14px;
+    border: solid 1px gray;
+    border-radius: 3px;
 }

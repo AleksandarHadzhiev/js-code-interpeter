@@ -23,13 +23,12 @@ class Search extends HTMLElement {
         searchBar.placeholder = "Search for..."
         searchBar.addEventListener('input', (event) => {
             const content = String(event.target.value)
-            if (content.trim() == "") {
-                const highlightedElements = document.getElementsByName('highlighted')
-                highlightedElements.forEach((highlighted) => {
-                    highlighted.replaceWith(highlighted.textContent)
-                })
+            const highlightedElements = document.getElementsByName('highlighted')
+            while (highlightedElements.length > 0) {
+                highlightedElements[0].replaceWith(highlightedElements[0].textContent)
             }
-            this._searchForContentInsideReader(content)
+            if (content.trim() != "")
+                this._searchForContentInsideReader(content)
         })
         return searchBar
     }
@@ -49,7 +48,7 @@ class Search extends HTMLElement {
         words.forEach((word) => {
             if (word.textContent.includes(content)) {
                 let innerHTML = word.innerHTML
-                innerHTML = String(innerHTML).replace(content, highlighted)
+                innerHTML = String(innerHTML).replaceAll(content, highlighted)
                 word.innerHTML = innerHTML
             }
         })

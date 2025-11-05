@@ -1,6 +1,7 @@
 # Table of Contents
 1. [About me](#about-me)
 2. [What's new](#whats-new)
+   - 2.2 [Version 1.1.0](#version-110)
    - 2.1 [Version 1.0.0](#version-100)
    - 2.2 [Version 0.0.0](#verions-000)
 3. [How to run](#how-to-run)
@@ -13,15 +14,22 @@
 This project is an online JS interpeter. 
 
 **Main Features**:
-    - Read and write JavaScript code.
-    - Terminal integration, allowing commands based on the OS of the user.
-    - Create and load proejcts on your local machine.
-    - GitHub/GitLab SSO.
-    - Work with projects from GitHub/GitLab without having to store them on your machine.
+ - Read and write JavaScript code. (Version 1.*)
+ - Terminal integration, allowing commands based on the OS of the user. (Version 2.*)
+ - Create and load proejcts on your local machine. (Version 3.*)
+ - GitHub/GitLab SSO. (Version 4.*)
+ - Work with projects from GitHub/GitLab without having to store them on your machine. (Version 4.*)
 
 ## What's new
 
 Order of versions - from newest to oldest.
+
+### Version 1.1.0
+
+This version adds the feature of searching for text in code. As such it allows the action to be done
+via right click and then search, or via a shortcut (which by default will be `ctrl + f`).
+
+Together with that the version will provide the feature of replacing text (if found) in the code. Similar to the search feature it will be via shortcut or the right click and then replace.
 
 ### Version 1.0.0
 

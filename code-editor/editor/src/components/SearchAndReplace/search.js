@@ -75,16 +75,24 @@ class Search extends HTMLElement {
             const replaceText = `<span name="highlighted" style="background-color: lightyellow">${oldText.substring(appearence, appearence + content.length)}</span>`
             innerHtml += `${initialText}${replaceText}`
         });
-        oldText = oldText.substring(appearences[appearences.length - 1] + 1, oldText.length)
+        oldText = oldText.substring(appearences[appearences.length - 1] + content.length, oldText.length)
         innerHtml += oldText
         return innerHtml
+    }
+
+    replaceWithHighlightedText(substrings, line) {
+        let html = line.innerHTML
+        const reversedSubstrings = substrings.reverse()
+        reversedSubstrings.forEach((substring) => {
+            html = html.substring(0, substring[0]) + `<span style="background-color: lightblue;">${html.substring(substring[0], substring[1])}</span>` + html.substring(substring[1], html.length)
+        })
+        line.innerHTML = html
     }
 
     _generateInitialText(appearences, appearence, content, oldText, index) {
         if (index == 0)
             return oldText.substring(0, appearence)
-        else if (index == appearences.length - 1) return oldText.substring(appearence + content.length, oldText.length)
-        else return oldText.substring(appearence + content.length, appearences[index + 1])
+        else return oldText.substring(appearences[index - 1] + content.length, appearence)
     }
 
     _buildFoundElementsContainer() {

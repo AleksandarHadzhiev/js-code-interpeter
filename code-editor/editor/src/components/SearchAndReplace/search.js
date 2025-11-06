@@ -23,6 +23,7 @@ class Search extends HTMLElement {
         searchBar.classList.add('search-bar')
         searchBar.placeholder = "Search for..."
         searchBar.addEventListener('input', (event) => {
+            this.foundElements = []
             const content = String(event.target.value)
             const highlightedElements = document.getElementsByName('highlighted')
             while (highlightedElements.length > 0) {
@@ -30,32 +31,38 @@ class Search extends HTMLElement {
             }
             if (content.trim() != "")
                 this._searchForContentInsideReader(content.toLowerCase())
+            this._updateInfo()
         })
         return searchBar
     }
 
+    _updateInfo() {
+        const info = document.getElementById('info')
+        info.textContent = `${this.foundElements.length > 0 ? "1" : '0'} : ${this.foundElements.length}`;
+    }
+
     _searchForContentInsideReader(content) {
         const lines = this.reader.childNodes
-        lines.forEach(line => {
+        lines.forEach((line, index) => {
             if (line.textContent.includes(content)) {
-                this._searchTheWordsOfLineForContent(line, content)
+                this._searchTheWordsOfLineForContent(line, content, index)
             }
         });
     }
 
-    _searchTheWordsOfLineForContent(line, content) {
+    _searchTheWordsOfLineForContent(line, content, lineIndex) {
         const words = line.childNodes
-        words.forEach((word) => {
+        words.forEach((word, index) => {
             const wordContent = String(word.textContent).toLowerCase()
             if (wordContent.includes(content)) {
-                this._updateInnerHTMLForWord(content, wordContent, word)
+                this._updateInnerHTMLForWord(content, wordContent, word, index, lineIndex)
             }
         })
     }
 
-    _updateInnerHTMLForWord(content, wordContent, word) {
+    _updateInnerHTMLForWord(content, wordContent, word, wordIndex, lineIndex) {
         const appearences = this._findHowManyTimesTheContentAppearsInAWord(content, wordContent)
-        let innerHtml = this._generateNewHTML(word, appearences, content)
+        let innerHtml = this._generateNewHTML(word, appearences, content, wordIndex, lineIndex)
         word.innerHTML = innerHtml
     }
 
@@ -73,13 +80,14 @@ class Search extends HTMLElement {
         return indexes
     }
 
-    _generateNewHTML(word, appearences, content) {
+    _generateNewHTML(word, appearences, content, wordIndex, lineIndex) {
         let oldText = String(word.innerHTML)
         let innerHtml = ""
         appearences.forEach((appearence, index) => {
             let initialText = this._generateInitialText(appearences, appearence, content, oldText, index)
-            const replaceText = `<span name= "highlighted" style="background-color: lightyellow">${oldText.substring(appearence, appearence + content.length)}</span>`
-            innerHtml += `${initialText}${replaceText} `
+            const replaceText = `<span id="${lineIndex}-${wordIndex}-${index}" name= "highlighted" style="background-color: lightyellow">${oldText.substring(appearence, appearence + content.length)}</span>`
+            this.foundElements.push(`${lineIndex}-${wordIndex}-${index}`)
+            innerHtml += `${initialText}${replaceText}`
         });
         oldText = oldText.substring(appearences[appearences.length - 1] + content.length, oldText.length)
         innerHtml += oldText
@@ -101,6 +109,7 @@ class Search extends HTMLElement {
 
     _buildInfoElement() {
         const info = document.createElement('p')
+        info.setAttribute('id', 'info')
         info.classList.add('info')
         info.innerHTML = `0 : ${this.foundElements.length} `
         return info

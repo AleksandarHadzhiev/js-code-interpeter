@@ -28,7 +28,7 @@ class Search extends HTMLElement {
                 highlightedElements[0].replaceWith(highlightedElements[0].textContent)
             }
             if (content.trim() != "")
-                this._searchForContentInsideReader(content)
+                this._searchForContentInsideReader(content.toLowerCase())
         })
         return searchBar
     }
@@ -44,14 +44,47 @@ class Search extends HTMLElement {
 
     _searchTheWordsOfLineForContent(line, content) {
         const words = line.childNodes
-        const highlighted = `<span name="highlighted" style="background-color: lightyellow">${content}</span>`
         words.forEach((word) => {
-            if (word.textContent.includes(content)) {
-                let innerHTML = word.innerHTML
-                innerHTML = String(innerHTML).replaceAll(content, highlighted)
-                word.innerHTML = innerHTML
+            const wordContent = String(word.textContent).toLowerCase()
+            if (wordContent.includes(content)) {
+                this._updateInnerHTMLForWord(content, wordContent, word)
             }
         })
+    }
+
+    _updateInnerHTMLForWord(content, wordContent, word) {
+        const appearences = this._findHowManyTimesTheContentAppearsInAWord(content, wordContent)
+        let innerHtml = this._generateNewHTML(word, appearences, content)
+        word.innerHTML = innerHtml
+    }
+
+    _findHowManyTimesTheContentAppearsInAWord(content, word) {
+        const matches = String(word).matchAll(content)
+        const indexes = []
+        matches.forEach((match) => {
+            indexes.push(match.index)
+        })
+        return indexes
+    }
+
+    _generateNewHTML(word, appearences, content) {
+        let oldText = String(word.innerHTML)
+        let innerHtml = ""
+        appearences.forEach((appearence, index) => {
+            let initialText = this._generateInitialText(appearences, appearence, content, oldText, index)
+            const replaceText = `<span name="highlighted" style="background-color: lightyellow">${oldText.substring(appearence, appearence + content.length)}</span>`
+            innerHtml += `${initialText}${replaceText}`
+        });
+        oldText = oldText.substring(appearences[appearences.length - 1] + 1, oldText.length)
+        innerHtml += oldText
+        return innerHtml
+    }
+
+    _generateInitialText(appearences, appearence, content, oldText, index) {
+        if (index == 0)
+            return oldText.substring(0, appearence)
+        else if (index == appearences.length - 1) return oldText.substring(appearence + content.length, oldText.length)
+        else return oldText.substring(appearence + content.length, appearences[index + 1])
     }
 
     _buildFoundElementsContainer() {

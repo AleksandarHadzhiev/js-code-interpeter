@@ -160,7 +160,9 @@ body {
 .found-elements {
     width: 25%;
     height: 100%;
-
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
 }
 
 .info {
@@ -168,4 +170,36 @@ body {
     text-align: center;
     height: 100%;
     padding-top: 10%;
+}
+
+.switch {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.hidden {
+    display: none;
+}
+
+.highlighted {
+    background-color: lightyellow;
+}
+
+.currently-selected {
+    background-color: lightcoral;
+}
+
+.position-switching-button {
+    background-color: transparent;
+    color: gray;
+    border: gray 1px solid;
+    width: 25px;
+    height: 25px;
+}
+
+.position-switching-button:hover {
+    opacity: 0.7;
+    color: white;
+    border: rgb(59, 59, 59) 1px solid;
 }

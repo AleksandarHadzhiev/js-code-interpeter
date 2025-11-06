@@ -2,6 +2,7 @@ class Search extends HTMLElement {
     constructor() {
         super()
         this.foundElements = []
+        this.specialCharaters = ['(', ')', '[', ']', '{', '}']
         this.reader = document.getElementById('reader')
         const container = this._buildMainContainer()
         this.appendChild(container)
@@ -59,7 +60,12 @@ class Search extends HTMLElement {
     }
 
     _findHowManyTimesTheContentAppearsInAWord(content, word) {
-        const matches = String(word).matchAll(content)
+        let regex = null
+        if (this.specialCharaters.includes(content))
+            regex = new RegExp(`${`\\`}${content} `, 'g')
+        else regex = new RegExp(content, 'g')
+        if (content == word) { return [0] }
+        const matches = String(word).matchAll(regex)
         const indexes = []
         matches.forEach((match) => {
             indexes.push(match.index)
@@ -72,21 +78,12 @@ class Search extends HTMLElement {
         let innerHtml = ""
         appearences.forEach((appearence, index) => {
             let initialText = this._generateInitialText(appearences, appearence, content, oldText, index)
-            const replaceText = `<span name="highlighted" style="background-color: lightyellow">${oldText.substring(appearence, appearence + content.length)}</span>`
-            innerHtml += `${initialText}${replaceText}`
+            const replaceText = `<span name= "highlighted" style="background-color: lightyellow">${oldText.substring(appearence, appearence + content.length)}</span>`
+            innerHtml += `${initialText}${replaceText} `
         });
         oldText = oldText.substring(appearences[appearences.length - 1] + content.length, oldText.length)
         innerHtml += oldText
         return innerHtml
-    }
-
-    replaceWithHighlightedText(substrings, line) {
-        let html = line.innerHTML
-        const reversedSubstrings = substrings.reverse()
-        reversedSubstrings.forEach((substring) => {
-            html = html.substring(0, substring[0]) + `<span style="background-color: lightblue;">${html.substring(substring[0], substring[1])}</span>` + html.substring(substring[1], html.length)
-        })
-        line.innerHTML = html
     }
 
     _generateInitialText(appearences, appearence, content, oldText, index) {
@@ -105,7 +102,7 @@ class Search extends HTMLElement {
     _buildInfoElement() {
         const info = document.createElement('p')
         info.classList.add('info')
-        info.innerHTML = `0 : ${this.foundElements.length}`
+        info.innerHTML = `0 : ${this.foundElements.length} `
         return info
     }
 }

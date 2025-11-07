@@ -60,8 +60,9 @@ class Search extends HTMLElement {
     _searchTheWordsOfLineForContent(line, content, lineIndex) {
         const words = line.childNodes
         words.forEach((word, index) => {
-            const wordContent = String(word.textContent).toLowerCase()
-            if (wordContent.includes(content)) {
+            const wordContent = String(word.innerHTML).toLowerCase()
+            const isNotSpecial = wordContent !== "&nbsp;" && wordContent !== "&emsp;"
+            if (wordContent.includes(content) && isNotSpecial) {
                 this._updateInnerHTMLForWord(content, wordContent, word, index, lineIndex)
             }
         })
@@ -144,7 +145,6 @@ class Search extends HTMLElement {
             this._updatePositionBasedOnAction(buttonAction)
             const element = document.getElementById(this.foundElements[this.currentPosition])
             element.classList.add('currently-selected')
-            console.log(element)
             element.scrollIntoView()
             this._updateInfo()
             prevElement = element

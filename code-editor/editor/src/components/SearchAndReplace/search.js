@@ -28,11 +28,12 @@ class Search extends HTMLElement {
             const content = String(event.target.value)
             const highlightedElements = document.getElementsByName('highlighted')
             while (highlightedElements.length > 0) {
-                highlightedElements[0].replaceWith(highlightedElements[0].textContent)
+                highlightedElements[0].replaceWith(highlightedElements[0].innerHTML)
             }
             if (content.trim() != "")
                 this._searchForContentInsideReader(content.toLowerCase())
             this._updateInfo()
+            this.foundElements = []
         })
         return searchBar
     }

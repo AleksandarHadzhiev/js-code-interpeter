@@ -51,7 +51,7 @@ class Search extends HTMLElement {
     _searchForContentInsideReader(content) {
         const lines = this.reader.childNodes
         lines.forEach((line, index) => {
-            if (line.textContent.includes(content)) {
+            if (line.textContent.toLowerCase().includes(content)) {
                 this._searchTheWordsOfLineForContent(line, content, index)
             }
         });

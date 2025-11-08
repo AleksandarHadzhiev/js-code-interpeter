@@ -70,10 +70,14 @@ class Search extends HTMLElement {
             this._searchTheWordsOfLineForContent(line, content, index)
         }
     }
-
     _multipleWords(line, content, index) {
-        console.log(line)
-        console.log(content)
+        const loweredLiner = String(line.textContent).toLowerCase()
+        console.log(loweredLiner)
+        const loweredContent = String(content).toLowerCase()
+        console.log(loweredContent)
+        console.log(loweredLiner.match(loweredContent))
+        if (loweredLiner.includes(loweredContent))
+            console.log(index)
     }
 
     _searchTheWordsOfLineForContent(line, content, lineIndex) {

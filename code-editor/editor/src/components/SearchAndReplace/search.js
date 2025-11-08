@@ -53,10 +53,27 @@ class Search extends HTMLElement {
     _searchForContentInsideReader(content) {
         const lines = this.reader.childNodes
         lines.forEach((line, index) => {
-            if (line.textContent.toLowerCase().includes(content)) {
-                this._searchTheWordsOfLineForContent(line, content, index)
-            }
+            this._searchForContent(line, content, index)
         });
+    }
+
+    _searchForContent(line, content, index) {
+        const regexForSignsForMultipleWords = /\W|\n/g
+        const isMultipleWords = regexForSignsForMultipleWords.test(content)
+        if (isMultipleWords == false)
+            this._singleWord(line, content, index)
+        else this._multipleWords(line, content, index)
+    }
+
+    _singleWord(line, content, index) {
+        if (line.textContent.toLowerCase().includes(content)) {
+            this._searchTheWordsOfLineForContent(line, content, index)
+        }
+    }
+
+    _multipleWords(line, content, index) {
+        console.log(line)
+        console.log(content)
     }
 
     _searchTheWordsOfLineForContent(line, content, lineIndex) {
@@ -105,8 +122,7 @@ class Search extends HTMLElement {
     }
 
     _generateInitialText(appearences, appearence, content, oldText, index) {
-        if (index == 0)
-            return oldText.substring(0, appearence)
+        if (index == 0) return oldText.substring(0, appearence)
         else return oldText.substring(appearences[index - 1] + content.length, appearence)
     }
 

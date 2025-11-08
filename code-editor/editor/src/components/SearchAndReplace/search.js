@@ -2,7 +2,8 @@ class Search extends HTMLElement {
     constructor() {
         super()
         this.foundElements = []
-        this.currentPosition = 1
+        this.currentPosition = 0
+        this.prevElement = null
         this.specialCharaters = ['(', ')', '[', ']', '{', '}']
         this.reader = document.getElementById('reader')
         const container = this._buildMainContainer()
@@ -29,11 +30,12 @@ class Search extends HTMLElement {
             const highlightedElements = document.getElementsByName('highlighted')
             while (highlightedElements.length > 0) {
                 highlightedElements[0].replaceWith(highlightedElements[0].innerHTML)
+                this.foundElements = []
+                this.prevElement = null
             }
             if (content.trim() != "")
                 this._searchForContentInsideReader(content.toLowerCase())
             this._updateInfo()
-            this.foundElements = []
         })
         return searchBar
     }
@@ -139,15 +141,14 @@ class Search extends HTMLElement {
         const button = document.createElement('button')
         button.textContent = buttonAction == "previous" ? "<" : ">"
         button.classList.add('position-switching-button')
-        let prevElement = null
         button.addEventListener('click', () => {
-            if (prevElement) prevElement.classList.remove('currently-selected')
+            if (this.prevElement) this.prevElement.classList.remove('currently-selected')
             this._updatePositionBasedOnAction(buttonAction)
             const element = document.getElementById(this.foundElements[this.currentPosition])
             element.classList.add('currently-selected')
             element.scrollIntoView()
             this._updateInfo()
-            prevElement = element
+            this.prevElement = element
         })
         return button
     }

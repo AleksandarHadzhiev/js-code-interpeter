@@ -63,7 +63,7 @@ class Search extends HTMLElement {
         const words = line.childNodes
         words.forEach((word, index) => {
             const wordContent = String(word.innerHTML).toLowerCase()
-            const isNotSpecial = wordContent !== "&nbsp;" && wordContent !== "&emsp;"
+            const isNotSpecial = wordContent !== "&nbsp;" && wordContent !== "&emsp;" && wordContent != "&gt;" && wordContent != "&lt;"
             if (wordContent.includes(content) && isNotSpecial) {
                 this._updateInnerHTMLForWord(content, wordContent, word, index, lineIndex)
             }

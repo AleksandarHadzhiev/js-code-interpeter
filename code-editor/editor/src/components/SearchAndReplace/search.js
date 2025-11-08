@@ -147,6 +147,7 @@ class Search extends HTMLElement {
             const element = document.getElementById(this.foundElements[this.currentPosition])
             element.classList.add('currently-selected')
             element.scrollIntoView()
+            // ==> readerPosFromTop === currentHightlightedElement.wordElement.lineElement.readerElement.scrollTop
             const readerScrollFromTOp = element.parentElement.parentElement.parentElement.scrollTop
             document.getElementById('writer').scrollTop = readerScrollFromTOp
             this._updateInfo()

@@ -197,6 +197,9 @@ body {
 
 .highlighted {
     background-color: lightyellow;
+    font-size: 24px;
+    min-height: 28.8px;
+    white-space: pre;
 }
 
 .currently-selected {

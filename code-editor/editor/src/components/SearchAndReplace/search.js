@@ -2,7 +2,6 @@ class Search extends HTMLElement {
     constructor() {
         super()
         this.foundElements = []
-        this.mapOfFoundElements = new Map()
         this.currentPosition = 0
         this.prevElement = null
         this.reader = document.getElementById('highlighter')
@@ -25,19 +24,27 @@ class Search extends HTMLElement {
         searchBar.classList.add('search-bar')
         searchBar.placeholder = "Search for..."
         searchBar.addEventListener('input', (event) => {
-            this.currentPosition = 0
-            const content = String(event.target.value)
-            const highlightedElements = document.getElementsByName('highlighted')
-            while (highlightedElements.length > 0) {
-                highlightedElements[0].replaceWith(highlightedElements[0].innerHTML)
-                this.foundElements = []
-                this.prevElement = null
-            }
-            if (content.trim() != "")
-                this._searchForContentInsideReader(content.toLowerCase())
-            this._updateInfo()
+            this._highlightElements(event)
         })
         return searchBar
+    }
+
+    _highlightElements(event) {
+        this.currentPosition = 0
+        const content = String(event.target.value)
+        this._cleanUpOldHighlights()
+        if (content.trim() != "")
+            this._searchForContentInsideReader(content.toLowerCase())
+        this._updateInfo()
+    }
+
+    _cleanUpOldHighlights() {
+        const highlightedElements = document.getElementsByName('highlighted')
+        while (highlightedElements.length > 0) {
+            highlightedElements[0].replaceWith(highlightedElements[0].innerHTML)
+            this.foundElements = []
+            this.prevElement = null
+        }
     }
 
     _updateInfo() {
@@ -54,17 +61,7 @@ class Search extends HTMLElement {
         const textContent = this.reader.textContent.toLowerCase()
         this.reader.innerHTML = textContent
         const matches = textContent.matchAll(this._reformContentToMatchRegexConditions(content))
-        let newHTML = ""
-        let index = 0
-        let oldHTML = this.reader.innerHTML
-        matches.forEach(match => {
-            newHTML += this._genHTML(content, match.index, index)
-            index = match.index + content.length
-        });
-        const lastPartOfContent = this.reader.textContent.substring(index, textContent.length)
-        newHTML += lastPartOfContent
-        console.log(newHTML)
-        this.reader.innerHTML = newHTML
+        this.reader.innerHTML = this._createHighlightedHTML(content, matches, textContent)
     }
 
     _reformContentToMatchRegexConditions(content) {
@@ -77,10 +74,23 @@ class Search extends HTMLElement {
         return newContent
     }
 
+    _createHighlightedHTML(content, matches, textContent) {
+        let newHTML = ""
+        let index = 0
+        matches.forEach(match => {
+            newHTML += this._genHTML(content, match.index, index)
+            index = match.index + content.length
+        });
+        const lastPartOfContent = this.reader.textContent.substring(index, textContent.length)
+        newHTML += lastPartOfContent
+        return newHTML
+    }
+
     _genHTML(content, matchIndex, index) {
         const beginning = this.reader.textContent.substring(index, matchIndex)
         const replaceText = this.reader.textContent.substring(matchIndex, matchIndex + content.length)
-        const reaplaceHTML = `<span style="background-color: lightyellow; font-size: 24px; min-height:28.8px; white-space: pre;">${replaceText}</span>`
+        const reaplaceHTML = `<span id="${matchIndex}-${index}" name="highlighted" class="highlighted">${replaceText}</span>`
+        this.foundElements.push(`${matchIndex}-${index}`)
         return `${beginning}${reaplaceHTML}`
     }
 
@@ -116,18 +126,27 @@ class Search extends HTMLElement {
         button.textContent = buttonAction == "previous" ? "<" : ">"
         button.classList.add('position-switching-button')
         button.addEventListener('click', () => {
-            if (this.prevElement) this.prevElement.classList.remove('currently-selected')
-            this._updatePositionBasedOnAction(buttonAction)
-            const element = document.getElementById(this.foundElements[this.currentPosition])
-            element.classList.add('currently-selected')
-            element.scrollIntoView()
-            // ==> readerPosFromTop === currentHightlightedElement.wordElement.lineElement.readerElement.scrollTop
-            const readerScrollFromTOp = element.parentElement.parentElement.parentElement.scrollTop
-            document.getElementById('writer').scrollTop = readerScrollFromTOp
-            this._updateInfo()
-            this.prevElement = element
+            this._handleChangeInShownHighlightedElement(buttonAction)
         })
         return button
+    }
+
+    _handleChangeInShownHighlightedElement(buttonAction) {
+        if (this.prevElement) this.prevElement.classList.remove('currently-selected')
+        this._updatePositionBasedOnAction(buttonAction)
+        const element = document.getElementById(this.foundElements[this.currentPosition])
+        element.classList.add('currently-selected')
+        this._updateScrollPosition(element)
+        this._updateInfo()
+        this.prevElement = element
+    }
+
+    _updateScrollPosition(element) {
+        element.scrollIntoView()
+        // ==> readerPosFromTop === currentHightlightedElement.highlighterElement.scrollTop
+        const readerScrollFromTOp = element.parentElement.scrollTop
+        document.getElementById('writer').scrollTop = readerScrollFromTOp
+        document.getElementById('reader').scrollTop = readerScrollFromTOp
     }
 
     _updatePositionBasedOnAction(action) {

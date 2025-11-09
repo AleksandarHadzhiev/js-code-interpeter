@@ -22,7 +22,7 @@ class Search extends HTMLElement {
     }
 
     _buildSearchBar() {
-        const searchBar = document.createElement('input')
+        const searchBar = document.createElement('textarea')
         searchBar.classList.add('search-bar')
         searchBar.placeholder = "Search for..."
         searchBar.addEventListener('input', (event) => {

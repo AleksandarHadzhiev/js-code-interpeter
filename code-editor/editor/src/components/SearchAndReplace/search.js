@@ -2,10 +2,11 @@ class Search extends HTMLElement {
     constructor() {
         super()
         this.foundElements = []
+        this.mapOfFoundElements = new Map()
         this.currentPosition = 0
         this.prevElement = null
         this.specialCharaters = ['(', ')', '[', ']', '{', '}']
-        this.reader = document.getElementById('reader')
+        this.reader = document.getElementById('highlighter')
         const container = this._buildMainContainer()
         this.appendChild(container)
     }
@@ -51,10 +52,35 @@ class Search extends HTMLElement {
     }
 
     _searchForContentInsideReader(content) {
-        const lines = this.reader.childNodes
-        lines.forEach((line, index) => {
-            this._searchForContent(line, content, index)
+        // const lines = this.reader.childNodes
+        // lines.forEach((line, index) => {
+        //     this._searchForContent(line, content, index)
+        // });
+        let regex = null
+        if (this.specialCharaters.includes(content))
+            regex = new RegExp(`${`\\`}${content} `, 'g')
+        else regex = new RegExp(content, 'g')
+        const textContent = this.reader.textContent.toLowerCase()
+        this.reader.innerHTML = textContent
+        const matches = textContent.matchAll(regex)
+        let newHTML = ""
+        let index = 0
+        let oldHTML = this.reader.innerHTML
+        matches.forEach(match => {
+            newHTML += this._genHTML(content, match.index, index)
+            index = match.index + content.length
         });
+        const lastPartOfContent = this.reader.textContent.substring(index, textContent.length)
+        newHTML += lastPartOfContent
+        console.log(newHTML)
+        this.reader.innerHTML = newHTML
+    }
+
+    _genHTML(content, matchIndex, index) {
+        const beginning = this.reader.textContent.substring(index, matchIndex)
+        const replaceText = this.reader.textContent.substring(matchIndex, matchIndex + content.length)
+        const reaplaceHTML = `<span style="background-color: orange; font-size: 24px; min-height:28.8px; white-space: pre;">${replaceText}</span>`
+        return `${beginning}${reaplaceHTML}`
     }
 
     _searchForContent(line, content, index) {
@@ -70,14 +96,24 @@ class Search extends HTMLElement {
             this._searchTheWordsOfLineForContent(line, content, index)
         }
     }
+
     _multipleWords(line, content, index) {
         const loweredLiner = String(line.textContent).toLowerCase()
-        console.log(loweredLiner)
         const loweredContent = String(content).toLowerCase()
-        console.log(loweredContent)
-        console.log(loweredLiner.match(loweredContent))
-        if (loweredLiner.includes(loweredContent))
-            console.log(index)
+        const oldHTML = line.innerHTML
+
+        if (loweredLiner.includes(loweredContent)) {
+            const startsFrom = loweredLiner.indexOf(loweredContent)
+            const starting = line.textContent.substring(0, startsFrom)
+            const startingHTML = `<span style="font-size: 24px; color: gray; white-space: pre;">${starting}</span>`
+            const foundHTML = `<span style="font-size: 24px; color: gray; white-space: pre; background-color: lightyellow;">${line.textContent.substring(startsFrom, startsFrom + loweredContent.length)}</span>`
+            const ending = line.textContent.substring(startsFrom + loweredContent.length, loweredLiner.length)
+            const endingHTML = `<span style="font-size: 24px; color: gray; white-space: pre;">${ending}</span>`
+            const innerHTML = `${startingHTML}${foundHTML}${endingHTML}`
+            console.log(innerHTML)
+            line.innerHTML = innerHTML
+        }
+        this.mapOfFoundElements.set(this.mapOfFoundElements.size, { "old": oldHTML, "new": line.innerHTML })
     }
 
     _searchTheWordsOfLineForContent(line, content, lineIndex) {
@@ -116,7 +152,7 @@ class Search extends HTMLElement {
         let innerHtml = ""
         appearences.forEach((appearence, index) => {
             let initialText = this._generateInitialText(appearences, appearence, content, oldText, index)
-            const replaceText = `<span id="${lineIndex}-${wordIndex}-${index}" name= "highlighted" class="highlighted">${oldText.substring(appearence, appearence + content.length)}</span>`
+            const replaceText = `<span id="${lineIndex}-${wordIndex}-${index}" name="highlighted" class="highlighted">${oldText.substring(appearence, appearence + content.length)}</span>`
             this.foundElements.push(`${lineIndex}-${wordIndex}-${index}`)
             innerHtml += `${initialText}${replaceText}`
         });

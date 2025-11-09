@@ -23,11 +23,11 @@ export default class WordBuilder {
 
     _buildWordElementForWordAtIndex(word, index, colorDefiner) {
         if (this.isComment) {
-            return `<span style="font-sieze: 24px; color: gray; white-space: pre;">${word}</span>`
+            return `<span style="font-size: 24px; color: gray; white-space: pre;">${word}</span>`
         }
         else {
             this.color = colorDefiner.defineColorForWordAtIndex(word, index)
-            return `<span style="font-sieze: 24px; min-height:28.8px; color: ${this.color}; white-space: pre;">${word}</span>`
+            return `<span style="font-size: 24px; min-height:28.8px; color: ${this.color}; white-space: pre;">${word}</span>`
         }
     }
 }

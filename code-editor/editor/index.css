@@ -61,7 +61,7 @@ body {
     outline: none;
     border: none;
     left: 5%;
-    z-index: 1;
+    z-index: 2;
 }
 
 #preview {
@@ -79,7 +79,7 @@ body {
     max-height: 100%;
     height: fit-content;
     width: 15%;
-    z-index: 1;
+    z-index: 2;
     zoom: 30%;
 }
 
@@ -94,6 +94,22 @@ body {
     display: flex;
     flex-direction: column;
     color: red;
+    height: 100%;
+    width: 95%;
+    left: 5%;
+    z-index: 1;
+}
+
+#highlighter {
+    top: 0%;
+    font-size: 24px;
+    line-height: 1.2;
+    font-family: 'Courier New', Courier, monospace;
+    position: absolute;
+    background-color: black;
+    overflow: auto;
+    white-space: pre;
+    color: transparent;
     height: 100%;
     width: 95%;
     left: 5%;

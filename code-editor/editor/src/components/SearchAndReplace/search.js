@@ -5,7 +5,6 @@ class Search extends HTMLElement {
         this.mapOfFoundElements = new Map()
         this.currentPosition = 0
         this.prevElement = null
-        this.specialCharaters = ['(', ')', '[', ']', '{', '}']
         this.reader = document.getElementById('highlighter')
         const container = this._buildMainContainer()
         this.appendChild(container)
@@ -52,17 +51,9 @@ class Search extends HTMLElement {
     }
 
     _searchForContentInsideReader(content) {
-        // const lines = this.reader.childNodes
-        // lines.forEach((line, index) => {
-        //     this._searchForContent(line, content, index)
-        // });
-        let regex = null
-        if (this.specialCharaters.includes(content))
-            regex = new RegExp(`${`\\`}${content} `, 'g')
-        else regex = new RegExp(content, 'g')
         const textContent = this.reader.textContent.toLowerCase()
         this.reader.innerHTML = textContent
-        const matches = textContent.matchAll(regex)
+        const matches = textContent.matchAll(this._reformContentToMatchRegexConditions(content))
         let newHTML = ""
         let index = 0
         let oldHTML = this.reader.innerHTML
@@ -76,94 +67,21 @@ class Search extends HTMLElement {
         this.reader.innerHTML = newHTML
     }
 
+    _reformContentToMatchRegexConditions(content) {
+        let newContent = String(content).replaceAll('(', '\\(')
+        newContent = String(newContent).replaceAll(')', '\\)')
+        newContent = String(newContent).replaceAll('[', '\\[')
+        newContent = String(newContent).replaceAll(']', '\\]')
+        newContent = String(newContent).replaceAll('{', '\\{')
+        newContent = String(newContent).replaceAll('}', '\\}')
+        return newContent
+    }
+
     _genHTML(content, matchIndex, index) {
         const beginning = this.reader.textContent.substring(index, matchIndex)
         const replaceText = this.reader.textContent.substring(matchIndex, matchIndex + content.length)
-        const reaplaceHTML = `<span style="background-color: orange; font-size: 24px; min-height:28.8px; white-space: pre;">${replaceText}</span>`
+        const reaplaceHTML = `<span style="background-color: lightyellow; font-size: 24px; min-height:28.8px; white-space: pre;">${replaceText}</span>`
         return `${beginning}${reaplaceHTML}`
-    }
-
-    _searchForContent(line, content, index) {
-        const regexForSignsForMultipleWords = /\W|\n/g
-        const isMultipleWords = regexForSignsForMultipleWords.test(content)
-        if (isMultipleWords == false)
-            this._singleWord(line, content, index)
-        else this._multipleWords(line, content, index)
-    }
-
-    _singleWord(line, content, index) {
-        if (line.textContent.toLowerCase().includes(content)) {
-            this._searchTheWordsOfLineForContent(line, content, index)
-        }
-    }
-
-    _multipleWords(line, content, index) {
-        const loweredLiner = String(line.textContent).toLowerCase()
-        const loweredContent = String(content).toLowerCase()
-        const oldHTML = line.innerHTML
-
-        if (loweredLiner.includes(loweredContent)) {
-            const startsFrom = loweredLiner.indexOf(loweredContent)
-            const starting = line.textContent.substring(0, startsFrom)
-            const startingHTML = `<span style="font-size: 24px; color: gray; white-space: pre;">${starting}</span>`
-            const foundHTML = `<span style="font-size: 24px; color: gray; white-space: pre; background-color: lightyellow;">${line.textContent.substring(startsFrom, startsFrom + loweredContent.length)}</span>`
-            const ending = line.textContent.substring(startsFrom + loweredContent.length, loweredLiner.length)
-            const endingHTML = `<span style="font-size: 24px; color: gray; white-space: pre;">${ending}</span>`
-            const innerHTML = `${startingHTML}${foundHTML}${endingHTML}`
-            console.log(innerHTML)
-            line.innerHTML = innerHTML
-        }
-        this.mapOfFoundElements.set(this.mapOfFoundElements.size, { "old": oldHTML, "new": line.innerHTML })
-    }
-
-    _searchTheWordsOfLineForContent(line, content, lineIndex) {
-        const words = line.childNodes
-        words.forEach((word, index) => {
-            const wordContent = String(word.innerHTML).toLowerCase()
-            const isNotSpecial = wordContent !== "&nbsp;" && wordContent !== "&emsp;" && wordContent != "&gt;" && wordContent != "&lt;"
-            if (wordContent.includes(content) && isNotSpecial) {
-                this._updateInnerHTMLForWord(content, wordContent, word, index, lineIndex)
-            }
-        })
-    }
-
-    _updateInnerHTMLForWord(content, wordContent, word, wordIndex, lineIndex) {
-        const appearences = this._findHowManyTimesTheContentAppearsInAWord(content, wordContent)
-        let innerHtml = this._generateNewHTML(word, appearences, content, wordIndex, lineIndex)
-        word.innerHTML = innerHtml
-    }
-
-    _findHowManyTimesTheContentAppearsInAWord(content, word) {
-        let regex = null
-        if (this.specialCharaters.includes(content))
-            regex = new RegExp(`${`\\`}${content} `, 'g')
-        else regex = new RegExp(content, 'g')
-        if (content == word) { return [0] }
-        const matches = String(word).matchAll(regex)
-        const indexes = []
-        matches.forEach((match) => {
-            indexes.push(match.index)
-        })
-        return indexes
-    }
-
-    _generateNewHTML(word, appearences, content, wordIndex, lineIndex) {
-        let oldText = String(word.innerHTML)
-        let innerHtml = ""
-        appearences.forEach((appearence, index) => {
-            let initialText = this._generateInitialText(appearences, appearence, content, oldText, index)
-            const replaceText = `<span id="${lineIndex}-${wordIndex}-${index}" name="highlighted" class="highlighted">${oldText.substring(appearence, appearence + content.length)}</span>`
-            this.foundElements.push(`${lineIndex}-${wordIndex}-${index}`)
-            innerHtml += `${initialText}${replaceText}`
-        });
-        oldText = oldText.substring(appearences[appearences.length - 1] + content.length, oldText.length)
-        innerHtml += oldText
-        return innerHtml
-    }
-
-    _generateInitialText(appearences, appearence, content, oldText, index) {
-        if (index == 0) return oldText.substring(0, appearence)
-        else return oldText.substring(appearences[index - 1] + content.length, appearence)
     }
 
     _buildFoundElementsContainer() {

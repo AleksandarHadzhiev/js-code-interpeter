@@ -75,7 +75,6 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    color: red;
     max-height: 100%;
     height: fit-content;
     width: 15%;
@@ -93,7 +92,6 @@ body {
     overflow: auto;
     display: flex;
     flex-direction: column;
-    color: red;
     height: 100%;
     width: 95%;
     left: 5%;
@@ -106,7 +104,6 @@ body {
     line-height: 1.2;
     font-family: 'Courier New', Courier, monospace;
     position: absolute;
-    background-color: black;
     overflow: auto;
     white-space: pre;
     color: transparent;

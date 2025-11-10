@@ -39,12 +39,9 @@ class Search extends HTMLElement {
     }
 
     _cleanUpOldHighlights() {
-        const highlightedElements = document.getElementsByName('highlighted')
-        while (highlightedElements.length > 0) {
-            highlightedElements[0].replaceWith(highlightedElements[0].innerHTML)
-            this.foundElements = []
-            this.prevElement = null
-        }
+        this.reader.innerHTML = this.reader.textContent
+        this.foundElements = []
+        this.prevElement = null
     }
 
     _updateInfo() {

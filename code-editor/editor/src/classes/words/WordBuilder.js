@@ -22,18 +22,12 @@ export default class WordBuilder {
     }
 
     _buildWordElementForWordAtIndex(word, index, colorDefiner) {
-        if (word.trim() == "") {
-            return `<span style="font-sieze: 24px">&nbsp;</span>`
-        }
-        else if (this.isComment) {
-            return `<span style="font-sieze: 24px; color: gray">${word}</span>`
-        }
-        else if (word == '\t') {
-            return `<span style="font-sieze: 24px">&emsp;</span>`
+        if (this.isComment) {
+            return `<span style="font-size: 24px; color: gray; white-space: pre;">${word}</span>`
         }
         else {
             this.color = colorDefiner.defineColorForWordAtIndex(word, index)
-            return `<span style="font-sieze: 24px; color: ${this.color}">${word}</span>`
+            return `<span style="font-size: 24px; min-height:28.8px; color: ${this.color}; white-space: pre;">${word}</span>`
         }
     }
 }

@@ -49,8 +49,10 @@ export class CustomReplace extends HTMLElement {
 
     _handleButtonAction(button, action) {
         button.addEventListener('click', (event) => {
-            const searchFieldValue = document.getElementById('search-field').value
+            const searchField = document.getElementById('search-field')
+            const searchFieldValue = searchField.value
             this._replaceBasedOnAction(action, searchFieldValue)
+            searchField.dispatchEvent(new Event('input'))
         })
     }
 

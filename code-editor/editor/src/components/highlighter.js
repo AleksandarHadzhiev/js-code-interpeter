@@ -7,6 +7,11 @@ class CusomHighlighter extends HTMLElement {
             this.textContent = content
         })
 
+        this.writer.addEventListener('change', (event) => {
+            const content = String(event.target.value)
+            this.textContent = content
+        })
+
         this.writer.addEventListener('scroll', () => {
             this.scrollTop = this.writer.scrollTop
             this.scrollLeft = this.writer.scrollLeft

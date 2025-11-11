@@ -19,6 +19,7 @@ export class Search extends HTMLElement {
     _buildSearchBar() {
         const searchBar = document.createElement('textarea')
         searchBar.classList.add('search-bar')
+        searchBar.setAttribute('id', 'search-field')
         searchBar.placeholder = "Search for..."
         searchBar.addEventListener('input', (event) => {
             this._highlightElements(event)
@@ -30,6 +31,7 @@ export class Search extends HTMLElement {
         this.currentPosition = 0
         const content = String(event.target.value)
         this._cleanUpOldHighlights()
+        console.log(this.foundElements)
         if (content.trim() != "")
             this._searchForContentInsideReader(content.toLowerCase())
         this._updateInfo()

@@ -16,14 +16,19 @@
             <textarea spellcheck="false" id="writer"></textarea>
         </div>
         <custom-reader id="reader"></custom-reader>
-        <custom-search id="search" class="invisible"></custom-search>
+        <custom-search-and-replace id="search" class="invisible">
+            <custom-search></custom-search>
+            <custom-replace></custom-replace>
+        </custom-search-and-replace>
         <custom-highlighter id="highlighter" class="invisible"></custom-highlighter>
     </main>
 
     <script type="module" src="./src/components/reader.js"></script>
     <script type="module" src="./src/components/preview.js"></script>
     <script type="module" src="./src/components/highlighter.js"></script>
+    <script type="module" src="./src/components/SearchAndReplace/searchAndReplaceContainer.js"></script>
     <script type="module" src="./src/components/SearchAndReplace/search.js"></script>
+    <script type="module" src="./src/components/SearchAndReplace/replace.js"></script>
     <script type="module" src="app.js"></script>
 </body>
 

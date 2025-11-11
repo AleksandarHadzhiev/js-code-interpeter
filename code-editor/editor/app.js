@@ -17,12 +17,9 @@ writer.addEventListener('input', (event) => {
 writer.addEventListener('scroll', (event) => {
     editorContainer.scrollTop = event.target.scrollTop
     editorContainer.scrollLeft = event.target.scrollLeft
-    highlighter.scrollLeft = event.target.scrollLeft
-    highlighter.scrollTop = event.target.scrollTop
 })
 
 document.addEventListener('keydown', (event) => {
-
     if (event.ctrlKey && event.key == "f" || event.key == "F") {
         event.preventDefault()
         if (search.classList.contains('invisible')) {

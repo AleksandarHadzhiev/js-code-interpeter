@@ -1,22 +1,19 @@
-class Search extends HTMLElement {
+export class Search extends HTMLElement {
     constructor() {
         super()
         this.foundElements = []
         this.currentPosition = 0
         this.prevElement = null
         this.reader = document.getElementById('highlighter')
-        const container = this._buildMainContainer()
-        this.appendChild(container)
+        this._buildMainContainer()
     }
 
     _buildMainContainer() {
-        const mainContainer = document.createElement('div')
-        mainContainer.classList.add("search-container")
+        this.classList.add("search-container")
         const searchBar = this._buildSearchBar()
         const foundElementsContainer = this._buildFoundElementsContainer()
-        mainContainer.appendChild(searchBar)
-        mainContainer.appendChild(foundElementsContainer)
-        return mainContainer
+        this.appendChild(searchBar)
+        this.appendChild(foundElementsContainer)
     }
 
     _buildSearchBar() {
@@ -75,16 +72,34 @@ class Search extends HTMLElement {
         let newHTML = ""
         let index = 0
         matches.forEach(match => {
+            console.log(match.index)
             newHTML += this._genHTML(content, match.index, index)
             index = match.index + content.length
         });
+        console.log(index, textContent.length)
         const lastPartOfContent = this.reader.textContent.substring(index, textContent.length)
-        newHTML += lastPartOfContent
+        const ending = this._generateEnding(lastPartOfContent)
+        console.log(ending)
+        newHTML += ending
+        // console.log(newHTML)
         return newHTML
     }
 
+    _generateEnding(content) {
+        console.log(content)
+        const lines = String(content).split('\n')
+        let ending = ""
+        lines.forEach((line) => {
+            console.log(line.length)
+            if (line === "")
+                ending += `<br>`
+            else ending += `<span style="font-size: 24px; min-height: 28.8px; white-space: pre;">${line}</span>`
+        });
+        return ending
+    }
+
     _genHTML(content, matchIndex, index) {
-        const beginning = this.reader.textContent.substring(index, matchIndex)
+        const beginning = `<span style="font-size: 24px; min-height: 28.8px; white-space: pre;">${this.reader.textContent.substring(index, matchIndex)}</span>`
         const replaceText = this.reader.textContent.substring(matchIndex, matchIndex + content.length)
         const reaplaceHTML = `<span id="${matchIndex}-${index}" name="highlighted" class="highlighted">${replaceText}</span>`
         this.foundElements.push(`${matchIndex}-${index}`)
@@ -144,6 +159,7 @@ class Search extends HTMLElement {
         const readerScrollFromTOp = element.parentElement.scrollTop
         document.getElementById('writer').scrollTop = readerScrollFromTOp
         document.getElementById('reader').scrollTop = readerScrollFromTOp
+        document.getElementById('highlighter').scrollTop = readerScrollFromTOp
     }
 
     _updatePositionBasedOnAction(action) {

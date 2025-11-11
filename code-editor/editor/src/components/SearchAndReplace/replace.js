@@ -1,16 +1,17 @@
-class CustomReplace extends HTMLElement {
+export class CustomReplace extends HTMLElement {
     constructor() {
         super()
-        const container = this._buildReplaceContainer()
-        this.appendChild(container)
+        this._buildReplaceContainer()
+        this.writer = document.getElementById('writer')
+        this.search = document.getElementById('')
+        this.classList.add('replace')
     }
 
     _buildReplaceContainer() {
-        const container = document.createElement('div')
-        const replaceField = this._buildReplaceContainer()
+        const replaceField = this._buildReplaceTextField()
         const actionsContainer = this._buildContainerForActions()
-        container.appendChild(replaceField)
-        return container
+        this.appendChild(replaceField)
+        this.appendChild(actionsContainer)
     }
 
     _buildReplaceTextField() {
@@ -25,6 +26,7 @@ class CustomReplace extends HTMLElement {
 
     _buildContainerForActions() {
         const actionsContainer = document.createElement('div')
+        actionsContainer.classList.add('found-elements')
         const replaceOne = this._buildButtonBasedOnAction('one')
         const replaceAll = this._buildButtonBasedOnAction('all')
         actionsContainer.appendChild(replaceOne)
@@ -34,6 +36,7 @@ class CustomReplace extends HTMLElement {
 
     _buildButtonBasedOnAction(action) {
         const button = document.createElement('button')
+        button.classList.add('position-switching-button')
         button.innerHTML = this._pickIconBasedOnAction(action)
         this._handleButtonAction(button, action)
         return button
@@ -49,3 +52,5 @@ class CustomReplace extends HTMLElement {
         })
     }
 }
+
+customElements.define('custom-replace', CustomReplace)

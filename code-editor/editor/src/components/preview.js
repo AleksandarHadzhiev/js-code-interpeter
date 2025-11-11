@@ -13,6 +13,13 @@ class CustomPreview extends HTMLElement {
             this.viewBuilder.buildCodeForLines(lines)
         })
 
+        this.writer.addEventListener('change', (event) => {
+            this.viewBuilder.changesTracker.defineTheFirstLineOfChange(0, event.target.value)
+            this.viewBuilder.changesTracker.defineTheLastLineOfChange(event.target.value.length, event.target.value)
+            this.viewBuilder.changesTracker.defineTheNewFirstLineOfChange(0, event.target.value)
+            this.viewBuilder.buildCodeForLines(String(event.target.value).split('\n'))
+        })
+
         this.writer.addEventListener('selectionchange', (event) => {
             const startingIndex = event.target.selectionStart
             const endingIndex = event.target.selectionEnd

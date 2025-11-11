@@ -2,6 +2,7 @@ export class CustomReplace extends HTMLElement {
     constructor() {
         super()
         this._buildReplaceContainer()
+        this.textToReplaceWith = ""
         this.writer = document.getElementById('writer')
         this.search = document.getElementById('')
         this.classList.add('replace')
@@ -19,7 +20,7 @@ export class CustomReplace extends HTMLElement {
         replaceField.classList.add('replace-text')
         replaceField.placeholder = "Replace with"
         replaceField.addEventListener('input', (event) => {
-            // this._highlightElements(event)
+            this.textToReplaceWith = event.target.value
         })
         return replaceField
     }
@@ -48,8 +49,24 @@ export class CustomReplace extends HTMLElement {
 
     _handleButtonAction(button, action) {
         button.addEventListener('click', (event) => {
-            console.log(action)
+            const searchFieldValue = document.getElementById('search-field').value
+            this._replaceBasedOnAction(action, searchFieldValue)
         })
+    }
+
+    _replaceBasedOnAction(action, searchFieldValue) {
+        if (action == "all") this._replaceAll(searchFieldValue)
+        else this._replaceOne(searchFieldValue)
+    }
+
+    _replaceOne(searchFieldValue) {
+        this.writer.value = String(this.writer.value).replace(searchFieldValue, this.textToReplaceWith)
+        this.writer.dispatchEvent(new Event('change'))
+    }
+
+    _replaceAll(searchFieldValue) {
+        this.writer.value = this.writer.value.replaceAll(searchFieldValue, this.textToReplaceWith)
+        this.writer.dispatchEvent(new Event('change'))
     }
 }
 

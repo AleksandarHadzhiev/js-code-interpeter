@@ -11,16 +11,22 @@
 <body>
     <custom-preview id="preview"></custom-preview>
     <main id="code-editor">
+        <div id="horizontal-scrollbar" class="invisible">
+            <div class="invisible" id="bar-vertical"></div>
+        </div>
+        <div id="vertical-scrollbar" class="invisible">
+            <div class="invisible" id="bar-horizontal"></div>
+        </div>
+        <textarea spellcheck="false" id="writer"></textarea>
         <div id="editor-container">
             <div id="lines"></div>
-            <textarea spellcheck="false" id="writer"></textarea>
+            <custom-highlighter id="highlighter" class="highlighter"></custom-highlighter>
         </div>
         <custom-reader id="reader"></custom-reader>
         <custom-search-and-replace id="search" class="invisible">
             <custom-search></custom-search>
             <custom-replace></custom-replace>
         </custom-search-and-replace>
-        <custom-highlighter id="highlighter" class="invisible"></custom-highlighter>
     </main>
 
     <script type="module" src="./src/components/reader.js"></script>

@@ -29,18 +29,17 @@ body {
     width: 100%;
     display: flex;
     flex-direction: row;
-    overflow-y: auto;
+    overflow: hidden;
     height: 100%;
     z-index: 0;
+    scrollbar-width: thin;
 }
 
 #lines {
     width: 5%;
-    height: fit-content;
     font-size: 24px;
     line-height: 1.2;
     display: flex;
-    overflow: hidden;
     align-items: center;
     flex-direction: column;
     color: white;
@@ -52,10 +51,11 @@ body {
     font-family: 'Courier New', Courier, monospace;
     position: absolute;
     background-color: transparent;
-    color: lightblue;
+    color: transparent;
     caret-color: red;
     overflow: auto;
-    white-space: nowrap;
+    white-space: pre;
+    scrollbar-width: none;
     height: 100%;
     top: 0%;
     width: 95%;
@@ -91,7 +91,7 @@ body {
     font-family: 'Courier New', Courier, monospace;
     position: absolute;
     background-color: transparent;
-    overflow: auto;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -101,19 +101,17 @@ body {
 }
 
 .highlighter {
-    top: 0%;
     font-size: 24px;
     line-height: 1.2;
     font-family: 'Courier New', Courier, monospace;
-    position: absolute;
-    overflow: auto;
-    white-space: pre;
-    color: green;
+    background-color: transparent;
     color: transparent;
-    height: 100%;
+    overflow: hidden;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
     width: 95%;
-    left: 5%;
-    z-index: 0;
+    z-index: 1;
 }
 
 .line-number {
@@ -132,6 +130,11 @@ body {
     width: fit-content;
     height: fit-content;
     white-space: pre;
+}
+
+.content-format {
+    font-size: 24px;
+    min-height: 28.8px;
 }
 
 .invisible {
@@ -234,9 +237,8 @@ body {
 
 .highlighted {
     background-color: lightyellow;
-    font-size: 24px;
-    min-height: 28.8px;
     white-space: pre;
+    color: transparent;
 }
 
 .currently-selected {
@@ -255,4 +257,29 @@ body {
     opacity: 0.7;
     color: white;
     border: rgb(59, 59, 59) 1px solid;
+}
+
+#horizontal-scrollbar {
+    position: absolute;
+    width: 95%;
+    height: 2.5%;
+    bottom: 0;
+    left: 5%;
+    background-color: transparent;
+}
+
+#vertical-scrollbar {
+    position: absolute;
+    width: 2.5%;
+    height: 100%;
+    bottom: 0;
+    left: 5%;
+    background-color: transparent;
+}
+
+.bar {
+    width: 100%;
+    height: 100%;
+    background-color: gray;
+    opacity: 0.5;
 }

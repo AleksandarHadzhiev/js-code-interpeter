@@ -16,7 +16,6 @@ writer.addEventListener('input', (event) => {
 
 writer.addEventListener('scroll', (event) => {
     editorContainer.scrollTop = event.target.scrollTop
-    editorContainer.scrollLeft = event.target.scrollLeft
 })
 
 document.addEventListener('keydown', (event) => {

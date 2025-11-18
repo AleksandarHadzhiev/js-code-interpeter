@@ -9,20 +9,24 @@
 </head>
 
 <body>
-    <custom-preview id="preview"></custom-preview>
     <main id="code-editor">
+        <custom-horizontal class="invisible"></custom-horizontal>
+        <custom-vertical class="invisible"></custom-vertical>
+        <textarea spellcheck="false" id="writer"></textarea>
         <div id="editor-container">
             <div id="lines"></div>
-            <textarea spellcheck="false" id="writer"></textarea>
+            <custom-highlighter id="highlighter" class="highlighter"></custom-highlighter>
         </div>
+        <custom-preview id="preview"></custom-preview>
         <custom-reader id="reader"></custom-reader>
         <custom-search-and-replace id="search" class="invisible">
             <custom-search></custom-search>
             <custom-replace></custom-replace>
         </custom-search-and-replace>
-        <custom-highlighter id="highlighter" class="invisible"></custom-highlighter>
     </main>
 
+    <script type="module" src="./src/components/customScrollbars/horizontal.js"></script>
+    <script type="module" src="./src/components/customScrollbars/vertical.js"></script>
     <script type="module" src="./src/components/reader.js"></script>
     <script type="module" src="./src/components/preview.js"></script>
     <script type="module" src="./src/components/highlighter.js"></script>

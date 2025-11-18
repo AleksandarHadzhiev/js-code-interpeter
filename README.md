@@ -1,9 +1,10 @@
 # Table of Contents
 1. [About me](#about-me)
 2. [What's new](#whats-new)
+   - 2.1 [Version 1.1.1](#version-111)
    - 2.2 [Version 1.1.0](#version-110)
-   - 2.1 [Version 1.0.0](#version-100)
-   - 2.2 [Version 0.0.0](#verions-000)
+   - 2.3 [Version 1.0.0](#version-100)
+   - 2.4 [Version 0.0.0](#verions-000)
 3. [How to run](#how-to-run)
 4. [Documentation](#documentation)
 4. [Author](#author)
@@ -23,6 +24,10 @@ This project is an online JS interpeter.
 ## What's new
 
 Order of versions - from newest to oldest.
+
+### Version 1.1.1
+
+Small problems were found, with the code display and it not being completely matched with the text field, during the integration of search and replace. The search and replace were pushed as they worked for majority of the cases and the situations in which they didnt work - the problems appeared form the unmatched display with textarea. This problem was fixed in this patch.
 
 ### Version 1.1.0
 

@@ -1,15 +1,30 @@
+import ViewBuilder from "../classes/ViewBuilder.js"
+
 class CusomHighlighter extends HTMLElement {
     constructor() {
         super()
+        this.viewBuilder = new ViewBuilder(this)
         this.writer = document.getElementById('writer')
         this.writer.addEventListener('input', (event) => {
-            const content = String(event.target.value)
-            this.textContent = content
+            this.replaceChildren()
+            const lines = String(event.target.value).split('\n')
+            lines.forEach(line => {
+                const lineElement = document.createElement('div')
+                lineElement.classList.add('line', 'content-format')
+                lineElement.textContent = line
+                this.appendChild(lineElement)
+            });
         })
 
         this.writer.addEventListener('change', (event) => {
-            const content = String(event.target.value)
-            this.textContent = content
+            const lines = String(event.target.value).split('\n')
+            this.replaceChildren()
+            lines.forEach(line => {
+                const lineElement = document.createElement('div')
+                lineElement.classList.add('line', 'content-format')
+                lineElement.textContent = line
+                this.appendChild(lineElement)
+            });
         })
 
         this.writer.addEventListener('scroll', () => {

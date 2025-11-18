@@ -1,11 +1,14 @@
+import Highlighter from "../../classes/highlighters/Highlighter.js"
+
 export class Search extends HTMLElement {
     constructor() {
         super()
         this.foundElements = []
         this.currentPosition = 0
         this.prevElement = null
-        this.reader = document.getElementById('highlighter')
+        this.writer = document.getElementById('writer')
         this._buildMainContainer()
+        this.highlighter = new Highlighter()
     }
 
     _buildMainContainer() {
@@ -22,25 +25,18 @@ export class Search extends HTMLElement {
         searchBar.setAttribute('id', 'search-field')
         searchBar.placeholder = "Search for..."
         searchBar.addEventListener('input', (event) => {
-            this._highlightElements(event)
+            const triggerEvent = new Event('change')
+            this.writer.dispatchEvent(triggerEvent)
+            this._highlight(event)
         })
         return searchBar
     }
 
-    _highlightElements(event) {
-        this.currentPosition = 0
-        const content = String(event.target.value)
-        this._cleanUpOldHighlights()
-        console.log(this.foundElements)
-        if (content.trim() != "")
-            this._searchForContentInsideReader(content.toLowerCase())
-        this._updateInfo()
-    }
-
-    _cleanUpOldHighlights() {
-        this.reader.innerHTML = this.reader.textContent
-        this.foundElements = []
+    _highlight(event) {
         this.prevElement = null
+        const content = String(event.target.value)
+        this.foundElements = this.highlighter.getHighlightedElementsAfterHighlightingContent(content)
+        this._updateInfo()
     }
 
     _updateInfo() {
@@ -53,60 +49,6 @@ export class Search extends HTMLElement {
         else info.textContent = `No elements found`;
     }
 
-    _searchForContentInsideReader(content) {
-        const textContent = this.reader.textContent.toLowerCase()
-        this.reader.innerHTML = textContent
-        const matches = textContent.matchAll(this._reformContentToMatchRegexConditions(content))
-        this.reader.innerHTML = this._createHighlightedHTML(content, matches, textContent)
-    }
-
-    _reformContentToMatchRegexConditions(content) {
-        let newContent = String(content).replaceAll('(', '\\(')
-        newContent = String(newContent).replaceAll(')', '\\)')
-        newContent = String(newContent).replaceAll('[', '\\[')
-        newContent = String(newContent).replaceAll(']', '\\]')
-        newContent = String(newContent).replaceAll('{', '\\{')
-        newContent = String(newContent).replaceAll('}', '\\}')
-        return newContent
-    }
-
-    _createHighlightedHTML(content, matches, textContent) {
-        let newHTML = ""
-        let index = 0
-        matches.forEach(match => {
-            console.log(match.index)
-            newHTML += this._genHTML(content, match.index, index)
-            index = match.index + content.length
-        });
-        console.log(index, textContent.length)
-        const lastPartOfContent = this.reader.textContent.substring(index, textContent.length)
-        const ending = this._generateEnding(lastPartOfContent)
-        console.log(ending)
-        newHTML += ending
-        // console.log(newHTML)
-        return newHTML
-    }
-
-    _generateEnding(content) {
-        console.log(content)
-        const lines = String(content).split('\n')
-        let ending = ""
-        lines.forEach((line) => {
-            console.log(line.length)
-            if (line === "")
-                ending += `<br>`
-            else ending += `<span style="font-size: 24px; min-height: 28.8px; white-space: pre;">${line}</span>`
-        });
-        return ending
-    }
-
-    _genHTML(content, matchIndex, index) {
-        const beginning = `<span style="font-size: 24px; min-height: 28.8px; white-space: pre;">${this.reader.textContent.substring(index, matchIndex)}</span>`
-        const replaceText = this.reader.textContent.substring(matchIndex, matchIndex + content.length)
-        const reaplaceHTML = `<span id="${matchIndex}-${index}" name="highlighted" class="highlighted">${replaceText}</span>`
-        this.foundElements.push(`${matchIndex}-${index}`)
-        return `${beginning}${reaplaceHTML}`
-    }
 
     _buildFoundElementsContainer() {
         const container = document.createElement('div')
@@ -146,19 +88,26 @@ export class Search extends HTMLElement {
     }
 
     _handleChangeInShownHighlightedElement(buttonAction) {
-        if (this.prevElement) this.prevElement.classList.remove('currently-selected')
+        if (this.prevElement) {
+            this.prevElement.forEach(previousElement => {
+                previousElement.classList.remove('currently-selected')
+            });
+        }
         this._updatePositionBasedOnAction(buttonAction)
-        const element = document.getElementById(this.foundElements[this.currentPosition])
-        element.classList.add('currently-selected')
-        this._updateScrollPosition(element)
+        const elements = this.foundElements[this.currentPosition]
+        elements.forEach((element, index) => {
+            element.classList.add('currently-selected')
+            if (index == 0) this._updateScrollPosition(element)
+        });
+
         this._updateInfo()
-        this.prevElement = element
+        this.prevElement = elements
     }
 
     _updateScrollPosition(element) {
         element.scrollIntoView()
-        // ==> readerPosFromTop === currentHightlightedElement.highlighterElement.scrollTop
-        const readerScrollFromTOp = element.parentElement.scrollTop
+        // ==> readerPosFromTop === currentHightlightedElement.row.highlighter.editor.scrollTop
+        const readerScrollFromTOp = element.parentElement.parentElement.parentElement.scrollTop
         document.getElementById('writer').scrollTop = readerScrollFromTOp
         document.getElementById('reader').scrollTop = readerScrollFromTOp
         document.getElementById('highlighter').scrollTop = readerScrollFromTOp

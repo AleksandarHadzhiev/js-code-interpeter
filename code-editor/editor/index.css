@@ -18,6 +18,7 @@ body {
 
 #code-editor {
     position: absolute;
+    display: flex;
     top: 0%;
     height: 100%;
     width: 100%;
@@ -26,7 +27,7 @@ body {
 }
 
 #editor-container {
-    width: 100%;
+    width: 90%;
     display: flex;
     flex-direction: row;
     overflow: hidden;
@@ -35,8 +36,9 @@ body {
     scrollbar-width: thin;
 }
 
+
 #lines {
-    width: 5%;
+    width: 5.6%;
     font-size: 24px;
     line-height: 1.2;
     display: flex;
@@ -44,6 +46,37 @@ body {
     flex-direction: column;
     color: white;
 }
+
+.highlighter {
+    font-size: 24px;
+    line-height: 1.2;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: transparent;
+    color: transparent;
+    overflow: hidden;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+    z-index: 1;
+}
+
+#preview {
+    font-size: 16px;
+    line-height: 1.2;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: black;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    height: fit-content;
+    width: 10%;
+    zoom: 30%;
+    border-left: solid 20px white;
+    box-shadow: 2px white;
+}
+
 
 #writer {
     font-size: 24px;
@@ -58,32 +91,12 @@ body {
     scrollbar-width: none;
     height: 100%;
     top: 0%;
-    width: 95%;
+    width: 85%;
     outline: none;
     border: none;
     left: 5%;
     z-index: 2;
     resize: none;
-}
-
-#preview {
-    top: 0%;
-    right: 0%;
-    font-size: 16px;
-    line-height: 1.2;
-    font-family: 'Courier New', Courier, monospace;
-    position: absolute;
-    background-color: black;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    max-height: 100%;
-    height: fit-content;
-    width: 10%;
-    z-index: 2;
-    zoom: 30%;
-    border-left: solid 20px white;
-    box-shadow: 2px white;
 }
 
 #reader {
@@ -97,22 +110,8 @@ body {
     display: flex;
     flex-direction: column;
     height: 100%;
-    width: 95%;
+    width: 85%;
     left: 5%;
-    z-index: 1;
-}
-
-.highlighter {
-    font-size: 24px;
-    line-height: 1.2;
-    font-family: 'Courier New', Courier, monospace;
-    background-color: transparent;
-    color: transparent;
-    overflow: hidden;
-    height: fit-content;
-    display: flex;
-    flex-direction: column;
-    width: 95%;
     z-index: 1;
 }
 
@@ -263,7 +262,7 @@ body {
 
 .horizontal-scrollbar {
     position: absolute;
-    width: 85%;
+    width: 80.5%;
     height: 2.5%;
     bottom: 0;
     left: 5%;
@@ -273,7 +272,7 @@ body {
 
 .vertical-scrollbar {
     position: absolute;
-    width: 2.5%;
+    width: 1.5%;
     height: 100%;
     top: 0%;
     right: 0%;

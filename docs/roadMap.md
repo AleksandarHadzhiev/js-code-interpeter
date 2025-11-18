@@ -11,14 +11,20 @@ The goal is to figure out how to build the code reader in such a way, that will 
 generate the code colorised (VSCode colorisation as example of color composition).
 
 ### Version 1.x.x
+
+#### 1.0.x
 - Integrate the found solution in the actual project
 - Have a preview view - to the right of the actual code - which disaplys the code in smaller format
+
+#### 1.1.x
 - Search and replace
    - Search for content in the file
    - Colorise the content and allow switching between found elements
    - Replace the content with new content
       - One by one
       - All at once
+
+#### 1.2.x
 - Redirect between code in file
    - When the user clicks on a variable, function, class, object name - he should be redirected to the initialization of it.
     

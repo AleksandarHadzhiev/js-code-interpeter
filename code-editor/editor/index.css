@@ -237,13 +237,13 @@ body {
 }
 
 .highlighted {
-    background-color: lightyellow;
+    background-color: rgb(157, 157, 157);
     white-space: pre;
     color: transparent;
 }
 
 .currently-selected {
-    background-color: lightcoral;
+    background-color: rgb(117, 91, 91);
 }
 
 .position-switching-button {

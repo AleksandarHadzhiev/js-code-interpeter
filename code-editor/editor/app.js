@@ -11,6 +11,8 @@ new LineNumberationTracker().buildLineNumbers([])
 
 writer.addEventListener('input', (event) => {
     const lines = String(event.target.value).split('\n')
+    const info = document.getElementById('info')
+    info.textContent = `No results`
     new LineNumberationTracker().buildLineNumbers(lines)
 })
 

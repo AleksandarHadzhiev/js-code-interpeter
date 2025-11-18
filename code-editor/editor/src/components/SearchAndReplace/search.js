@@ -36,17 +36,18 @@ export class Search extends HTMLElement {
         this.prevElement = null
         const content = String(event.target.value)
         this.foundElements = this.highlighter.getHighlightedElementsAfterHighlightingContent(content)
-        this._updateInfo()
+        this._updateInfo(event)
     }
 
-    _updateInfo() {
+    _updateInfo(event) {
         const switcher = document.getElementById('position-switcher')
         const info = document.getElementById('info')
+        if (event.target.value == "") this.foundElements = []
         if (this.foundElements.length > 0) {
             switcher.classList.remove('hidden')
             info.textContent = `${this.currentPosition + 1} : ${this.foundElements.length}`;
         }
-        else info.textContent = `No elements found`;
+        else info.textContent = `No results`;
     }
 
 

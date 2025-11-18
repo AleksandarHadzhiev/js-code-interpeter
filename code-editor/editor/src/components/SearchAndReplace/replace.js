@@ -38,13 +38,20 @@ export class CustomReplace extends HTMLElement {
     _buildButtonBasedOnAction(action) {
         const button = document.createElement('button')
         button.classList.add('position-switching-button')
-        button.innerHTML = this._pickIconBasedOnAction(action)
+        button.append(this._pickIconBasedOnAction(action))
         this._handleButtonAction(button, action)
         return button
     }
 
     _pickIconBasedOnAction(action) {
-        return `${action}`
+        let src = "./icons/replace_one_element.png"
+        if (action == "all")
+            src = "./icons/replace_multiple.png"
+        const icon = document.createElement('img')
+        icon.src = src
+        icon.alt = 'Action to replace'
+        icon.classList.add('icon')
+        return icon
     }
 
     _handleButtonAction(button, action) {

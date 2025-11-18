@@ -1,6 +1,7 @@
 # Table of Contents
 1. [About me](#about-me)
 2. [What's new](#whats-new)
+   - 2.1 [Version 1.1.2](#version-112)
    - 2.1 [Version 1.1.1](#version-111)
    - 2.2 [Version 1.1.0](#version-110)
    - 2.3 [Version 1.0.0](#version-100)
@@ -24,6 +25,12 @@ This project is an online JS interpeter.
 ## What's new
 
 Order of versions - from newest to oldest.
+
+### Version 1.1.2
+
+Small changes to the reaplce actions were added:
+ - now there are icons for the buttons
+ - and there is helping text displayed when the user hovers over the buttons - similar to the way VSCode does it.
 
 ### Version 1.1.1
 

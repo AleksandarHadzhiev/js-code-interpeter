@@ -1,11 +1,12 @@
 # Table of Contents
 1. [About me](#about-me)
 2. [What's new](#whats-new)
-   - 2.1 [Version 1.1.2](#version-112)
-   - 2.2 [Version 1.1.1](#version-111)
-   - 2.3 [Version 1.1.0](#version-110)
-   - 2.4 [Version 1.0.0](#version-100)
-   - 2.5 [Version 0.0.0](#verions-000)
+   - 2.1 [Version 1.1.3](#version-113)
+   - 2.2 [Version 1.1.2](#version-112)
+   - 2.3 [Version 1.1.1](#version-111)
+   - 2.4 [Version 1.1.0](#version-110)
+   - 2.5 [Version 1.0.0](#version-100)
+   - 2.6 [Version 0.0.0](#verions-000)
 3. [How to run](#how-to-run)
 4. [Documentation](#documentation)
 4. [Author](#author)
@@ -25,6 +26,12 @@ This project is an online JS interpeter.
 ## What's new
 
 Order of versions - from newest to oldest.
+
+### Version 1.1.3
+
+Small changes to the search container and styling of highlighted text:
+ - change of highlight colors - for better visual composition.
+ - change in style - width and height - of the search container and its elements - for more stable view when screen size changes.
 
 ### Version 1.1.2
 

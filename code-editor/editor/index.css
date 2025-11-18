@@ -26,7 +26,7 @@ body {
 }
 
 #editor-container {
-    width: 90%;
+    width: 100%;
     display: flex;
     flex-direction: row;
     overflow: hidden;
@@ -58,7 +58,7 @@ body {
     scrollbar-width: none;
     height: 100%;
     top: 0%;
-    width: 85%;
+    width: 95%;
     outline: none;
     border: none;
     left: 5%;
@@ -97,7 +97,7 @@ body {
     display: flex;
     flex-direction: column;
     height: 100%;
-    width: 85%;
+    width: 95%;
     left: 5%;
     z-index: 1;
 }
@@ -112,7 +112,7 @@ body {
     height: fit-content;
     display: flex;
     flex-direction: column;
-    width: 85%;
+    width: 95%;
     z-index: 1;
 }
 
@@ -261,27 +261,37 @@ body {
     border: rgb(59, 59, 59) 1px solid;
 }
 
-#horizontal-scrollbar {
+.horizontal-scrollbar {
     position: absolute;
-    width: 95%;
+    width: 85%;
     height: 2.5%;
     bottom: 0;
     left: 5%;
+    z-index: 3;
     background-color: transparent;
 }
 
-#vertical-scrollbar {
+.vertical-scrollbar {
     position: absolute;
     width: 2.5%;
     height: 100%;
-    bottom: 0;
-    left: 5%;
+    top: 0%;
+    right: 0%;
+    z-index: 2;
     background-color: transparent;
 }
 
 .bar {
-    width: 100%;
-    height: 100%;
     background-color: gray;
     opacity: 0.5;
+}
+
+.horizontal-bar {
+    height: 100%;
+    width: 10%;
+}
+
+.vertical-bar {
+    width: 100%;
+    height: 10%;
 }

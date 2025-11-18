@@ -11,12 +11,8 @@
 <body>
     <custom-preview id="preview"></custom-preview>
     <main id="code-editor">
-        <div id="horizontal-scrollbar" class="invisible">
-            <div class="invisible" id="bar-vertical"></div>
-        </div>
-        <div id="vertical-scrollbar" class="invisible">
-            <div class="invisible" id="bar-horizontal"></div>
-        </div>
+        <custom-horizontal class="invisible"></custom-horizontal>
+        <custom-vertical class="invisible"></custom-vertical>
         <textarea spellcheck="false" id="writer"></textarea>
         <div id="editor-container">
             <div id="lines"></div>
@@ -29,6 +25,8 @@
         </custom-search-and-replace>
     </main>
 
+    <script type="module" src="./src/components/customScrollbars/horizontal.js"></script>
+    <script type="module" src="./src/components/customScrollbars/vertical.js"></script>
     <script type="module" src="./src/components/reader.js"></script>
     <script type="module" src="./src/components/preview.js"></script>
     <script type="module" src="./src/components/highlighter.js"></script>

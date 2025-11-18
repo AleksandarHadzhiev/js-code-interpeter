@@ -153,8 +153,8 @@ body {
     background-color: rgb(68, 68, 68);
     border: gray solid 2px;
     border-radius: 5px;
-    width: 35%;
-    height: 10%;
+    width: 500px;
+    height: 100px;
 }
 
 .search-container {
@@ -172,7 +172,7 @@ body {
 }
 
 .search-bar {
-    width: 70%;
+    width: 300px;
     height: 70%;
     outline: none;
     border: solid 1px gray;
@@ -199,7 +199,7 @@ body {
 }
 
 .replace-text {
-    width: 70%;
+    width: 300px;
     height: 70%;
     outline: none;
     border: solid 1px gray;
@@ -212,7 +212,7 @@ body {
 }
 
 .found-elements {
-    width: 25%;
+    width: 150px;
     height: 100%;
     display: flex;
     align-items: center;
@@ -220,7 +220,7 @@ body {
 }
 
 .info {
-    width: 100%;
+    width: 150px;
     text-align: center;
     height: 100%;
     padding-top: 10%;
@@ -228,6 +228,7 @@ body {
 
 .switch {
     display: flex;
+    width: 90px;
     align-items: center;
     justify-content: space-evenly;
 }

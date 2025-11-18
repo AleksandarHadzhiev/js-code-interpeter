@@ -247,11 +247,10 @@ body {
 }
 
 .position-switching-button {
-    background-color: transparent;
-    color: gray;
-    border: gray 1px solid;
-    width: 25px;
-    height: 25px;
+    background-color: white;
+    border: black 1px solid;
+    width: 35px;
+    height: 35px;
 }
 
 .position-switching-button:hover {
@@ -293,4 +292,22 @@ body {
 .vertical-bar {
     width: 100%;
     height: 10%;
+}
+
+.icon {
+    width: 30px;
+    height: 30px;
+}
+
+.replace-info {
+    position: absolute;
+    width: 150px;
+    height: 25px;
+    font-size: 20px;
+    right: 0%;
+    top: 10%;
+    text-align: center;
+    background-color: gray;
+    color: white;
+    border: solid 1px white;
 }

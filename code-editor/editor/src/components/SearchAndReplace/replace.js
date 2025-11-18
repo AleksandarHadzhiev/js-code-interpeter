@@ -61,8 +61,9 @@ export class CustomReplace extends HTMLElement {
             this._replaceBasedOnAction(action, searchFieldValue)
             searchField.dispatchEvent(new Event('input'))
         })
-    }
 
+        this._displayHelpinInfoOnHover(button, action)
+    }
     _replaceBasedOnAction(action, searchFieldValue) {
         if (action == "all") this._replaceAll(searchFieldValue)
         else this._replaceOne(searchFieldValue)
@@ -76,6 +77,26 @@ export class CustomReplace extends HTMLElement {
     _replaceAll(searchFieldValue) {
         this.writer.value = this.writer.value.replaceAll(searchFieldValue, this.textToReplaceWith)
         this.writer.dispatchEvent(new Event('change'))
+    }
+
+    _displayHelpinInfoOnHover(button, action) {
+        let node = null
+        button.addEventListener('mouseenter', () => {
+            if (action == "all") node = this._displayHelpinInfo("Replace all")
+            else node = this._displayHelpinInfo("Replace first")
+        })
+
+        button.addEventListener('mouseleave', () => {
+            node.remove()
+        })
+    }
+
+    _displayHelpinInfo(text,) {
+        const info = document.createElement('span')
+        info.textContent = text
+        info.classList.add('replace-info')
+        this.append(info)
+        return info
     }
 }
 

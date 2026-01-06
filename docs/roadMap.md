@@ -23,6 +23,7 @@ generate the code colorised (VSCode colorisation as example of color composition
    - Replace the content with new content
       - One by one
       - All at once
+- Fast loading/reloading of the content
 
 #### 1.2.x
 - Redirect between code in file

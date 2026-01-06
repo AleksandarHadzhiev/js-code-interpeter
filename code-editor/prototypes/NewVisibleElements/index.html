@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="code">
+        <div id="editor">
+            <div id="reader"></div>
+            <custom-lines-tracker id="lines"></custom-lines-tracker>
+            <custom-content id="content"></custom-content>
+        </div>
+        <custom-vertical id="vertical" class="invisible"></custom-vertical>
+        <custom-horizontal id="horizontal" class="invisible"></custom-horizontal>
+    </div>
+    <textarea name="" id="writer"></textarea>
+    <script type="module" src="index.js"></script>
+    <script type="module" src="custom-lines.js"></script>
+    <script type="module" src="custom-content.js"></script>
+    <script type="module" src="custom-vertical.js"></script>
+    <script type="module" src="custom-horizontal.js"></script>
+</body>
+
+</html>

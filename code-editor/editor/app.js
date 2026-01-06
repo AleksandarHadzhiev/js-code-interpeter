@@ -8,7 +8,6 @@ const highlighter = document.getElementById('highlighter')
 // Start from line 1 when the app boots up
 new LineNumberationTracker().buildLineNumbers([])
 
-
 writer.addEventListener('input', (event) => {
     const lines = String(event.target.value).split('\n')
     const info = document.getElementById('info')

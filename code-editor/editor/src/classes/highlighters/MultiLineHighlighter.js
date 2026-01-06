@@ -16,31 +16,26 @@ export default class MultiLineHighlighter {
     }
 
     highlight() {
+        this.indexOf = 0
+        this.index = 0
         const wholeText = document.getElementById('writer').value.toLowerCase()
-        while (this.indexOf != -1) {
-            this._findLinesToHiglight(wholeText)
+        this._revisit(wholeText)
+    }
+
+    _revisit(wholeText) {
+        this.indexOf = String(wholeText).indexOf(this.lowered, this.index)
+        this.index = this.indexOf + 1
+        if (this.indexOf != -1) {
+            this._coloriseLines(wholeText)
         }
     }
 
-    _findLinesToHiglight(wholeText) {
-        this.indexOf = this._findStartingLineForWholeText(wholeText)
-        if (this.indexOf !== -1) {
-            this._updateIndexAndHighlightForWholeText(wholeText)
-            this.highlights.push(this.highlightedLines)
-            this.highlightedLines = []
-        }
-
-    }
-
-    _findStartingLineForWholeText(wholeText) {
-        const indexOf = String(wholeText).indexOf(this.lowered, this.index)
-        return indexOf
-    }
-
-    _updateIndexAndHighlightForWholeText(wholeText) {
+    _coloriseLines(wholeText) {
         const line = String(wholeText).substring(0, this.indexOf).split('\n').length - 1
         this._highlightLinesBasedOnStartingLine(line)
-        this.index += this.indexOf + this.lowered.length
+        this.highlights.push(this.highlightedLines)
+        this.highlightedLines = []
+        this._revisit(wholeText)
     }
 
     _highlightLinesBasedOnStartingLine(startingLine) {
@@ -66,7 +61,6 @@ export default class MultiLineHighlighter {
         this._generatePositionsOfNormalTextInLineForLineBeforeLast(lineElement, index)
         const replaceText = new HighlightLineBuilder().buildReplaceTextElement(this.loweredAsLines[index])
         this.highlightedLines.push(replaceText)
-
         const startingHTML = this._generateNormal(lineElement)
         this._reformLineElements(lineElement, startingHTML, replaceText)
     }

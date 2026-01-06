@@ -1,4 +1,5 @@
 import ViewBuilder from "../classes/ViewBuilder.js"
+import CustomLineELement from "./lineElement.js"
 
 class CusomHighlighter extends HTMLElement {
     constructor() {
@@ -8,10 +9,8 @@ class CusomHighlighter extends HTMLElement {
         this.writer.addEventListener('input', (event) => {
             this.replaceChildren()
             const lines = String(event.target.value).split('\n')
-            lines.forEach(line => {
-                const lineElement = document.createElement('div')
-                lineElement.classList.add('line', 'content-format')
-                lineElement.textContent = line
+            lines.forEach((line, index) => {
+                const lineElement = new CustomLineELement(line, index)
                 this.appendChild(lineElement)
             });
         })
@@ -19,10 +18,8 @@ class CusomHighlighter extends HTMLElement {
         this.writer.addEventListener('change', (event) => {
             const lines = String(event.target.value).split('\n')
             this.replaceChildren()
-            lines.forEach(line => {
-                const lineElement = document.createElement('div')
-                lineElement.classList.add('line', 'content-format')
-                lineElement.textContent = line
+            lines.forEach((line, index) => {
+                const lineElement = new CustomLineELement(line, index)
                 this.appendChild(lineElement)
             });
         })

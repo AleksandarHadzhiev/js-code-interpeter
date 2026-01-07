@@ -1,3 +1,5 @@
+import LineBUilder from "./lineBuilder.js"
+
 const lineNumerationElement = document.getElementById('line-numeration')
 const editorElement = document.getElementById('editor')
 const contentElement = document.getElementById('content')
@@ -7,7 +9,7 @@ const contentElement = document.getElementById('content')
 // To prove it loads the minimal elements needed to display the content it will go through a loop of 2000 lines
 
 const listOfPossibleLinesToDisplay = [
-    "Hello, this is a medium code line to be displayed.",
+    `function getName(age) { console.log("MEOW"); }`,
     "This is a short line",
     "This is a long line to be displayed, and for that reason it will have a lot of text inside it."
 ]
@@ -147,7 +149,6 @@ function buildLineNumerationElementForLine(line) {
  * Appends a line content element to the content section.
  */
 function addLineContentToContent(line) {
-    console.log(line)
     const lineContent = buildLineWithContent(line)
     contentElement.appendChild(lineContent)
 }
@@ -159,12 +160,11 @@ function addLineContentToContent(line) {
  * Build the content of the line as a div element.
  */
 function buildLineWithContent(line) {
-    const lineContent = document.createElement('div')
-    lineContent.textContent = line.content
-    lineContent.setAttribute('id', String(line.index))
-    lineContent.style = `top:${line.index * 28.8}px;`
-    lineContent.classList.add('line-content')
-    return lineContent
+    const builder = new LineBUilder(line.content)
+    const lineElement = builder.buildLine()
+    lineElement.setAttribute('id', String(line.index))
+    lineElement.style = `top:${line.index * 28.8}px;`
+    return lineElement
 }
 
 loadLines()

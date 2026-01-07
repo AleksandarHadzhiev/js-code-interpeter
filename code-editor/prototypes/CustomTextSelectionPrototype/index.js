@@ -9,10 +9,8 @@ const contentElement = document.getElementById('content')
 // --> NEEDED FOR CONTENT LOADING
 const listOfPossibleLinesToDisplay = [
     `function getName(age) { console.log("MEOW"); }`,
-    "This is a short line",
     "This is a long line to be displayed, and for that reason it will have a lot of text inside it."
 ]
-const lastIndexOfPossibleLinesToDisplay = listOfPossibleLinesToDisplay.length - 1
 const numberOfLines = 2000
 const maximumVisibleLinesOnScreen = Math.round(contentElement.offsetHeight / 28.8);
 let lastVisibleLine = maximumVisibleLinesOnScreen
@@ -24,12 +22,12 @@ class Line {
 
     constructor(index) {
         this.index = index
-        this.content = this.getLineContent()
+        this.content = this.getLineContent(index)
         this.numeration = this.getLineNumerationBasedOnIndexInLoop(index)
     }
 
-    getLineContent() {
-        this.updateIndexOfLineToMatchIndexFromPossibleLinesToDisplay()
+    getLineContent(index) {
+        this.updateIndexOfLineToMatchIndexFromPossibleLinesToDisplay(index)
         return listOfPossibleLinesToDisplay[indexOfLine]
     }
 
@@ -37,11 +35,10 @@ class Line {
         return String(index + 1)
     }
 
-    updateIndexOfLineToMatchIndexFromPossibleLinesToDisplay() {
-        if (indexOfLine == lastIndexOfPossibleLinesToDisplay) {
+    updateIndexOfLineToMatchIndexFromPossibleLinesToDisplay(index) {
+        if (index % 2 == 0) {
             indexOfLine = 0
-        }
-        else indexOfLine += 1
+        } else { indexOfLine = 1 }
     }
 }
 

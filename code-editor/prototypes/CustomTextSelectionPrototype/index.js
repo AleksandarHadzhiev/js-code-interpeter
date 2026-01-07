@@ -109,27 +109,40 @@ class CustomContentMarker {
      * Buids marker based on the first and last selections of the user.
      */
     buildMarker() {
-        this.buildMarkerIfstartingPointAndreleasingPointAreOnTheSameLine()
+        if (this._checkIfTextSelectionIsOneLine()) {
+            console.log("MARKER IS ON THE SAME LINE")
+            this._buildMarkerIfStartingPointAndReleasingPointAreOnTheSameLine()
+        }
+        else {
+            console.log("FALSE")
+            this._buildMarkerIfStartingPointAndReleasingPointAreOnDifferentLines()
+        }
     }
 
     /**
      * Build the marker only if the startingPoint and Releasing point are on the same line
      */
-    buildMarkerIfstartingPointAndreleasingPointAreOnTheSameLine() {
+    _buildMarkerIfStartingPointAndReleasingPointAreOnTheSameLine() {
+        const coordinates = this._getCoordinatesOfTheSelection()
+        this._buildLineInMarkerForCoordinates(coordinates)
+    }
+
+    /**
+     * 
+     * @returns True if the selected content is on the same line. False if its on multiple lines.
+     */
+    _checkIfTextSelectionIsOneLine() {
         const isTheSameStartingLine = this.startingPoint.lineOfStartContainer == this.releasingPoint.lineOfStartContainer
         const isTheSameEndingLine = this.startingPoint.lineOfEndContainer == this.releasingPoint.lineOfEndContainer
         const isTheSameLine = isTheSameEndingLine && isTheSameStartingLine
-        if (isTheSameLine) {
-            console.log("MARKER IS ON THE SAME LINE")
-            const coordinates = this._getCoordinatesOfTheLine()
-            this._buildLineInMarkerForCoordinates(coordinates)
-        }
-        else {
-            console.log("FALSE")
-        }
+        return isTheSameLine
     }
 
-    _getCoordinatesOfTheLine() {
+    /**
+     * The function calculates the coordinates of the line and transforms them into a StartingPositionOfLineObject.
+     * @returns The coordinates of selection
+     */
+    _getCoordinatesOfTheSelection() {
         let startingPosition = null
         let endingPosition = null
         let leftOffset = 0
@@ -147,6 +160,10 @@ class CustomContentMarker {
         return new StartingPositionOfLine(leftOffset, this.startingPoint.offsetTopForStartingLine, widthOfSelectedText)
     }
 
+    /**
+     * This functions checks the starting positions of the starting point and releasing point, so that it can confirm if the user is selecting left to right or right to left direction.
+     * @returns True if the user is selecting form left to right and false if the user is selecting from right to left
+     */
     _checkIfSelectionIsTurningRight() {
         const startingContainerOfStartingPointIsFirst = this.startingPoint.startContainer.offsetLeft < this.releasingPoint.startContainer.offsetLeft
         const isSameStartingElement = this.startingPoint.startContainer.offsetLeft == this.releasingPoint.startContainer.offsetLeft
@@ -169,19 +186,7 @@ class CustomContentMarker {
         return offsetLeft
     }
 
-    /**
-     * Calculates the full left offset of the position, by taking its initial left offset and adding the additonal pixels from the unmarked text.
-     * @param {CustomRangeElement} position 
-     * @returns The full left offset.
-    */
-    _getLeftOffsetForEndingPosition(position) {
-        let offsetLeft = position.endContainer.offsetLeft
-        const spanText = String(position.endContainer.textContent)
-        const neededText = spanText.substring(0, position.endOffset)
-        const leftOffsetFromUnmarkedText = this._calculateLeft(neededText)
-        offsetLeft += leftOffsetFromUnmarkedText
-        return offsetLeft
-    }
+
     /**
      * The function calculates the additional left offset by creating a span element from where 
      * to fetch its width, so that it is the exact width which the text takes and removes the element
@@ -212,6 +217,20 @@ class CustomContentMarker {
     }
 
     /**
+     * Calculates the full left offset of the position, by taking its initial left offset and adding the additonal pixels from the unmarked text.
+     * @param {CustomRangeElement} position 
+     * @returns The full left offset.
+    */
+    _getLeftOffsetForEndingPosition(position) {
+        let offsetLeft = position.endContainer.offsetLeft
+        const spanText = String(position.endContainer.textContent)
+        const neededText = spanText.substring(0, position.endOffset)
+        const leftOffsetFromUnmarkedText = this._calculateLeft(neededText)
+        offsetLeft += leftOffsetFromUnmarkedText
+        return offsetLeft
+    }
+
+    /**
      * Creates a line and appends it to the marker.
      * @param {StartingPositionOfLine} coordinates 
      */
@@ -228,6 +247,74 @@ class CustomContentMarker {
             color: transparent;
         `
         marker.append(lineInMarker)
+    }
+
+    /**
+     * The function handles the selection of text containing multiple lines.
+     */
+    _buildMarkerIfStartingPointAndReleasingPointAreOnDifferentLines() {
+        /* TODO:
+    
+        1) Define Which Line is first:
+            - is it the starting point? -> +
+            - is it the release point? -> +
+        2) Define from where to start coloring on the first line.
+        3) Define from where to start coloring on the last line.
+        4) Color the lines in between.
+        5) Sum up all lines together in a big list of lines 
+        6) Add them to the marker element.
+        */
+        let startingSelection = this.releasingPoint
+        if (this._checkIfSelectionIsTurningRightForMultilineSelection()) {
+            console.log("TURNING RIGHT")
+            startingSelection = this.startingPoint
+        }
+        this._coloriseFirstLine(startingSelection)
+    }
+
+    /**
+     * @returns True if direction is left to right and False if direction is right to left.
+     */
+    _checkIfSelectionIsTurningRightForMultilineSelection() {
+        const startingLineId = Number(this.startingPoint.lineOfStartContainer.id)
+        const releaseLineId = Number(this.releasingPoint.lineOfStartContainer.id)
+        if (startingLineId <= releaseLineId) return true
+        return false
+    }
+
+    /**
+     * @param {CustomRangeElement} startingSelection 
+     */
+    _coloriseFirstLine(startingSelection) {
+        const coordinates = this._findTheCoordiantesForTheFirstLine(startingSelection)
+        this._buildLineInMarkerForCoordinates(coordinates)
+        return coordinates
+    }
+
+
+    /**
+     * @param {CustomRangeElement} startingSelection 
+     * @returns the coordinates of the first line in which there is text selection
+     */
+    _findTheCoordiantesForTheFirstLine(startingSelection) {
+        const leftOffset = this._getLeftOffsetForStartingPosition(startingSelection)
+        const width = this._calculateWidthToSelectForSelectionBasedOnLeftOffset(leftOffset, startingSelection)
+        const topOffset = startingSelection.lineOfStartContainer.offsetTop
+        const coordinates = new StartingPositionOfLine(leftOffset, topOffset, width)
+        return coordinates
+    }
+
+    /**
+     * 
+     * @param {Number} leftOffset 
+     * @param {CustomRangeElement} startingSelection
+     * @returns The width of the text the select
+     */
+    _calculateWidthToSelectForSelectionBasedOnLeftOffset(leftOffset, startingSelection) {
+        const line = startingSelection.lineOfStartContainer
+        const text = String(line.textContent)
+        const fullWidth = this._calculateLeft(text)
+        return fullWidth - leftOffset
     }
 }
 // <-- NEEDED FOR TEXT SELECTION
@@ -399,8 +486,12 @@ function selectText() {
     }
     else {
         releasingPoint = new CustomRangeElement(range)
-        const customMarker = new CustomContentMarker(startingPoint, releasingPoint)
+        // console.log(releasingPoint.lineOfStartContainer)
+        // console.log(range)
+        let customMarker = new CustomContentMarker(startingPoint, releasingPoint)
         customMarker.buildMarker()
+        customMarker = null
+        releasingPoint = null
     }
 
 }

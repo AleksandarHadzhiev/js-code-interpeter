@@ -134,7 +134,7 @@ class CustomContentMarker {
         let endingPosition = null
         let leftOffset = 0
         let widthOfSelectedText = 0
-        if (this.startingPoint.startContainer.offsetLeft <= this.releasingPoint.startContainer.offsetLeft) {
+        if (this._checkIfSelectionIsTurningRight()) {
             startingPosition = this.startingPoint
             endingPosition = this.releasingPoint
         }
@@ -145,6 +145,14 @@ class CustomContentMarker {
         leftOffset = this._getLeftOffsetForStartingPosition(startingPosition)
         widthOfSelectedText = this._getWidthOfMarkedLine(leftOffset, endingPosition)
         return new StartingPositionOfLine(leftOffset, this.startingPoint.offsetTopForStartingLine, widthOfSelectedText)
+    }
+
+    _checkIfSelectionIsTurningRight() {
+        const startingContainerOfStartingPointIsFirst = this.startingPoint.startContainer.offsetLeft < this.releasingPoint.startContainer.offsetLeft
+        const isSameStartingElement = this.startingPoint.startContainer.offsetLeft == this.releasingPoint.startContainer.offsetLeft
+        const startOffsetOfStartingPointIsFIrst = isSameStartingElement && this.startingPoint.startOffset == this.releasingPoint.startOffset
+        const startingPointIsFirst = startingContainerOfStartingPointIsFirst || startOffsetOfStartingPointIsFIrst
+        return startingPointIsFirst
     }
 
     /**

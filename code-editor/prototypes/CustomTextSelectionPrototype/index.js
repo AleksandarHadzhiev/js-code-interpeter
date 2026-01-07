@@ -253,23 +253,21 @@ class CustomContentMarker {
      * The function handles the selection of text containing multiple lines.
      */
     _buildMarkerIfStartingPointAndReleasingPointAreOnDifferentLines() {
-        /* TODO:
-    
-        1) Define Which Line is first:
-            - is it the starting point? -> +
-            - is it the release point? -> +
-        2) Define from where to start coloring on the first line.
-        3) Define from where to start coloring on the last line.
-        4) Color the lines in between.
-        5) Sum up all lines together in a big list of lines 
-        6) Add them to the marker element.
-        */
+        // TODO :: CHECK IF EFERYTHINS IS CORRECT
         let startingSelection = this.releasingPoint
+        let releasingSelection = this.startingPoint
+        let startingLineToFullyColorise = Number(this.releasingPoint.lineOfStartContainer.id) + 1
+        let lastLineToFullyColorise = Number(this.startingPoint.lineOfStartContainer.id)
         if (this._checkIfSelectionIsTurningRightForMultilineSelection()) {
             console.log("TURNING RIGHT")
             startingSelection = this.startingPoint
+            releasingSelection = this.releasingPoint
+            startingLineToFullyColorise = Number(this.startingPoint.lineOfStartContainer.id) + 1
+            lastLineToFullyColorise = Number(this.releasingPoint.lineOfEndContainer.id)
         }
         this._coloriseFirstLine(startingSelection)
+        this._coloriseLastLine(releasingSelection)
+        this._coloriseLinesInBetween(startingLineToFullyColorise, lastLineToFullyColorise)
     }
 
     /**
@@ -288,7 +286,6 @@ class CustomContentMarker {
     _coloriseFirstLine(startingSelection) {
         const coordinates = this._findTheCoordiantesForTheFirstLine(startingSelection)
         this._buildLineInMarkerForCoordinates(coordinates)
-        return coordinates
     }
 
 
@@ -315,6 +312,43 @@ class CustomContentMarker {
         const text = String(line.textContent)
         const fullWidth = this._calculateLeft(text)
         return fullWidth - leftOffset
+    }
+
+    /**
+    * @param {CustomRangeElement} endingSelection 
+    */
+    _coloriseLastLine(endingSelection) {
+        console.log(endingSelection)
+        const coordinates = this._findTheCoordiantesForTheLastLine(endingSelection)
+        this._buildLineInMarkerForCoordinates(coordinates)
+    }
+
+    /**
+   * @param {CustomRangeElement} endingSelection 
+   * @returns the coordinates of the first line in which there is text selection
+   */
+    _findTheCoordiantesForTheLastLine(endingSelection) {
+        const width = this._getLeftOffsetForEndingPosition(endingSelection) // the leftOffset is the width
+        console.log(width)
+        const topOffset = endingSelection.lineOfEndContainer.offsetTop
+        const coordinates = new StartingPositionOfLine(0, topOffset, width)
+        return coordinates
+    }
+
+    /**
+     * @param {Number} indexOfFirstLineToFullyColorise
+     * @param {Number} indexOfLastLineToFullyColorise
+     */
+    _coloriseLinesInBetween(indexOfFirstLineToFullyColorise, indexOfLastLineToFullyColorise) {
+        for (let index = indexOfFirstLineToFullyColorise; index < indexOfLastLineToFullyColorise; index++) {
+            const lineElement = document.getElementById(String(index));
+            const width = this._calculateLeft(lineElement.textContent)
+            const topOffset = lineElement.offsetTop
+            const leftOffset = 0
+            const coordinates = new StartingPositionOfLine(leftOffset, topOffset, width)
+            this._buildLineInMarkerForCoordinates(coordinates)
+
+        }
     }
 }
 // <-- NEEDED FOR TEXT SELECTION

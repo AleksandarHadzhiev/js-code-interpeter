@@ -1,5 +1,8 @@
 import CustomRangeElement from "./CustomRangeElement.js";
 import MarkedLineCoordinates from "./MarkedLineCoordinates.js";
+import CaretLeftOffsetCalculator from "./Caclulators/CaretLeftOffsetCalculator.js";
+import CaretLeftOffsetDTO from "./DTOs/caretDTO.js"
+
 
 export default class SingleLineSelector {
     /**
@@ -9,6 +12,7 @@ export default class SingleLineSelector {
     constructor(startingRange, releasingRange) {
         this.startingRange = startingRange
         this.releasingRange = releasingRange
+        this.caretLeftOffsetCalculator = new CaretLeftOffsetCalculator(startingRange, releasingRange)
     }
 
     /**
@@ -19,11 +23,13 @@ export default class SingleLineSelector {
         let leftOffset = 0
         let widthOfSelectedText = 0
         if (this._checkIfSelectionIsTurningRightForSingleLine()) {
-            leftOffset = this._getOffsetLeftForSpecifiedRange(this.startingRange)
+            leftOffset = this.caretLeftOffsetCalculator.calculateTotalLeftOffsetOfCaretInTheLine(new CaretLeftOffsetDTO(this.startingRange.startContainer, this.startingRange.startContainer.offsetLeft, this.startingRange.startOffset))
+            // leftOffset = this._getOffsetLeftForSpecifiedRange(this.startingRange)
             widthOfSelectedText = this._calculateTheWidthOfTheMarkedTextForRangeByRemovingTheLeftOffset(this.releasingRange, leftOffset)
         }
         else {
-            leftOffset = this._getOffsetLeftForSpecifiedRange(this.releasingRange)
+            leftOffset = this.caretLeftOffsetCalculator.calculateTotalLeftOffsetOfCaretInTheLine(new CaretLeftOffsetDTO(this.releasingRange.startContainer, this.releasingRange.startContainer.offsetLeft, this.releasingRange.startOffset))
+            // leftOffset = this._getOffsetLeftForSpecifiedRange(this.releasingRange)
             widthOfSelectedText = this._calculateTheWidthOfTheMarkedTextForRangeByRemovingTheLeftOffset(this.startingRange, leftOffset)
         }
         return new MarkedLineCoordinates(leftOffset, this.startingRange.offsetTopForStartingLine, widthOfSelectedText)

@@ -1,0 +1,91 @@
+    /**
+     * The function calculates the coordinates of the line and transforms them into a StartingPositionOfLineObject.
+     * @returns The coordinates of selection
+     */
+    _getCoordinatesOfTheSelectionForSingleLineSelection() {
+        let startingPosition = null
+        let endingPosition = null
+        let leftOffset = 0
+        let widthOfSelectedText = 0
+        if (this._checkIfSelectionIsTurningRightForSingleLine()) {
+            startingPosition = this.startingPoint
+            endingPosition = this.releasingPoint
+        }
+        else {
+            startingPosition = this.releasingPoint
+            endingPosition = this.startingPoint
+        }
+        leftOffset = this._getLeftOffsetForStartingPosition(startingPosition)
+        widthOfSelectedText = this._getWidthOfMarkedLine(leftOffset, endingPosition)
+        return new StartingPositionOfLine(leftOffset, this.startingPoint.offsetTopForStartingLine, widthOfSelectedText)
+    }
+
+    /**
+     * This functions checks the starting positions of the starting point and releasing point, so that it can confirm if the user is selecting left to right or right to left direction.
+     * @returns True if the user is selecting form left to right and false if the user is selecting from right to left
+     */
+    _checkIfSelectionIsTurningRightForSingleLine() {
+        const startingContainerOfStartingPointIsFirst = this.startingPoint.startContainer.offsetLeft < this.releasingPoint.startContainer.offsetLeft
+        const isSameStartingElement = this.startingPoint.startContainer.offsetLeft == this.releasingPoint.startContainer.offsetLeft
+        const startOffsetOfStartingPointIsFIrst = isSameStartingElement && this.startingPoint.startOffset == this.releasingPoint.startOffset
+        const startingPointIsFirst = startingContainerOfStartingPointIsFirst || startOffsetOfStartingPointIsFIrst
+        return startingPointIsFirst
+    }
+
+        /**
+     * Calculates the full left offset of the position, by taking its initial left offset and adding the additonal pixels from the unmarked text.
+     * @param {CustomRangeElement} position 
+     * @returns The full left offset.
+     */
+    _getLeftOffsetForStartingPosition(position) {
+        let offsetLeft = position.startContainer.offsetLeft
+        const spanText = String(position.startContainer.textContent)
+        const neededText = spanText.substring(0, position.startOffset)
+        const leftOffsetFromUnmarkedText = this._calculateLeft(neededText)
+        offsetLeft += leftOffsetFromUnmarkedText
+        return offsetLeft
+    }
+    
+    /**
+     * The function calculates the additional left offset by creating a span element from where 
+     * to fetch its width, so that it is the exact width which the text takes and removes the element
+     * so that there is no element polution to the DOM.
+     * @param {String} text 
+     * @returns The width of the element, which is used as additional left offset.
+     */
+    _calculateLeft(text) {
+        const element = document.createElement('span')
+        element.textContent = text
+        element.classList.add('line-content-marker')
+        editorElement.prepend(element)
+        const width = element.offsetWidth
+        element.remove()
+        return width
+    }
+
+    /**
+     * Calculate the width of the selected text.
+     * @param {Number} offsetLeft 
+     * @param {CustomRangeElement} endingPosition  
+     * @returns The width of selected text as a number
+    */
+    _getWidthOfMarkedLine(offsetLeft, endingPosition) {
+        const offsetLeftOfendingPosition = this._getLeftOffsetForEndingPosition(endingPosition)
+        let widthOfSelectedText = offsetLeftOfendingPosition - offsetLeft
+        return widthOfSelectedText
+    }
+
+    /**
+     * Calculates the full left offset of the position, by taking its initial left offset and adding the additonal pixels from the unmarked text.
+     * @param {CustomRangeElement} position 
+     * @returns The full left offset.
+    */
+    _getLeftOffsetForEndingPosition(position) {
+        let offsetLeft = position.endContainer.offsetLeft
+        const spanText = String(position.endContainer.textContent)
+        const neededText = spanText.substring(0, position.endOffset)
+        const leftOffsetFromUnmarkedText = this._calculateLeft(neededText)
+        offsetLeft += leftOffsetFromUnmarkedText
+        return offsetLeft
+    }
+

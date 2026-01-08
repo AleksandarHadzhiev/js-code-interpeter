@@ -1,4 +1,5 @@
 import LineBUilder from "./lineBuilder.js"
+import SingleLineSelector from "./SingleLineSelector.js"
 
 const lineNumerationElement = document.getElementById('line-numeration')
 const editorElement = document.getElementById('editor')
@@ -115,7 +116,7 @@ class CustomContentMarker {
         }
         else {
             console.log("FALSE")
-            this._buildMarkerIfStartingPointAndReleasingPointAreOnDifferentLines()
+            // this._buildMarkerIfStartingPointAndReleasingPointAreOnDifferentLines()
         }
     }
 
@@ -123,7 +124,8 @@ class CustomContentMarker {
      * Build the marker only if the startingPoint and Releasing point are on the same line
      */
     _buildMarkerIfStartingPointAndReleasingPointAreOnTheSameLine() {
-        const coordinates = this._getCoordinatesOfTheSelection()
+        const singleLineSelector = new SingleLineSelector(this.startingPoint, this.releasingPoint)
+        const coordinates = singleLineSelector.getCoordinatesForSingleLineSelection()
         this._buildLineInMarkerForCoordinates(coordinates)
     }
 
@@ -136,98 +138,6 @@ class CustomContentMarker {
         const isTheSameEndingLine = this.startingPoint.lineOfEndContainer == this.releasingPoint.lineOfEndContainer
         const isTheSameLine = isTheSameEndingLine && isTheSameStartingLine
         return isTheSameLine
-    }
-
-    /**
-     * The function calculates the coordinates of the line and transforms them into a StartingPositionOfLineObject.
-     * @returns The coordinates of selection
-     */
-    _getCoordinatesOfTheSelection() {
-        let startingPosition = null
-        let endingPosition = null
-        let leftOffset = 0
-        let widthOfSelectedText = 0
-        if (this._checkIfSelectionIsTurningRight()) {
-            startingPosition = this.startingPoint
-            endingPosition = this.releasingPoint
-        }
-        else {
-            startingPosition = this.releasingPoint
-            endingPosition = this.startingPoint
-        }
-        leftOffset = this._getLeftOffsetForStartingPosition(startingPosition)
-        widthOfSelectedText = this._getWidthOfMarkedLine(leftOffset, endingPosition)
-        return new StartingPositionOfLine(leftOffset, this.startingPoint.offsetTopForStartingLine, widthOfSelectedText)
-    }
-
-    /**
-     * This functions checks the starting positions of the starting point and releasing point, so that it can confirm if the user is selecting left to right or right to left direction.
-     * @returns True if the user is selecting form left to right and false if the user is selecting from right to left
-     */
-    _checkIfSelectionIsTurningRight() {
-        const startingContainerOfStartingPointIsFirst = this.startingPoint.startContainer.offsetLeft < this.releasingPoint.startContainer.offsetLeft
-        const isSameStartingElement = this.startingPoint.startContainer.offsetLeft == this.releasingPoint.startContainer.offsetLeft
-        const startOffsetOfStartingPointIsFIrst = isSameStartingElement && this.startingPoint.startOffset == this.releasingPoint.startOffset
-        const startingPointIsFirst = startingContainerOfStartingPointIsFirst || startOffsetOfStartingPointIsFIrst
-        return startingPointIsFirst
-    }
-
-    /**
-     * Calculates the full left offset of the position, by taking its initial left offset and adding the additonal pixels from the unmarked text.
-     * @param {CustomRangeElement} position 
-     * @returns The full left offset.
-     */
-    _getLeftOffsetForStartingPosition(position) {
-        let offsetLeft = position.startContainer.offsetLeft
-        const spanText = String(position.startContainer.textContent)
-        const neededText = spanText.substring(0, position.startOffset)
-        const leftOffsetFromUnmarkedText = this._calculateLeft(neededText)
-        offsetLeft += leftOffsetFromUnmarkedText
-        return offsetLeft
-    }
-
-
-    /**
-     * The function calculates the additional left offset by creating a span element from where 
-     * to fetch its width, so that it is the exact width which the text takes and removes the element
-     * so that there is no element polution to the DOM.
-     * @param {String} text 
-     * @returns The width of the element, which is used as additional left offset.
-     */
-    _calculateLeft(text) {
-        const element = document.createElement('span')
-        element.textContent = text
-        element.classList.add('line-content-marker')
-        editorElement.prepend(element)
-        const width = element.offsetWidth
-        element.remove()
-        return width
-    }
-
-    /**
-     * Calculate the width of the selected text.
-     * @param {Number} offsetLeft 
-     * @param {CustomRangeElement} endingPosition  
-     * @returns The width of selected text as a number
-    */
-    _getWidthOfMarkedLine(offsetLeft, endingPosition) {
-        const offsetLeftOfendingPosition = this._getLeftOffsetForEndingPosition(endingPosition)
-        let widthOfSelectedText = offsetLeftOfendingPosition - offsetLeft
-        return widthOfSelectedText
-    }
-
-    /**
-     * Calculates the full left offset of the position, by taking its initial left offset and adding the additonal pixels from the unmarked text.
-     * @param {CustomRangeElement} position 
-     * @returns The full left offset.
-    */
-    _getLeftOffsetForEndingPosition(position) {
-        let offsetLeft = position.endContainer.offsetLeft
-        const spanText = String(position.endContainer.textContent)
-        const neededText = spanText.substring(0, position.endOffset)
-        const leftOffsetFromUnmarkedText = this._calculateLeft(neededText)
-        offsetLeft += leftOffsetFromUnmarkedText
-        return offsetLeft
     }
 
     /**
@@ -253,13 +163,11 @@ class CustomContentMarker {
      * The function handles the selection of text containing multiple lines.
      */
     _buildMarkerIfStartingPointAndReleasingPointAreOnDifferentLines() {
-        // TODO :: CHECK IF EFERYTHINS IS CORRECT
-        // This flow works fine - IF there is no scrolling. I need to handle scrolling now.
         /**
-         * To handle scrolling, first we need to know if it is scrolling or if it is not
-         * Second we need to know which direction we are going
-         * Third we need to simplify the whole structure - or it will become hard to read and use
+         * The current code can select text on one line, multiple lines and multiple lines with scrolling which keeps the this.startingPoint.lineOfStartContainer,
+         * still visible on the screen - aka the line from where the text selection begins.
          * 
+         * The question is how to simplify it so that i can remove repetitive code - checks, and logic.
          */
         let startingSelection = this.releasingPoint
         let releasingSelection = this.startingPoint
@@ -292,8 +200,6 @@ class CustomContentMarker {
             Number(this.releasingPoint.lineOfEndContainer.id) ?
             Number(this.releasingPoint.lineOfStartContainer.id) :
             Number(this.releasingPoint.lineOfEndContainer.id)
-        console.log(startingLineId)
-        console.log(releaseLineId)
         if (startingLineId <= releaseLineId) return true
         return false
     }
@@ -551,7 +457,6 @@ function selectText() {
         startingPoint = new CustomRangeElement(range)
     }
     else {
-        console.log(range)
         releasingPoint = new CustomRangeElement(range)
         let customMarker = new CustomContentMarker(startingPoint, releasingPoint)
         customMarker.buildMarker()

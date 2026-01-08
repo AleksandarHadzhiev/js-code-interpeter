@@ -254,6 +254,13 @@ class CustomContentMarker {
      */
     _buildMarkerIfStartingPointAndReleasingPointAreOnDifferentLines() {
         // TODO :: CHECK IF EFERYTHINS IS CORRECT
+        // This flow works fine - IF there is no scrolling. I need to handle scrolling now.
+        /**
+         * To handle scrolling, first we need to know if it is scrolling or if it is not
+         * Second we need to know which direction we are going
+         * Third we need to simplify the whole structure - or it will become hard to read and use
+         * 
+         */
         let startingSelection = this.releasingPoint
         let releasingSelection = this.startingPoint
         let startingLineToFullyColorise = Number(this.releasingPoint.lineOfStartContainer.id) + 1
@@ -265,9 +272,15 @@ class CustomContentMarker {
             startingLineToFullyColorise = Number(this.startingPoint.lineOfStartContainer.id) + 1
             lastLineToFullyColorise = Number(this.releasingPoint.lineOfEndContainer.id)
         }
+        // ALREADY WRONG AS IT ADDS TOO MUCH CHECKING -> MAKING THE CODE HARD TO MAINTAIN
+        else if (Number(this.releasingPoint.lineOfStartContainer.id) >
+            Number(this.releasingPoint.lineOfEndContainer.id)) {
+            startingLineToFullyColorise = Number(this.releasingPoint.lineOfEndContainer.id) + 1
+        }
+        // COLORISE FIRST LINE IS UNDER QUESTION FOR STABILITY WHEN SELECTING LEFT TO RIGHT
         this._coloriseFirstLine(startingSelection)
-        this._coloriseLastLine(releasingSelection)
         this._coloriseLinesInBetween(startingLineToFullyColorise, lastLineToFullyColorise)
+        this._coloriseLastLine(releasingSelection)
     }
 
     /**
@@ -275,7 +288,12 @@ class CustomContentMarker {
      */
     _checkIfSelectionIsTurningRightForMultilineSelection() {
         const startingLineId = Number(this.startingPoint.lineOfStartContainer.id)
-        const releaseLineId = Number(this.releasingPoint.lineOfStartContainer.id)
+        const releaseLineId = Number(this.releasingPoint.lineOfStartContainer.id) <=
+            Number(this.releasingPoint.lineOfEndContainer.id) ?
+            Number(this.releasingPoint.lineOfStartContainer.id) :
+            Number(this.releasingPoint.lineOfEndContainer.id)
+        console.log(startingLineId)
+        console.log(releaseLineId)
         if (startingLineId <= releaseLineId) return true
         return false
     }
@@ -288,19 +306,34 @@ class CustomContentMarker {
         this._buildLineInMarkerForCoordinates(coordinates)
     }
 
-
     /**
      * @param {CustomRangeElement} startingSelection 
      * @returns the coordinates of the first line in which there is text selection
      */
     _findTheCoordiantesForTheFirstLine(startingSelection) {
-        const leftOffset = this._getLeftOffsetForStartingPosition(startingSelection)
-        const width = this._calculateWidthToSelectForSelectionBasedOnLeftOffset(leftOffset, startingSelection)
-        const topOffset = startingSelection.lineOfStartContainer.offsetTop
+        let leftOffset = this._getLeftOffsetForStartingPosition(startingSelection)
+        let width = this._calculateWidthToSelectForSelectionBasedOnLeftOffset(leftOffset, startingSelection)
+        let topOffset = startingSelection.lineOfStartContainer.offsetTop
+        if (Number(this.releasingPoint.lineOfStartContainer.id) >
+            Number(this.releasingPoint.lineOfEndContainer.id)) {
+            leftOffset = this._getLeftOffsetForEndingPosition(startingSelection)
+            width = this._getWidthOfSelectedTextForEndContainer(startingSelection, leftOffset)
+            topOffset = startingSelection.lineOfEndContainer.offsetTop
+        }
         const coordinates = new StartingPositionOfLine(leftOffset, topOffset, width)
         return coordinates
     }
 
+    /**
+     * @param {CustomRangeElement} position 
+     * @param {Number} offsetLeft
+     * @returns The width of the selected text for the ending container of a CustomRangeElementProvided
+     */
+    _getWidthOfSelectedTextForEndContainer(position, offsetLeft) {
+        const lineText = position.lineOfEndContainer.textContent
+        const widthOfFullText = this._calculateLeft(lineText)
+        return widthOfFullText - offsetLeft
+    }
     /**
      * 
      * @param {Number} leftOffset 
@@ -318,7 +351,6 @@ class CustomContentMarker {
     * @param {CustomRangeElement} endingSelection 
     */
     _coloriseLastLine(endingSelection) {
-        console.log(endingSelection)
         const coordinates = this._findTheCoordiantesForTheLastLine(endingSelection)
         this._buildLineInMarkerForCoordinates(coordinates)
     }
@@ -329,7 +361,6 @@ class CustomContentMarker {
    */
     _findTheCoordiantesForTheLastLine(endingSelection) {
         const width = this._getLeftOffsetForEndingPosition(endingSelection) // the leftOffset is the width
-        console.log(width)
         const topOffset = endingSelection.lineOfEndContainer.offsetTop
         const coordinates = new StartingPositionOfLine(0, topOffset, width)
         return coordinates
@@ -340,14 +371,15 @@ class CustomContentMarker {
      * @param {Number} indexOfLastLineToFullyColorise
      */
     _coloriseLinesInBetween(indexOfFirstLineToFullyColorise, indexOfLastLineToFullyColorise) {
-        for (let index = indexOfFirstLineToFullyColorise; index < indexOfLastLineToFullyColorise; index++) {
-            const lineElement = document.getElementById(String(index));
-            const width = this._calculateLeft(lineElement.textContent)
-            const topOffset = lineElement.offsetTop
-            const leftOffset = 0
-            const coordinates = new StartingPositionOfLine(leftOffset, topOffset, width)
-            this._buildLineInMarkerForCoordinates(coordinates)
-
+        if (indexOfLastLineToFullyColorise - indexOfFirstLineToFullyColorise > 0) {
+            for (let index = indexOfFirstLineToFullyColorise; index < indexOfLastLineToFullyColorise; index++) {
+                const lineElement = document.getElementById(String(index));
+                const width = this._calculateLeft(lineElement.textContent)
+                const topOffset = lineElement.offsetTop
+                const leftOffset = 0
+                const coordinates = new StartingPositionOfLine(leftOffset, topOffset, width)
+                this._buildLineInMarkerForCoordinates(coordinates)
+            }
         }
     }
 }
@@ -519,9 +551,8 @@ function selectText() {
         startingPoint = new CustomRangeElement(range)
     }
     else {
+        console.log(range)
         releasingPoint = new CustomRangeElement(range)
-        // console.log(releasingPoint.lineOfStartContainer)
-        // console.log(range)
         let customMarker = new CustomContentMarker(startingPoint, releasingPoint)
         customMarker.buildMarker()
         customMarker = null

@@ -14,6 +14,10 @@ export default class SingleLineSelector {
         this.releasingRange = releasingRange
     }
 
+    /**
+     * 
+     * @returns the coordinates of the selected text from the line
+     */
     getCoordinatesForSingleLineSelection() {
         if (this._checkIfSelectionIsTurningRightForSingleLine()) {
             return this._calculateSelectionFromStartingPointToEndingPoint(this.startingRange, this.releasingRange)

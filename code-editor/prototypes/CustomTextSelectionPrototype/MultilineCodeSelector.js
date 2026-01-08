@@ -21,24 +21,13 @@ export default class MultilineCodeSelector {
         this.coordinatesForSelectedLines = new Map()
     }
     /**
-     * @param {Number} firstVisibleLine 
+
      * @returns {Map} the coordinates for each line in the selection
      */
-    markContent(firstVisibleLine) {
+    markContent() {
         this._definePositionsOfTheSelection()
-        this._definePositionsOfSelectionWithScrollingInMind(firstVisibleLine)
         this._findTheCoordinatesForTheSelection()
         return this.coordinatesForSelectedLines
-    }
-
-    /**
-     * @param {Number} firstVisibleLine 
-     * 
-     */
-    _definePositionsOfSelectionWithScrollingInMind(firstVisibleLine) {
-        console.log(this.startingRange)
-        console.log(this.releasingRange)
-        console.log(firstVisibleLine)
     }
 
     // Good enough only for when there is not scrolling

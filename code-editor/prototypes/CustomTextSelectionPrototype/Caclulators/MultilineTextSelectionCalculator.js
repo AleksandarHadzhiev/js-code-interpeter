@@ -10,7 +10,6 @@ import calculateWidthForText from "./WidthOfTextCalculator.js";
  * @returns {MarkedLineCoordinates} the coordinates of the marked text
  */
 export function calculateCoordinatesOfFirstSelectedLine(selectionPosition) {
-    console.log(selectionPosition)
     const leftOffset = calculateTotalLeftOffsetOfCaretInTheLine(
         new CaretLeftOffsetDTO(selectionPosition.container, selectionPosition.container.offsetLeft, selectionPosition.caretOffset)
     )

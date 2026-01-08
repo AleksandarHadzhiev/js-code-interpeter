@@ -18,21 +18,16 @@ export default class CustomContentMarker {
         this.releasingPoint = releasingPoint
     }
 
-    /**
-     * Buids marker based on the first and last selections of the user.
-     * @param {Number} firstVisibleLine Contains the id of the first visible line on the screen
-     */
-    buildMarker(firstVisibleLine) {
+    buildMarker() {
         if (this._checkIfTextSelectionIsOneLine()) {
             this._buildMarkerIfStartingPointAndReleasingPointAreOnTheSameLine()
         }
         else {
-            this._buildMarkerForMultilineSelection(firstVisibleLine)
+            this._buildMarkerForMultilineSelection()
         }
     }
 
     /**
-     * 
      * @returns True if the selected content is on the same line. False if its on multiple lines.
      */
     _checkIfTextSelectionIsOneLine() {
@@ -42,21 +37,14 @@ export default class CustomContentMarker {
         return isTheSameLine
     }
 
-    /**
-     * Build the marker only if the startingPoint and Releasing point are on the same line
-     */
     _buildMarkerIfStartingPointAndReleasingPointAreOnTheSameLine() {
         const singleLineSelector = new SingleLineSelector(this.startingPoint, this.releasingPoint)
         const coordinates = singleLineSelector.getCoordinatesForSingleLineSelection()
         this._buildLineInMarkerForCoordinates(coordinates)
     }
 
-    /**
-     * 
-     * @param {Number} firstVisibleLine Contains the id of the first visible line 
-     */
-    _buildMarkerForMultilineSelection(firstVisibleLine) {
-        const multilineCoordinates = this._findCoordinatesForMultilineSelection(firstVisibleLine)
+    _buildMarkerForMultilineSelection() {
+        const multilineCoordinates = this._findCoordinatesForMultilineSelection()
         multilineCoordinates.forEach((coordinates) => {
             this._buildLineInMarkerForCoordinates(coordinates)
         });
@@ -64,12 +52,11 @@ export default class CustomContentMarker {
 
     /**
      * The coordinates can be reached by the id of the line
-     * @param {Number} firstVisibleLine Contains the id of the first visible line 
      * @returns {Map} A map containing the coordinates of all lines.
      */
-    _findCoordinatesForMultilineSelection(firstVisibleLine) {
+    _findCoordinatesForMultilineSelection() {
         const multilineCodeSelector = new MultilineCodeSelector(this.startingPoint, this.releasingPoint)
-        const cooridnatesForSelectedLines = multilineCodeSelector.markContent(firstVisibleLine)
+        const cooridnatesForSelectedLines = multilineCodeSelector.markContent()
         return cooridnatesForSelectedLines
     }
 

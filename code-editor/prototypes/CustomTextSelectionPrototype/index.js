@@ -47,6 +47,7 @@ class Line {
 
 // --> NEEDED FOR TEXT SELECTION
 let isSelectingText = false
+let isScrolling = false
 let startingPoint = null
 let releasingPoint = null
 
@@ -192,7 +193,30 @@ function buildLineWithContent(line) {
     const lineElement = builder.buildLine()
     lineElement.setAttribute('id', String(line.index))
     lineElement.style = `top:${line.index * 28.8}px;`
+    handleMouseMovement(lineElement)
     return lineElement
+}
+
+/**
+ * 
+ * @param {HTMLElement} lineElement 
+ */
+function handleMouseMovement(lineElement) {
+    // no matter what is being done the selection gets lost once you start scrolling, even if the selection is based on the editor and not the line
+    lineElement.addEventListener('mousedown', (event) => {
+        isSelectingText = true
+    })
+    lineElement.addEventListener('mouseup', (event) => {
+        isSelectingText = false
+        startingPoint = null
+        releasingPoint = null
+        isScrolling = false
+    })
+    lineElement.addEventListener('mousemove', (event) => {
+        if (isSelectingText) {
+            selectText(firstVisibleLine, event)
+        }
+    })
 }
 
 loadLines()
@@ -210,34 +234,19 @@ function buildMarker() {
 }
 
 document.addEventListener('scroll', () => {
+    if (isSelectingText) isScrolling = true
     firstVisibleLine = Math.round(document.documentElement.scrollTop / 28.8)
     lastVisibleLine = firstVisibleLine + maximumVisibleLinesOnScreen
     loadLines()
-})
 
-
-// no matter what is being done the selection gets lost once you start scrolling, even if the selection is based on the editor and not the line
-editorElement.addEventListener('mousedown', (event) => {
-    isSelectingText = true
-    console.log(releasingPoint)
-    console.log(startingPoint)
 })
-editorElement.addEventListener('mouseup', (event) => {
-    isSelectingText = false
-    startingPoint = null
-    releasingPoint = null
-})
-editorElement.addEventListener('mousemove', (event) => {
-    if (isSelectingText) {
-        selectText(firstVisibleLine)
-    }
-})
-
 
 /**
  * Handle the selection of text.
+ * @param {Number} firstVisibleLine 
+ * @param {Event} event 
  */
-function selectText(firstVisibleLine) {
+function selectText(firstVisibleLine, event) {
     buildMarker()
     const range = document.getSelection().getRangeAt(0)
     if (startingPoint == null) {
@@ -245,6 +254,9 @@ function selectText(firstVisibleLine) {
     }
     else {
         releasingPoint = new CustomRangeElement(range)
+        if (isScrolling) {
+
+        }
         let customMarker = new CustomContentMarker(startingPoint, releasingPoint)
         customMarker.buildMarker(firstVisibleLine)
         customMarker = null

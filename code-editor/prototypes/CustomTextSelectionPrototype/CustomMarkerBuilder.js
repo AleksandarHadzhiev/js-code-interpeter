@@ -20,13 +20,14 @@ export default class CustomContentMarker {
 
     /**
      * Buids marker based on the first and last selections of the user.
+     * @param {Number} firstVisibleLine Contains the id of the first visible line on the screen
      */
-    buildMarker() {
+    buildMarker(firstVisibleLine) {
         if (this._checkIfTextSelectionIsOneLine()) {
             this._buildMarkerIfStartingPointAndReleasingPointAreOnTheSameLine()
         }
         else {
-            this._buildMarkerForMultilineSelection()
+            this._buildMarkerForMultilineSelection(firstVisibleLine)
         }
     }
 
@@ -50,8 +51,12 @@ export default class CustomContentMarker {
         this._buildLineInMarkerForCoordinates(coordinates)
     }
 
-    _buildMarkerForMultilineSelection() {
-        const multilineCoordinates = this._findCoordinatesForMultilineSelection()
+    /**
+     * 
+     * @param {Number} firstVisibleLine Contains the id of the first visible line 
+     */
+    _buildMarkerForMultilineSelection(firstVisibleLine) {
+        const multilineCoordinates = this._findCoordinatesForMultilineSelection(firstVisibleLine)
         multilineCoordinates.forEach((coordinates) => {
             this._buildLineInMarkerForCoordinates(coordinates)
         });
@@ -59,11 +64,12 @@ export default class CustomContentMarker {
 
     /**
      * The coordinates can be reached by the id of the line
+     * @param {Number} firstVisibleLine Contains the id of the first visible line 
      * @returns {Map} A map containing the coordinates of all lines.
      */
-    _findCoordinatesForMultilineSelection() {
+    _findCoordinatesForMultilineSelection(firstVisibleLine) {
         const multilineCodeSelector = new MultilineCodeSelector(this.startingPoint, this.releasingPoint)
-        const cooridnatesForSelectedLines = multilineCodeSelector.markContent()
+        const cooridnatesForSelectedLines = multilineCodeSelector.markContent(firstVisibleLine)
         return cooridnatesForSelectedLines
     }
 

@@ -20,13 +20,28 @@ export default class MultilineCodeSelector {
         this.releasingPosititon = null
         this.coordinatesForSelectedLines = new Map()
     }
-
-    markContent() {
+    /**
+     * @param {Number} firstVisibleLine 
+     * @returns {Map} the coordinates for each line in the selection
+     */
+    markContent(firstVisibleLine) {
         this._definePositionsOfTheSelection()
+        this._definePositionsOfSelectionWithScrollingInMind(firstVisibleLine)
         this._findTheCoordinatesForTheSelection()
         return this.coordinatesForSelectedLines
     }
 
+    /**
+     * @param {Number} firstVisibleLine 
+     * 
+     */
+    _definePositionsOfSelectionWithScrollingInMind(firstVisibleLine) {
+        console.log(this.startingRange)
+        console.log(this.releasingRange)
+        console.log(firstVisibleLine)
+    }
+
+    // Good enough only for when there is not scrolling
     _definePositionsOfTheSelection() {
         const lineOfStartingRange = Number(this.startingRange.lineOfStartContainer.id)
         const startingPositionOfReleaseRange = this._getStartingPositionOfReleaseRange()

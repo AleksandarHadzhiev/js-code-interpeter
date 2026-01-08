@@ -229,7 +229,7 @@ editorElement.addEventListener('mouseup', (event) => {
 })
 editorElement.addEventListener('mousemove', (event) => {
     if (isSelectingText) {
-        selectText()
+        selectText(firstVisibleLine)
     }
 })
 
@@ -237,7 +237,7 @@ editorElement.addEventListener('mousemove', (event) => {
 /**
  * Handle the selection of text.
  */
-function selectText() {
+function selectText(firstVisibleLine) {
     buildMarker()
     const range = document.getSelection().getRangeAt(0)
     if (startingPoint == null) {
@@ -246,7 +246,7 @@ function selectText() {
     else {
         releasingPoint = new CustomRangeElement(range)
         let customMarker = new CustomContentMarker(startingPoint, releasingPoint)
-        customMarker.buildMarker()
+        customMarker.buildMarker(firstVisibleLine)
         customMarker = null
         releasingPoint = null
     }

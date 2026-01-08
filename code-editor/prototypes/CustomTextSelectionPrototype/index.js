@@ -254,11 +254,12 @@ function selectText(firstVisibleLine, event) {
     }
     else {
         releasingPoint = new CustomRangeElement(range)
-        if (isScrolling) {
-
-        }
         let customMarker = new CustomContentMarker(startingPoint, releasingPoint)
-        customMarker.buildMarker(firstVisibleLine)
+        if (isScrolling) {
+            customMarker.buildMarkerWithScrolling(event, firstVisibleLine)
+        }
+        customMarker.buildMarkerWithoutScrolling()
+
         customMarker = null
         releasingPoint = null
     }

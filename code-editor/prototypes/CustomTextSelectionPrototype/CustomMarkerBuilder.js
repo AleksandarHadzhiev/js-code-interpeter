@@ -18,7 +18,37 @@ export default class CustomContentMarker {
         this.releasingPoint = releasingPoint
     }
 
-    buildMarker() {
+
+    /**
+     * 
+     * @param {Event} event 
+     * @param {Number} firstVisibleLine 
+     */
+    buildMarkerWithScrolling(event, firstVisibleLine) {
+        // FIRST FIND A WAY TO CHECK IF IT IS A SINGLE LINE CHECK
+        if (this._checkIfEventIsTriggeredOnStartingLineOfSelection(event)) {
+
+        }
+        else {
+            console.log("MULTILINE")
+        }
+    }
+
+    /**
+     * 
+     * @param {Event} event 
+     */
+    _checkIfEventIsTriggeredOnStartingLineOfSelection(event) {
+        const lineListeningToMouseMoveEvent = Number(event.currentTarget.id)
+        const firstLineOfSelection = Number(this.startingPoint.startContainer.id)
+        if (lineListeningToMouseMoveEvent == firstLineOfSelection) {
+            console.log("SINGLE LINE")
+            return true
+        }
+        return false
+    }
+
+    buildMarkerWithoutScrolling() {
         if (this._checkIfTextSelectionIsOneLine()) {
             this._buildMarkerIfStartingPointAndReleasingPointAreOnTheSameLine()
         }

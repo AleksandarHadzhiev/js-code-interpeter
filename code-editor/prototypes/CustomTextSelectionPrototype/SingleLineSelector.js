@@ -14,11 +14,7 @@ export default class SingleLineSelector {
         this.releasingRange = releasingRange
     }
 
-    /**
-    * @returns The coordinates of selection
-    */
     getCoordinatesForSingleLineSelection() {
-        // If done at the beggining the caclulations will be done twice in the case it turns right - it will slow down the process
         if (this._checkIfSelectionIsTurningRightForSingleLine()) {
             return this._calculateSelectionFromStartingPointToEndingPoint(this.startingRange, this.releasingRange)
         }

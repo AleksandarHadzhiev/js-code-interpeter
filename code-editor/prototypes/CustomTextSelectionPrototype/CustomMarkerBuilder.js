@@ -1,7 +1,8 @@
 import CustomRangeElement from "./CustomRangeElement.js"
 import SingleLineSelector from "./SingleLineSelector.js"
 import MultilineCodeSelector from "./MultilineCodeSelector.js"
-
+import ScrollingSingleLineSelector from "./SingleLineSelectionWithScrolling.js"
+import MultilineCodeSelectorScrolling from "./MultilineCodeSelectorScrolling.js"
 /**
  * The class makes use of the CustomRangeElement class and based on the first selection of the user - the point where the user started selecting text
  * and the last selection of the user - the point where the user stopped selecting and released the mouse
@@ -23,14 +24,22 @@ export default class CustomContentMarker {
      * 
      * @param {Event} event 
      * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
      */
-    buildMarkerWithScrolling(event, firstVisibleLine) {
+    buildMarkerWithScrolling(event, firstVisibleLine, lastVisibleLine) {
         // FIRST FIND A WAY TO CHECK IF IT IS A SINGLE LINE CHECK
         if (this._checkIfEventIsTriggeredOnStartingLineOfSelection(event)) {
-
+            const singleLineSelector = new ScrollingSingleLineSelector(this.startingPoint, this.releasingPoint)
+            const coordinates = singleLineSelector.getCoordinatesForSingleLineSelection()
+            console.log(coordinates)
+            this._buildLineInMarkerForCoordinates(coordinates)
         }
         else {
-            console.log("MULTILINE")
+            const multilineCodeSelector = new MultilineCodeSelectorScrolling(this.startingPoint, this.releasingPoint)
+            const multilineCoordinates = multilineCodeSelector.markContent(firstVisibleLine, lastVisibleLine, event)
+            multilineCoordinates.forEach((coordinates) => {
+                this._buildLineInMarkerForCoordinates(coordinates)
+            });
         }
     }
 
@@ -40,7 +49,7 @@ export default class CustomContentMarker {
      */
     _checkIfEventIsTriggeredOnStartingLineOfSelection(event) {
         const lineListeningToMouseMoveEvent = Number(event.currentTarget.id)
-        const firstLineOfSelection = Number(this.startingPoint.startContainer.id)
+        const firstLineOfSelection = Number(this.startingPoint.lineOfStartContainer.id)
         if (lineListeningToMouseMoveEvent == firstLineOfSelection) {
             console.log("SINGLE LINE")
             return true
@@ -103,7 +112,7 @@ export default class CustomContentMarker {
             left: ${coordinates.left}px;
             width: ${coordinates.width}px;
             background-color: green;
-            height: 28.8px;
+            height: 27.6px;
             color: transparent;
         `
         marker.append(lineInMarker)

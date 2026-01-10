@@ -13,11 +13,11 @@ const listOfPossibleLinesToDisplay = [
     "This is a long line to be displayed, and for that reason it will have a lot of text inside it."
 ]
 const numberOfLines = 2000
-const maximumVisibleLinesOnScreen = Math.round(contentElement.offsetHeight / 28.8);
+const maximumVisibleLinesOnScreen = Math.round(contentElement.offsetHeight / 27.6);
 let lastVisibleLine = maximumVisibleLinesOnScreen
 let firstVisibleLine = 0
 let indexOfLine = 0
-editorElement.style = `height: ${numberOfLines * 28.8}px;`
+editorElement.style = `height: ${numberOfLines * 27.6}px;`
 
 class Line {
 
@@ -166,7 +166,7 @@ function buildLineNumerationElementForLine(line) {
     const lineNumeration = document.createElement('span')
     lineNumeration.classList.add('numeration')
     lineNumeration.setAttribute('id', `numeration-${line.index}`)
-    lineNumeration.style = `top:${line.index * 28.8}px;`
+    lineNumeration.style = `top:${line.index * 27.6}px;`
     lineNumeration.textContent = line.numeration
     return lineNumeration
 }
@@ -192,7 +192,7 @@ function buildLineWithContent(line) {
     const builder = new LineBUilder(line.content)
     const lineElement = builder.buildLine()
     lineElement.setAttribute('id', String(line.index))
-    lineElement.style = `top:${line.index * 28.8}px;`
+    lineElement.style = `top:${line.index * 27.6}px;`
     handleMouseMovement(lineElement)
     return lineElement
 }
@@ -214,7 +214,7 @@ function handleMouseMovement(lineElement) {
     })
     lineElement.addEventListener('mousemove', (event) => {
         if (isSelectingText) {
-            selectText(firstVisibleLine, event)
+            selectText(event)
         }
     })
 }
@@ -235,7 +235,7 @@ function buildMarker() {
 
 document.addEventListener('scroll', () => {
     if (isSelectingText) isScrolling = true
-    firstVisibleLine = Math.round(document.documentElement.scrollTop / 28.8)
+    firstVisibleLine = Math.round(document.documentElement.scrollTop / 27.6)
     lastVisibleLine = firstVisibleLine + maximumVisibleLinesOnScreen
     loadLines()
 
@@ -243,22 +243,23 @@ document.addEventListener('scroll', () => {
 
 /**
  * Handle the selection of text.
- * @param {Number} firstVisibleLine 
  * @param {Event} event 
  */
-function selectText(firstVisibleLine, event) {
+function selectText(event) {
     buildMarker()
     const range = document.getSelection().getRangeAt(0)
     if (startingPoint == null) {
+        const offsetLeft = range.startContainer.parentElement.offsetLeft
         startingPoint = new CustomRangeElement(range)
+        startingPoint.startContainerOffset = offsetLeft
     }
     else {
         releasingPoint = new CustomRangeElement(range)
         let customMarker = new CustomContentMarker(startingPoint, releasingPoint)
         if (isScrolling) {
-            customMarker.buildMarkerWithScrolling(event, firstVisibleLine)
+            customMarker.buildMarkerWithScrolling(event, firstVisibleLine, lastVisibleLine)
         }
-        customMarker.buildMarkerWithoutScrolling()
+        else customMarker.buildMarkerWithoutScrolling()
 
         customMarker = null
         releasingPoint = null

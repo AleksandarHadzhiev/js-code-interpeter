@@ -11,11 +11,11 @@ import calculateWidthForText from "./WidthOfTextCalculator.js";
  */
 export function calculateCoordinatesOfFirstSelectedLine(selectionPosition) {
     const leftOffset = calculateTotalLeftOffsetOfCaretInTheLine(
-        new CaretLeftOffsetDTO(selectionPosition.container, selectionPosition.container.offsetLeft, selectionPosition.caretOffset)
+        new CaretLeftOffsetDTO(selectionPosition.container, selectionPosition.offsetLeft, selectionPosition.caretOffset)
     )
     const totalTextWidth = calculateWidthForText(selectionPosition.line.textContent)
     const widthOfMarkedText = totalTextWidth - leftOffset
-    const topOffset = selectionPosition.line.offsetTop
+    const topOffset = selectionPosition.offsetTop
     return new MarkedLineCoordinates(leftOffset, topOffset, widthOfMarkedText)
 }
 
@@ -26,10 +26,12 @@ export function calculateCoordinatesOfFirstSelectedLine(selectionPosition) {
  */
 export function calculateCoordinatesOfLastSelectedLine(selectionPosition) {
     const leftOffset = 0 // the last line doesn't have offset
+    console.log(selectionPosition.line)
+    console.log(selectionPosition.offsetTop)
     const widthOfMarkedText = calculateTotalLeftOffsetOfCaretInTheLine(
-        new CaretLeftOffsetDTO(selectionPosition.container, selectionPosition.container.offsetLeft, selectionPosition.caretOffset)
+        new CaretLeftOffsetDTO(selectionPosition.container, selectionPosition.offsetLeft, selectionPosition.caretOffset)
     )
-    const topOffset = selectionPosition.line.offsetTop
+    const topOffset = selectionPosition.offsetTop
     return new MarkedLineCoordinates(leftOffset, topOffset, widthOfMarkedText)
 }
 

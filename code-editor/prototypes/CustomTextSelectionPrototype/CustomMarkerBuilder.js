@@ -17,8 +17,22 @@ export default class CustomContentMarker {
     constructor(startingPoint, releasingPoint) {
         this.startingPoint = startingPoint
         this.releasingPoint = releasingPoint
+        this.selector = null
     }
 
+    /**
+     * 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     */
+    displayMarker(firstVisibleLine, lastVisibleLine) {
+        if (this.selector != null) {
+            const multilineCoordinates = this.selector.displayMarker(firstVisibleLine, lastVisibleLine)
+            multilineCoordinates.forEach((coordinates) => {
+                this._buildLineInMarkerForCoordinates(coordinates)
+            });
+        }
+    }
 
     /**
      * 
@@ -35,8 +49,8 @@ export default class CustomContentMarker {
             this._buildLineInMarkerForCoordinates(coordinates)
         }
         else {
-            const multilineCodeSelector = new MultilineCodeSelectorScrolling(this.startingPoint, this.releasingPoint)
-            const multilineCoordinates = multilineCodeSelector.markContent(firstVisibleLine, lastVisibleLine, event)
+            this.selector = new MultilineCodeSelectorScrolling(this.startingPoint, this.releasingPoint)
+            const multilineCoordinates = this.selector.markContent(firstVisibleLine, lastVisibleLine)
             multilineCoordinates.forEach((coordinates) => {
                 this._buildLineInMarkerForCoordinates(coordinates)
             });
@@ -58,6 +72,7 @@ export default class CustomContentMarker {
     }
 
     buildMarkerWithoutScrolling() {
+        this.selector = null
         if (this._checkIfTextSelectionIsOneLine()) {
             this._buildMarkerIfStartingPointAndReleasingPointAreOnTheSameLine()
         }

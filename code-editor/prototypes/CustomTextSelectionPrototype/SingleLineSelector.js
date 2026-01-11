@@ -46,6 +46,8 @@ export default class SingleLineSelector {
     _calculateSelectionFromStartingPointToEndingPoint(startingPoint, endingPoinnt) {
         let leftOffset = calculateTotalLeftOffsetOfCaretInTheLine(new CaretLeftOffsetDTO(startingPoint.startContainer, startingPoint.startContainer.offsetLeft, startingPoint.startOffset))
         let widthOfSelectedText = calculateWidthOfSelectedText(new SelectedTextDTO(endingPoinnt, leftOffset))
+        console.log(startingPoint.offsetTopForStartingLine)
+        console.log(startingPoint.offsetTopForEndingLine)
         return new MarkedLineCoordinates(leftOffset, startingPoint.offsetTopForStartingLine, widthOfSelectedText)
     }
 }

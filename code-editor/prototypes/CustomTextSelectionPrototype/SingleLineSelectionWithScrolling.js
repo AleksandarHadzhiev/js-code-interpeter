@@ -89,6 +89,7 @@ export default class ScrollingSingleLineSelector {
             )
         }
         else {
+            console.log(this.releasingPoint)
             // THERE IS ALSO THE POSSIBILITY OF THE LINE BREAKING ITS OWN START AND END OFFSET
             return new ScrollingReleasePoint(
                 this.releasingPoint.startContainer,

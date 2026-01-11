@@ -17,6 +17,7 @@ const maximumVisibleLinesOnScreen = Math.round(contentElement.offsetHeight / 27.
 let lastVisibleLine = maximumVisibleLinesOnScreen
 let firstVisibleLine = 0
 let indexOfLine = 0
+let customMarker = null
 editorElement.style = `height: ${numberOfLines * 27.6}px;`
 
 class Line {
@@ -236,9 +237,16 @@ function buildMarker() {
 document.addEventListener('scroll', () => {
     if (isSelectingText) isScrolling = true
     firstVisibleLine = Math.round(document.documentElement.scrollTop / 27.6)
-    lastVisibleLine = firstVisibleLine + maximumVisibleLinesOnScreen
+    lastVisibleLine = firstVisibleLine + maximumVisibleLinesOnScreen - 1
     loadLines()
+    let marker = document.getElementById('marker')
+    console.log(marker)
+    console.log(isSelectingText)
+    console.log(customMarker)
+    if (marker && isSelectingText == false) {
 
+        customMarker.displayMarker(firstVisibleLine, lastVisibleLine)
+    }
 })
 
 /**
@@ -252,16 +260,21 @@ function selectText(event) {
         const offsetLeft = range.startContainer.parentElement.offsetLeft
         startingPoint = new CustomRangeElement(range)
         startingPoint.startContainerOffset = offsetLeft
+        startingPoint.offsetTopForStartingLine = range.startContainer.parentElement.parentElement.offsetTop
+        startingPoint.offsetTopForEndingLine = range.endContainer.parentElement.parentElement.offsetTop
     }
     else {
         releasingPoint = new CustomRangeElement(range)
-        let customMarker = new CustomContentMarker(startingPoint, releasingPoint)
+        releasingPoint.endContainerOffset = range.endContainer.parentElement.offsetLeft
+        releasingPoint.startContainerOffset = range.startContainer.parentElement.offsetLeft
+        releasingPoint.offsetTopForStartingLine = range.startContainer.parentElement.parentElement.offsetTop
+        releasingPoint.offsetTopForEndingLine = range.endContainer.parentElement.parentElement.offsetTop
+        customMarker = new CustomContentMarker(startingPoint, releasingPoint)
         if (isScrolling) {
             customMarker.buildMarkerWithScrolling(event, firstVisibleLine, lastVisibleLine)
         }
         else customMarker.buildMarkerWithoutScrolling()
 
-        customMarker = null
         releasingPoint = null
     }
 

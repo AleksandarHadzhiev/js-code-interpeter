@@ -36,21 +36,39 @@ export default class MultilineCodeSelector {
         const startingPositionOfReleaseRange = this._getStartingPositionOfReleaseRange()
         const lineOfStartingPositionOfReleaseRange = Number(startingPositionOfReleaseRange.container.parentElement.id)
         if (lineOfStartingRange <= lineOfStartingPositionOfReleaseRange) {
-            this.startingPosition = new SelectionPosition(this.startingRange.startOffset, this.startingRange.startContainer)
-            this.releasingPosititon = new SelectionPosition(this.releasingRange.endOffset, this.releasingRange.endContainer)
+            this.startingPosition = new SelectionPosition(
+                this.startingRange.startOffset, this.startingRange.startContainer,
+                this.startingRange.startContainerOffset, this.startingRange.offsetTopForStartingLine)
+            this.releasingPosititon = startingPositionOfReleaseRange
         }
         else {
             this.startingPosition = startingPositionOfReleaseRange
-            this.releasingPosititon = new SelectionPosition(this.startingRange.endOffset, this.startingRange.endContainer)
+            this.releasingPosititon = new SelectionPosition(
+                this.startingRange.endOffset, this.startingRange.startContainer,
+                this.startingRange.startContainerOffset, this.startingRange.offsetTopForStartingLine)
         }
     }
 
     _getStartingPositionOfReleaseRange() {
         const idOfLastLineInRangeAsANumber = Number(this.releasingRange.lineOfEndContainer.id)
         const idOfFirstLineInrangeAsANumber = Number(this.releasingRange.lineOfStartContainer.id)
-        if (idOfFirstLineInrangeAsANumber < idOfLastLineInRangeAsANumber)
-            return new SelectionPosition(this.releasingRange.startOffset, this.releasingRange.startContainer)
-        return new SelectionPosition(this.releasingRange.endOffset, this.releasingRange.endContainer)
+        const lineOfStartingRange = Number(this.startingRange.lineOfStartContainer.id)
+        console.log(idOfFirstLineInrangeAsANumber, idOfLastLineInRangeAsANumber)
+        if (lineOfStartingRange == idOfLastLineInRangeAsANumber) {
+            return new SelectionPosition(
+                this.releasingRange.startOffset, this.releasingRange.startContainer,
+                this.releasingRange.startContainerOffset, this.releasingRange.offsetTopForStartingLine)
+        }
+        else if (lineOfStartingRange == idOfFirstLineInrangeAsANumber) {
+            return new SelectionPosition(
+                this.releasingRange.endOffset, this.releasingRange.endContainer,
+                this.releasingRange.endContainerOffset, this.releasingRange.offsetTopForEndingLine)
+        }
+        else {
+            return new SelectionPosition(
+                this.releasingRange.endOffset, this.releasingRange.endContainer,
+                this.releasingRange.endContainerOffset, this.releasingRange.offsetTopForEndingLine)
+        }
     }
 
     _findTheCoordinatesForTheSelection() {

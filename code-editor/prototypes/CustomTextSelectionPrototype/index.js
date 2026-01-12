@@ -1,10 +1,11 @@
 import LineBUilder from "./lineBuilder.js"
 import CustomContentMarker from "./CustomMarkerBuilder.js"
+import NewAlgorithm from "./NewAlgorithm.js"
 
 const lineNumerationElement = document.getElementById('line-numeration')
 const editorElement = document.getElementById('editor')
 const contentElement = document.getElementById('content')
-
+let algorithm = null
 // This Prototype has to upgrade the content loading mechanism and allow text selection
 
 // --> NEEDED FOR CONTENT LOADING
@@ -240,22 +241,23 @@ document.addEventListener('scroll', () => {
     lastVisibleLine = firstVisibleLine + maximumVisibleLinesOnScreen - 1
     loadLines()
     let marker = document.getElementById('marker')
-    console.log(marker)
-    console.log(isSelectingText)
-    console.log(customMarker)
     if (marker && isSelectingText == false) {
 
         customMarker.displayMarker(firstVisibleLine, lastVisibleLine)
+        algorithm.displayMarker(firstVisibleLine, lastVisibleLine)
     }
 })
 
 /**
  * Handle the selection of text.
- * @param {Event} event 
+ * @param {MouseEvent} event 
  */
 function selectText(event) {
     buildMarker()
+    const selection = document.getSelection()
+    console.log(selection)
     const range = document.getSelection().getRangeAt(0)
+    console.log(range)
     if (startingPoint == null) {
         const offsetLeft = range.startContainer.parentElement.offsetLeft
         startingPoint = new CustomRangeElement(range)
@@ -270,11 +272,12 @@ function selectText(event) {
         releasingPoint.offsetTopForStartingLine = range.startContainer.parentElement.parentElement.offsetTop
         releasingPoint.offsetTopForEndingLine = range.endContainer.parentElement.parentElement.offsetTop
         customMarker = new CustomContentMarker(startingPoint, releasingPoint)
-        if (isScrolling) {
-            customMarker.buildMarkerWithScrolling(event, firstVisibleLine, lastVisibleLine)
-        }
-        else customMarker.buildMarkerWithoutScrolling()
-
+        algorithm = new NewAlgorithm(startingPoint, releasingPoint)
+        // if (isScrolling) {
+        //     customMarker.buildMarkerWithScrolling(event, firstVisibleLine, lastVisibleLine)
+        // }
+        // else customMarker.buildMarkerWithoutScrolling()
+        customMarker.build(event, firstVisibleLine, lastVisibleLine)
         releasingPoint = null
     }
 

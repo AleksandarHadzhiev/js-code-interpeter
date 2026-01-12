@@ -3,6 +3,7 @@ import SingleLineSelector from "./SingleLineSelector.js"
 import MultilineCodeSelector from "./MultilineCodeSelector.js"
 import ScrollingSingleLineSelector from "./SingleLineSelectionWithScrolling.js"
 import MultilineCodeSelectorScrolling from "./MultilineCodeSelectorScrolling.js"
+import NewAlgorithm from "./NewAlgorithm.js"
 /**
  * The class makes use of the CustomRangeElement class and based on the first selection of the user - the point where the user started selecting text
  * and the last selection of the user - the point where the user stopped selecting and released the mouse
@@ -18,6 +19,20 @@ export default class CustomContentMarker {
         this.startingPoint = startingPoint
         this.releasingPoint = releasingPoint
         this.selector = null
+    }
+
+    /**
+     * 
+     * @param {MouseEvent} event 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     */
+    build(event, firstVisibleLine, lastVisibleLine) {
+        const algorithm = new NewAlgorithm(this.startingPoint, this.releasingPoint)
+        const multilineCoordinates = algorithm.markContent(event, firstVisibleLine, lastVisibleLine)
+        multilineCoordinates.forEach((coordinates) => {
+            this._buildLineInMarkerForCoordinates(coordinates)
+        });
     }
 
     /**

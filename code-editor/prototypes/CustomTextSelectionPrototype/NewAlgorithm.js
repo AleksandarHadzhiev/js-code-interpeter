@@ -25,6 +25,22 @@ class CustomMultiLineRange {
     }
 }
 
+class MArkedPoint {
+    /**
+     * 
+     * @param {Number} top 
+     * @param {Number} left 
+     * @param {Number} width 
+     * @param {Number} lineId 
+     */
+    constructor(top, left, width, lineId) {
+        this.top = top
+        this.left = left
+        this.lineId = lineId
+        this.width = width
+    }
+}
+
 class SelectedPoint {
     /**
      * 
@@ -58,6 +74,8 @@ export default class NewAlgorithm {
         this.startingRangeTopOffset = startingRange.offsetTopForStartingLine
         this.coordinatesToHighlight = new Map()
         this.startingLineWidth = calculateTotalLeftOffsetOfCaretInTheLine(new CaretLeftOffsetDTO(this.startingRange.startContainer, this.startingRangeLeftOffset, this.startingRangeCaretOffset))
+        this.startingMarkedPoint = null
+        this.endingMarkedPoint = null
     }
 
     /**
@@ -379,6 +397,20 @@ export default class NewAlgorithm {
         const widthOfSelectedText = widthOfTextContent - leftOffset
         const coordinates = new MarkedLineCoordinates(leftOffset, topOffset, widthOfSelectedText)
         this.coordinatesToHighlight.set(lineId, coordinates)
+        if (lineId >= this.startingRangeLine) {
+            this.startingMarkedPoint = new MArkedPoint(
+                this.startingRangeTopOffset,
+                this.startingLineWidth,
+                widthOfSelectedText,
+                this.startingRangeLine
+            )
+        }
+        else {
+            this.startingMarkedPoint = new MArkedPoint(
+                topOffset, leftOffset, widthOfSelectedText, lineId
+            )
+
+        }
     }
 
     /**
@@ -418,6 +450,20 @@ export default class NewAlgorithm {
     _calculateCoordinatesForLastLine(leftOffset, topOffset, lineId) {
         const coordinates = new MarkedLineCoordinates(0, topOffset, leftOffset)
         this.coordinatesToHighlight.set(lineId, coordinates)
+        if (lineId >= this.startingRangeLine) {
+
+            this.endingMarkedPoint = new MArkedPoint(
+                topOffset, 0, leftOffset, lineId
+            )
+        }
+        else {
+            this.endingMarkedPoint = new MArkedPoint(
+                this.startingRangeTopOffset,
+                0,
+                this.startingLineWidth,
+                this.startingRangeLine
+            )
+        }
     }
 
     /**
@@ -509,8 +555,35 @@ export default class NewAlgorithm {
      * @param {Number} lastVisibleLine 
      */
     displayMarker(firstVisibleLine, lastVisibleLine) {
-        console.log(`STARTING SELECTION LINE: ${this.startingRangeLine}`)
-        console.log(`FIRST VISIBLE LINE: ${firstVisibleLine}`)
-        console.log(`LAST VISIBLE LINE: ${lastVisibleLine}`)
+        const lineOfStartingPoint = this.startingMarkedPoint.lineId
+        const lineOfEndingPoint = this.endingMarkedPoint.lineId
+        if (lineOfStartingPoint > lastVisibleLine) {
+            return new Map()
+        }
+        else if (lineOfEndingPoint < firstVisibleLine) {
+            return new Map()
+        }
+        this._loadCoordinatesBetweenFirstVisbleLineAndLastVisibleLine(firstVisibleLine, lastVisibleLine)
+        return this.coordinatesToHighlight
+    }
+
+    /**
+     * 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     */
+    _loadCoordinatesBetweenFirstVisbleLineAndLastVisibleLine(firstVisibleLine, lastVisibleLine) {
+        this.coordinatesToHighlight = new Map()
+        for (let index = firstVisibleLine; index < lastVisibleLine; index++) {
+            if (index == this.startingMarkedPoint.lineId) {
+                this.coordinatesToHighlight.set(this.startingMarkedPoint.lineId, this.startingMarkedPoint)
+            }
+            else if (index == this.endingMarkedPoint.lineId) {
+                this.coordinatesToHighlight.set(this.endingMarkedPoint.lineId, this.endingMarkedPoint)
+            }
+            else if (index > this.startingMarkedPoint.lineId && index < this.endingMarkedPoint.lineId) {
+                this._calculateCoordinatesForLineAtIndex(index)
+            }
+        }
     }
 }

@@ -219,6 +219,15 @@ function handleMouseMovement(lineElement) {
             selectText(event)
         }
     })
+    lineElement.addEventListener('mousedown', (event) => {
+        let marker = document.getElementById('marker')
+        if (marker) marker.remove()
+        startingPoint = null
+        releasingPoint = null
+        isSelectingText = false
+        isScrolling = false
+
+    })
 }
 
 loadLines()
@@ -242,9 +251,8 @@ document.addEventListener('scroll', () => {
     loadLines()
     let marker = document.getElementById('marker')
     if (marker && isSelectingText == false) {
-
-        customMarker.displayMarker(firstVisibleLine, lastVisibleLine)
-        algorithm.displayMarker(firstVisibleLine, lastVisibleLine)
+        customMarker.display(firstVisibleLine, lastVisibleLine)
+        // customMarker.displayMarker(firstVisibleLine, lastVisibleLine)
     }
 })
 
@@ -272,7 +280,7 @@ function selectText(event) {
         releasingPoint.offsetTopForStartingLine = range.startContainer.parentElement.parentElement.offsetTop
         releasingPoint.offsetTopForEndingLine = range.endContainer.parentElement.parentElement.offsetTop
         customMarker = new CustomContentMarker(startingPoint, releasingPoint)
-        algorithm = new NewAlgorithm(startingPoint, releasingPoint)
+        // algorithm = new NewAlgorithm(startingPoint, releasingPoint)
         // if (isScrolling) {
         //     customMarker.buildMarkerWithScrolling(event, firstVisibleLine, lastVisibleLine)
         // }
@@ -280,5 +288,4 @@ function selectText(event) {
         customMarker.build(event, firstVisibleLine, lastVisibleLine)
         releasingPoint = null
     }
-
 }

@@ -19,6 +19,7 @@ export default class CustomContentMarker {
         this.startingPoint = startingPoint
         this.releasingPoint = releasingPoint
         this.selector = null
+        this.algorithm = null
     }
 
     /**
@@ -28,8 +29,20 @@ export default class CustomContentMarker {
      * @param {Number} lastVisibleLine 
      */
     build(event, firstVisibleLine, lastVisibleLine) {
-        const algorithm = new NewAlgorithm(this.startingPoint, this.releasingPoint)
-        const multilineCoordinates = algorithm.markContent(event, firstVisibleLine, lastVisibleLine)
+        this.algorithm = new NewAlgorithm(this.startingPoint, this.releasingPoint)
+        const multilineCoordinates = this.algorithm.markContent(event, firstVisibleLine, lastVisibleLine)
+        multilineCoordinates.forEach((coordinates) => {
+            this._buildLineInMarkerForCoordinates(coordinates)
+        });
+    }
+
+    /**
+     * 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     */
+    display(firstVisibleLine, lastVisibleLine) {
+        const multilineCoordinates = this.algorithm.displayMarker(firstVisibleLine, lastVisibleLine)
         multilineCoordinates.forEach((coordinates) => {
             this._buildLineInMarkerForCoordinates(coordinates)
         });

@@ -279,13 +279,21 @@ export default class NewAlgorithm {
      */
     _handleMultilineTextSelection(mouseMoveEvent, firstVisibleLine, lastVisibleLine) {
         console.log("MULTILINE TEXT SELECTION")
-
+        console.log(this.releasingRange)
+        const lineOfEndContainer = this.releasingRange.lineOfEndContainer
+        const lineOfStartContainer = this.releasingRange.lineOfStartContainer
+        console.log(lineOfEndContainer, lineOfStartContainer)
         if (this.startingRangeLine >= firstVisibleLine && this.startingRangeLine <= lastVisibleLine) {
             console.log("STARGIN LINE IS BETWEEN VISIBLE LINES")
             this._handleStartingRangeIsBetweenVisibleLines(mouseMoveEvent) // SEEMS TO BE WORKING
         }
         else if (this.startingRangeLine < firstVisibleLine) {
             console.log("STARTING LINE IS THE VERY TOP OF TEXT SELECTION, BUT IS NO LONGER VISIBLE")
+            let lineElement = document.getElementById(firstVisibleLine)
+            while (lineElement == null) {
+                firstVisibleLine += 1
+                lineElement = document.getElementById(firstVisibleLine)
+            }
             this._handleMultilineTextSelectionWithStartignRangeNotVisibleOnTheScreen(mouseMoveEvent, firstVisibleLine)
         }
         else if (this.startingRangeLine > lastVisibleLine) {
@@ -307,7 +315,8 @@ export default class NewAlgorithm {
         const mouseYPosition = mouseMoveEvent.currentTarget.offsetTop
         const startingLineReleaseRangeOffsetY = this.releasingRange.offsetTopForStartingLine
         const endingLineReleaseRangeOffsetY = this.releasingRange.offsetTopForEndingLine
-
+        console.log(startingLineReleaseRangeOffsetY)
+        console.log(endingLineReleaseRangeOffsetY)
         const differenseInYPositionOfEndingReleaseLineFromMouseX = mouseYPosition > endingLineReleaseRangeOffsetY ? mouseYPosition - endingLineReleaseRangeOffsetY : endingLineReleaseRangeOffsetY - mouseYPosition
         const differenseInYPositionOfStartingReleaseLineFromMouseX = mouseYPosition > startingLineReleaseRangeOffsetY ? mouseYPosition - startingLineReleaseRangeOffsetY : startingLineReleaseRangeOffsetY - mouseYPosition
 
@@ -339,7 +348,7 @@ export default class NewAlgorithm {
             this.startingRangeLine,
             Number(this.releasingRange.lineOfStartContainer.id)
         )
-        if (differenseInXPositionOfEndingReleaseLineFromMouseX < differenseInXPositionOfStartingReleaseLineFromMouseX) {
+        if (differenseInXPositionOfEndingReleaseLineFromMouseX < differenseInXPositionOfStartingReleaseLineFromMouseX && this.releasingRange.offsetTopForEndingLine == offsetTop) {
             selection = new CustomMultiLineRange(
                 offsetTop, widthOfEndingLineOfReleaseRange,
                 this.startingRangeTopOffset, this.startingLineWidth,
@@ -424,7 +433,7 @@ export default class NewAlgorithm {
             lastLine -= 1
             lineElement = document.getElementById(String(lastLine))
         }
-        for (let index = firstLine; index < lastLine; index++) {
+        for (let index = firstLine; index <= lastLine; index++) {
             this._calculateCoordinatesForLineAtIndex(index)
         }
     }

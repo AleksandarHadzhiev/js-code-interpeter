@@ -210,6 +210,7 @@ function handleMouseMovement(lineElement) {
     })
     lineElement.addEventListener('mouseup', (event) => {
         isSelectingText = false
+        // editorElement.prepend(caret)
         startingPoint = null
         releasingPoint = null
         isScrolling = false

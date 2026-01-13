@@ -1,0 +1,441 @@
+import CustomRangeElement from "./CustomRangeElement.js";
+import calculateWidthOfSelectedText from "./Caclulators/SelectedTextWidthCalculator.js";
+import calculateTotalLeftOffsetOfCaretInTheLine from "./Caclulators/CaretLeftOffsetCalculator.js";
+import { CaretLeftOffsetDTO, SelectedTextDTO } from "./DTOs/caretDTO.js";
+import MarkedLineCoordinates from "./MarkedLineCoordinates.js";
+import calculateWidthForText from "./Caclulators/WidthOfTextCalculator.js";
+
+class CustomMultiLineRange {
+    /**
+     * 
+     * @param {Number} offsetTopOfReleaseRangeLine
+     * @param {Number} leftOffsetOfReleaseRangeLine 
+     * @param {Number} topOffsetOfStartingRangeLine
+     * @param {Number} offsetLeftofStartingRangeLine
+     * @param {Number} lineIdOfStartingRangeLine
+     * @param {Number} lineIdOfReleaseRangeLine
+     */
+    constructor(offsetTopOfReleaseRangeLine, leftOffsetOfReleaseRangeLine, topOffsetOfStartingRangeLine, offsetLeftofStartingRangeLine, lineIdOfStartingRangeLine, lineIdOfReleaseRangeLine) {
+        this.offsetTopOfReleaseRangeLine = offsetTopOfReleaseRangeLine
+        this.leftOffsetOfReleaseRangeLine = leftOffsetOfReleaseRangeLine
+        this.topOffsetOfStartingRangeLine = topOffsetOfStartingRangeLine
+        this.offsetLeftofStartingRangeLine = offsetLeftofStartingRangeLine
+        this.lineIdOfStartingRangeLine = lineIdOfStartingRangeLine
+        this.lineIdOfReleaseRangeLine = lineIdOfReleaseRangeLine
+    }
+}
+
+class SelectedPoint {
+    /**
+     * 
+     * @param {HTMLElement} container 
+     * @param {Number} containerOffset 
+     * @param {Number} caretOffset 
+     * @param {Number} leftOffset 
+     * @param {Number} topOffset 
+     */
+    constructor(container, containerOffset, caretOffset, leftOffset, topOffset) {
+        this.container = container
+        this.containerOffset = containerOffset
+        this.caretOffset = caretOffset
+        this.leftOffset = leftOffset
+        this.topOffset = topOffset
+    }
+}
+
+export default class NewAlgorithm {
+    /**
+     * 
+     * @param {CustomRangeElement} startingRange 
+     * @param {CustomRangeElement} releasingRange 
+     */
+    constructor(startingRange, releasingRange) {
+        this.startingRange = startingRange
+        this.releasingRange = releasingRange
+        this.startingRangeLine = Number(startingRange.lineOfStartContainer.id)
+        this.startingRangeLeftOffset = startingRange.startContainerOffset
+        this.startingRangeCaretOffset = startingRange.startOffset
+        this.startingRangeTopOffset = startingRange.offsetTopForStartingLine
+        this.coordinatesToHighlight = new Map()
+        this.startingLineWidth = calculateTotalLeftOffsetOfCaretInTheLine(new CaretLeftOffsetDTO(this.startingRange.startContainer, this.startingRangeLeftOffset, this.startingRangeCaretOffset))
+    }
+
+    /**
+     * 
+     * @param {MouseEvent} mouseMoveEvent 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     * @returns {Map} the coordinates which should be highlighted as selected
+     */
+    markContent(mouseMoveEvent, firstVisibleLine, lastVisibleLine) {
+        const mouseLineId = Number(mouseMoveEvent.currentTarget.id)
+        const idOfLineForEndingContainerForRelease = Number(this.releasingRange.lineOfEndContainer.id)
+        const idOfLineForStartingContainerForRelease = Number(this.releasingRange.lineOfStartContainer.id)
+
+        if (isNaN(idOfLineForEndingContainerForRelease) || isNaN(idOfLineForStartingContainerForRelease)) {
+            return this.coordinatesToHighlight
+        }
+        if (this._isTextSelectionOnOneLine(mouseLineId)) {
+            this._handleSingleLineTextSelection(mouseMoveEvent)
+        }
+        else {
+            this._handleMultilineTextSelection(mouseMoveEvent, firstVisibleLine, lastVisibleLine)
+        }
+        return this.coordinatesToHighlight
+    }
+
+    /**
+     * @param {Number} mouseLineId
+     */
+    _isTextSelectionOnOneLine(mouseLineId) {
+        if (mouseLineId == this.startingRangeLine) {
+            return true
+        }
+        return false
+    }
+
+    /**
+     * @param {MouseEvent} mouseMoveEvent
+     */
+    _handleSingleLineTextSelection(mouseMoveEvent) {
+        console.log("SINGLE LINE TEXT SELECTION")
+        const widthOfStartingLineOfReleaseRange = calculateTotalLeftOffsetOfCaretInTheLine(new CaretLeftOffsetDTO(this.releasingRange.startContainer, this.releasingRange.startContainerOffset, this.releasingRange.startOffset))
+        const widthOfEndingLineOfReleaseRange = calculateTotalLeftOffsetOfCaretInTheLine(new CaretLeftOffsetDTO(this.releasingRange.endContainer, this.releasingRange.endContainerOffset, this.releasingRange.endOffset))
+        console.log(widthOfStartingLineOfReleaseRange)
+        console.log(widthOfEndingLineOfReleaseRange)
+        console.log(mouseMoveEvent.offsetX)
+        const mouseXPosition = mouseMoveEvent.offsetX
+        const differenseInXPositionOfEndingReleaseLineFromMouseX = mouseXPosition > widthOfEndingLineOfReleaseRange ? mouseXPosition - widthOfEndingLineOfReleaseRange : widthOfEndingLineOfReleaseRange - mouseXPosition
+        const differenseInXPositionOfStartingReleaseLineFromMouseX = mouseXPosition > widthOfStartingLineOfReleaseRange ? mouseXPosition - widthOfStartingLineOfReleaseRange : widthOfStartingLineOfReleaseRange - mouseXPosition
+        console.log(differenseInXPositionOfEndingReleaseLineFromMouseX)
+        console.log(differenseInXPositionOfStartingReleaseLineFromMouseX)
+        if (differenseInXPositionOfEndingReleaseLineFromMouseX < differenseInXPositionOfStartingReleaseLineFromMouseX) {
+            console.log("Working with ending line")
+            this._calculateCoordinatesForEndingContainerAndStartingLine(widthOfEndingLineOfReleaseRange)
+        }
+        else {
+            console.log("Working with sarting line")
+            this._calculateCoordinatesForStartingContainerAndStartingLine(widthOfStartingLineOfReleaseRange)
+        }
+    }
+
+    /**
+     * @param {Number} widthOfEndingLineOfReleaseRange 
+     */
+    _calculateCoordinatesForEndingContainerAndStartingLine(widthOfEndingLineOfReleaseRange) {
+        if (widthOfEndingLineOfReleaseRange > this.startingLineWidth) {
+            this._goingLeftToRightWithEndContainerForReleaseRangeForSingleLine()
+        }
+        else {
+            this._goingRightToLeftWithEndContainerForSingleLine()
+        }
+    }
+
+    _goingLeftToRightWithEndContainerForReleaseRangeForSingleLine() {
+        console.log("GOING LEFT TO RIGHT")
+        const leftOffsetPoint = new SelectedPoint(
+            this.startingRange.startContainer,
+            this.startingRange.startContainerOffset,
+            this.startingRange.startOffset,
+            this.startingRange.startContainerOffset,
+            this.startingRange.offsetTopForStartingLine
+        )
+        const rightOffsetPoint = new SelectedPoint(
+            this.releasingRange.endContainer,
+            this.releasingRange.endContainerOffset,
+            this.releasingRange.endOffset,
+            this.releasingRange.endContainerOffset,
+            this.releasingRange.offsetTopForEndingLine
+        )
+        const coordinates = this._calculateCoordinatesForPoints(leftOffsetPoint, rightOffsetPoint)
+        this.coordinatesToHighlight.set(this.startingRangeLine, coordinates)
+    }
+
+    /**
+     * @param {SelectedPoint} pointForLeftOffset 
+     * @param {SelectedPoint} pointForRightOffset 
+     * @returns {Number} width of the selected text
+     */
+    _calculateCoordinatesForPoints(pointForLeftOffset, pointForRightOffset) {
+        let leftOffset = calculateTotalLeftOffsetOfCaretInTheLine(new CaretLeftOffsetDTO(pointForLeftOffset.container, pointForLeftOffset.containerOffset, pointForLeftOffset.caretOffset))
+        pointForRightOffset.leftOffset = leftOffset
+        const widthOfTheSelectedText = this._calculateWidthOfSelectedText(pointForRightOffset)
+        const topOffset = this.startingRange.offsetTopForStartingLine
+        const coorindates = new MarkedLineCoordinates(leftOffset, topOffset, widthOfTheSelectedText)
+        return coorindates
+    }
+
+    /**
+     * @param {SelectedPoint} point 
+     * @returns {Number} width of the selected text
+     */
+    _calculateWidthOfSelectedText(point) {
+        const offset = calculateTotalLeftOffsetOfCaretInTheLine(
+            new CaretLeftOffsetDTO(
+                point.container,
+                point.containerOffset,
+                point.caretOffset
+            )
+        )
+        let widthOfSelectedText = offset - point.leftOffset
+        return widthOfSelectedText
+    }
+
+    _goingRightToLeftWithEndContainerForSingleLine() {
+        console.log("GOING RIGHT TO LEFT")
+        const leftOffsetPoint = new SelectedPoint(
+            this.releasingRange.endContainer,
+            this.releasingRange.endContainerOffset,
+            this.releasingRange.endOffset,
+            this.releasingRange.endContainerOffset,
+            this.releasingRange.offsetTopForEndingLine
+        )
+        const rightOffsetPoint = new SelectedPoint(
+            this.startingRange.startContainer,
+            this.startingRange.startContainerOffset,
+            this.startingRange.startOffset,
+            this.startingRange.startContainerOffset,
+            this.startingRange.offsetTopForStartingLine
+        )
+        const coordinates = this._calculateCoordinatesForPoints(leftOffsetPoint, rightOffsetPoint)
+        this.coordinatesToHighlight.set(this.startingRangeLine, coordinates)
+    }
+
+    /**
+     * 
+     * @param {Number} widthOfStartingLineOfReleaseRange
+     */
+    _calculateCoordinatesForStartingContainerAndStartingLine(widthOfStartingLineOfReleaseRange) {
+        if (widthOfStartingLineOfReleaseRange > this.startingLineWidth) {
+            this._goingLeftToRightWithStartContainerForReleaseRangeForSingleLine()
+        }
+        else {
+            this._goingRightToLeftWithStartContainerForSingleLine()
+        }
+    }
+
+    _goingLeftToRightWithStartContainerForReleaseRangeForSingleLine() {
+        console.log("GOING LEFT TO RIGHT")
+        const leftOffsetPoint = new SelectedPoint(
+            this.startingRange.startContainer,
+            this.startingRange.startContainerOffset,
+            this.startingRange.startOffset,
+            this.startingRange.startContainerOffset,
+            this.startingRange.offsetTopForStartingLine
+        )
+        const rightOffsetPoint = new SelectedPoint(
+            this.releasingRange.startContainer,
+            this.releasingRange.startContainerOffset,
+            this.releasingRange.startOffset,
+            this.releasingRange.startContainerOffset,
+            this.releasingRange.offsetTopForStartingLine
+        )
+        const coordinates = this._calculateCoordinatesForPoints(leftOffsetPoint, rightOffsetPoint)
+        this.coordinatesToHighlight.set(this.startingRangeLine, coordinates)
+    }
+
+    _goingRightToLeftWithStartContainerForSingleLine() {
+        console.log("GOING RIGTH TO LEFT")
+        const leftOffsetPoint = new SelectedPoint(
+            this.releasingRange.startContainer,
+            this.releasingRange.startContainerOffset,
+            this.releasingRange.startOffset,
+            this.releasingRange.startContainerOffset,
+            this.releasingRange.offsetTopForStartingLine
+        )
+        const rightOffsetPoint = new SelectedPoint(
+            this.startingRange.startContainer,
+            this.startingRange.startContainerOffset,
+            this.startingRange.startOffset,
+            this.startingRange.startContainerOffset,
+            this.startingRange.offsetTopForStartingLine
+        )
+        const coordinates = this._calculateCoordinatesForPoints(leftOffsetPoint, rightOffsetPoint)
+        this.coordinatesToHighlight.set(this.startingRangeLine, coordinates)
+    }
+
+    /**
+     * @param {MouseEvent} mouseMoveEvent
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     */
+    _handleMultilineTextSelection(mouseMoveEvent, firstVisibleLine, lastVisibleLine) {
+        console.log("MULTILINE TEXT SELECTION")
+
+        if (this.startingRangeLine >= firstVisibleLine && this.startingRangeLine <= lastVisibleLine) {
+            console.log("STARGIN LINE IS BETWEEN VISIBLE LINES")
+            this._handleStartingRangeIsBetweenVisibleLines(mouseMoveEvent) // SEEMS TO BE WORKING
+        }
+        else if (this.startingRangeLine < firstVisibleLine) {
+            console.log("STARTING LINE IS THE VERY TOP OF TEXT SELECTION, BUT IS NO LONGER VISIBLE")
+        }
+        else if (this.startingRangeLine > lastVisibleLine) {
+            console.log("STARTING LINE IS THE VERY END OF TEXT SELECTION, BUT IS NO LONGER VISIBLE")
+        }
+    }
+
+    /**
+     * @param {MouseEvent} mouseMoveEvent
+     * 
+     */
+    _handleStartingRangeIsBetweenVisibleLines(mouseMoveEvent) {
+        const mouseYPosition = mouseMoveEvent.currentTarget.offsetTop
+        const startingLineReleaseRangeOffsetY = this.releasingRange.offsetTopForStartingLine
+        const endingLineReleaseRangeOffsetY = this.releasingRange.offsetTopForEndingLine
+
+        const differenseInYPositionOfEndingReleaseLineFromMouseX = mouseYPosition > endingLineReleaseRangeOffsetY ? mouseYPosition - endingLineReleaseRangeOffsetY : endingLineReleaseRangeOffsetY - mouseYPosition
+        const differenseInYPositionOfStartingReleaseLineFromMouseX = mouseYPosition > startingLineReleaseRangeOffsetY ? mouseYPosition - startingLineReleaseRangeOffsetY : startingLineReleaseRangeOffsetY - mouseYPosition
+
+        if (differenseInYPositionOfEndingReleaseLineFromMouseX < differenseInYPositionOfStartingReleaseLineFromMouseX) {
+            console.log("USING ENDING LINE OFFSET TOP")
+            this._calculateCoordinates(mouseMoveEvent, endingLineReleaseRangeOffsetY)
+        }
+        else {
+            console.log("USING STARTING LINE OFFSET TOP")
+            this._calculateCoordinates(mouseMoveEvent, startingLineReleaseRangeOffsetY)
+        }
+    }
+
+    /**
+    * @param {MouseEvent} mouseMoveEvent
+    * @param { Number} offsetTop
+    */
+    _calculateCoordinates(mouseMoveEvent, offsetTop) {
+        const widthOfStartingLineOfReleaseRange = calculateTotalLeftOffsetOfCaretInTheLine(new CaretLeftOffsetDTO(this.releasingRange.startContainer, this.releasingRange.startContainerOffset, this.releasingRange.startOffset))
+        const widthOfEndingLineOfReleaseRange = calculateTotalLeftOffsetOfCaretInTheLine(new CaretLeftOffsetDTO(this.releasingRange.endContainer, this.releasingRange.endContainerOffset, this.releasingRange.endOffset))
+
+        const mouseXPosition = mouseMoveEvent.offsetX
+        const differenseInXPositionOfEndingReleaseLineFromMouseX = mouseXPosition > widthOfEndingLineOfReleaseRange ? mouseXPosition - widthOfEndingLineOfReleaseRange : widthOfEndingLineOfReleaseRange - mouseXPosition
+        const differenseInXPositionOfStartingReleaseLineFromMouseX = mouseXPosition > widthOfStartingLineOfReleaseRange ? mouseXPosition - widthOfStartingLineOfReleaseRange : widthOfStartingLineOfReleaseRange - mouseXPosition
+        console.log(this.releasingRange)
+        let selection = new CustomMultiLineRange(
+            offsetTop, widthOfStartingLineOfReleaseRange,
+            this.startingRangeTopOffset, this.startingLineWidth,
+            this.startingRangeLine,
+            Number(this.releasingRange.lineOfStartContainer.id)
+        )
+        if (differenseInXPositionOfEndingReleaseLineFromMouseX < differenseInXPositionOfStartingReleaseLineFromMouseX) {
+            selection = new CustomMultiLineRange(
+                offsetTop, widthOfEndingLineOfReleaseRange,
+                this.startingRangeTopOffset, this.startingLineWidth,
+                this.startingRangeLine,
+                Number(this.releasingRange.lineOfEndContainer.id)
+            )
+        }
+        this._calculateCoordinatesForSelection(selection)
+    }
+
+    /**
+     * 
+     * @param {CustomMultiLineRange} multilineRange 
+     */
+    _calculateCoordinatesForSelection(multilineRange) {
+        console.log("CALCULATE COORDINATES FOR SELECTION: ")
+        console.log(multilineRange)
+        if (multilineRange.topOffsetOfStartingRangeLine < multilineRange.offsetTopOfReleaseRangeLine) {
+            console.log("START WITH STARTING RANGE")
+            this._calculateCoordinatesWithStartingRangeFirst(multilineRange)
+        } else {
+            console.log("START WITH RELEASE RANGE")
+            this._calculateCoordinatesWithReleasingRangeFirst(multilineRange)
+        }
+    }
+
+    /**
+     * 
+     * @param {CustomMultiLineRange} multilineRange 
+     */
+    _calculateCoordinatesWithStartingRangeFirst(multilineRange) {
+        this._calculateCoordinatesForFirstLine(
+            multilineRange.offsetLeftofStartingRangeLine,
+            multilineRange.topOffsetOfStartingRangeLine,
+            multilineRange.lineIdOfStartingRangeLine
+        )
+        const firstLine = multilineRange.lineIdOfStartingRangeLine + 1
+        const lastLine = multilineRange.lineIdOfReleaseRangeLine
+        this._calculateCoordinatesForInBetweenLines(firstLine, lastLine)
+        this._calculateCoordinatesForLastLine(
+            multilineRange.leftOffsetOfReleaseRangeLine,
+            multilineRange.offsetTopOfReleaseRangeLine,
+            multilineRange.lineIdOfReleaseRangeLine
+        )
+    }
+
+    /**
+     * @param {Number} leftOffset 
+     * @param {Number} topOffset
+     * @param {Number} lineId  
+     */
+    _calculateCoordinatesForFirstLine(leftOffset, topOffset, lineId) {
+        const textContentOfLine = document.getElementById(String(lineId)).textContent
+        const widthOfTextContent = calculateWidthForText(textContentOfLine)
+        const widthOfSelectedText = widthOfTextContent - leftOffset
+        const coordinates = new MarkedLineCoordinates(leftOffset, topOffset, widthOfSelectedText)
+        this.coordinatesToHighlight.set(lineId, coordinates)
+    }
+
+    /**
+     * 
+     * @param {Number} firstLine 
+     * @param {Number} lastLine 
+     */
+    _calculateCoordinatesForInBetweenLines(firstLine, lastLine) {
+        for (let index = firstLine; index < lastLine; index++) {
+            this._calculateCoordinatesForLineAtIndex(index)
+        }
+    }
+
+    /**
+     * 
+     * @param {Number} index 
+     */
+    _calculateCoordinatesForLineAtIndex(index) {
+        const lineElement = document.getElementById(String(index));
+        const textContentOfLine = lineElement.textContent
+        const widthOfTextContent = calculateWidthForText(textContentOfLine)
+        const topOffset = lineElement.offsetTop
+        const coordinates = new MarkedLineCoordinates(0, topOffset, widthOfTextContent)
+        this.coordinatesToHighlight.set(index, coordinates)
+    }
+
+    /**
+     * @param {Number} leftOffset 
+     * @param {Number} topOffset
+     * @param {Number} lineId  
+     */
+    _calculateCoordinatesForLastLine(leftOffset, topOffset, lineId) {
+        const coordinates = new MarkedLineCoordinates(0, topOffset, leftOffset)
+        this.coordinatesToHighlight.set(lineId, coordinates)
+    }
+
+    /**
+     * 
+     * @param {CustomMultiLineRange} multilineRange 
+     */
+    _calculateCoordinatesWithReleasingRangeFirst(multilineRange) {
+        this._calculateCoordinatesForFirstLine(
+            multilineRange.leftOffsetOfReleaseRangeLine,
+            multilineRange.offsetTopOfReleaseRangeLine,
+            multilineRange.lineIdOfReleaseRangeLine
+
+        )
+        const firstLine = multilineRange.lineIdOfReleaseRangeLine + 1
+        const lastLine = multilineRange.lineIdOfStartingRangeLine
+        this._calculateCoordinatesForInBetweenLines(firstLine, lastLine)
+        this._calculateCoordinatesForLastLine(
+            multilineRange.offsetLeftofStartingRangeLine,
+            multilineRange.topOffsetOfStartingRangeLine,
+            multilineRange.lineIdOfStartingRangeLine
+        )
+    }
+
+    /**
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     */
+    displayMarker(firstVisibleLine, lastVisibleLine) {
+        console.log(`STARTING SELECTION LINE: ${this.startingRangeLine}`)
+        console.log(`FIRST VISIBLE LINE: ${firstVisibleLine}`)
+        console.log(`LAST VISIBLE LINE: ${lastVisibleLine}`)
+    }
+}

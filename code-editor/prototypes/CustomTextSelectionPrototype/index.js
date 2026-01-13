@@ -205,7 +205,7 @@ function buildLineWithContent(line) {
  */
 function handleMouseMovement(lineElement) {
     // no matter what is being done the selection gets lost once you start scrolling, even if the selection is based on the editor and not the line
-    lineElement.addEventListener('mousedown', (event) => {
+    lineElement.addEventListener('selectstart', (event) => {
         isSelectingText = true
     })
     lineElement.addEventListener('mouseup', (event) => {

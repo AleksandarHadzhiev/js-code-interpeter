@@ -268,9 +268,16 @@ export default class NewAlgorithm {
         }
         else if (this.startingRangeLine < firstVisibleLine) {
             console.log("STARTING LINE IS THE VERY TOP OF TEXT SELECTION, BUT IS NO LONGER VISIBLE")
+            this._handleMultilineTextSelectionWithStartignRangeNotVisibleOnTheScreen(mouseMoveEvent, firstVisibleLine)
         }
         else if (this.startingRangeLine > lastVisibleLine) {
             console.log("STARTING LINE IS THE VERY END OF TEXT SELECTION, BUT IS NO LONGER VISIBLE")
+            let lineElement = document.getElementById(lastVisibleLine)
+            while (lineElement == null) {
+                lastVisibleLine -= 1
+                lineElement = document.getElementById(lastVisibleLine)
+            }
+            this._handleMultilineTextSelectionWithStartignRangeNotVisibleOnTheScreen(mouseMoveEvent, lastVisibleLine)
         }
     }
 
@@ -380,6 +387,11 @@ export default class NewAlgorithm {
      * @param {Number} lastLine 
      */
     _calculateCoordinatesForInBetweenLines(firstLine, lastLine) {
+        let lineElement = document.getElementById(String(lastLine))
+        while (lineElement == null) {
+            lastLine -= 1
+            lineElement = document.getElementById(String(lastLine))
+        }
         for (let index = firstLine; index < lastLine; index++) {
             this._calculateCoordinatesForLineAtIndex(index)
         }
@@ -427,6 +439,69 @@ export default class NewAlgorithm {
             multilineRange.topOffsetOfStartingRangeLine,
             multilineRange.lineIdOfStartingRangeLine
         )
+    }
+
+    /**
+     * @param {MouseEvent} mouseMoveEvent
+     * @param {Number} line 
+     */
+    _handleMultilineTextSelectionWithStartignRangeNotVisibleOnTheScreen(mouseMoveEvent, line) {
+        console.log("BEFORE VISIBLE LINES")
+        this._handleStartingRangeIsNotVisible(mouseMoveEvent, line)
+    }
+
+
+    /**
+     * @param {MouseEvent} mouseMoveEvent
+     * @param {Number} line 
+    */
+    _handleStartingRangeIsNotVisible(mouseMoveEvent, line) {
+        const mouseYPosition = mouseMoveEvent.currentTarget.offsetTop
+        const startingLineReleaseRangeOffsetY = this.releasingRange.offsetTopForStartingLine
+        const endingLineReleaseRangeOffsetY = this.releasingRange.offsetTopForEndingLine
+
+        const differenseInYPositionOfEndingReleaseLineFromMouseX = mouseYPosition > endingLineReleaseRangeOffsetY ? mouseYPosition - endingLineReleaseRangeOffsetY : endingLineReleaseRangeOffsetY - mouseYPosition
+        const differenseInYPositionOfStartingReleaseLineFromMouseX = mouseYPosition > startingLineReleaseRangeOffsetY ? mouseYPosition - startingLineReleaseRangeOffsetY : startingLineReleaseRangeOffsetY - mouseYPosition
+
+        if (differenseInYPositionOfEndingReleaseLineFromMouseX < differenseInYPositionOfStartingReleaseLineFromMouseX) {
+            console.log("USING ENDING LINE OFFSET TOP")
+            this._calculateCoordinatesForStartingRangeNotVisible(mouseMoveEvent, line, endingLineReleaseRangeOffsetY)
+        }
+        else {
+            console.log("USING STARTING LINE OFFSET TOP")
+            this._calculateCoordinatesForStartingRangeNotVisible(mouseMoveEvent, line, startingLineReleaseRangeOffsetY)
+        }
+    }
+
+    /**
+     * 
+     * @param {MouseEvent} mouseMoveEvent 
+     * @param {Number} line 
+     * @param {Number} offsetTop 
+     */
+    _calculateCoordinatesForStartingRangeNotVisible(mouseMoveEvent, line, offsetTop) {
+        const widthOfStartingLineOfReleaseRange = calculateTotalLeftOffsetOfCaretInTheLine(new CaretLeftOffsetDTO(this.releasingRange.startContainer, this.releasingRange.startContainerOffset, this.releasingRange.startOffset))
+        const widthOfEndingLineOfReleaseRange = calculateTotalLeftOffsetOfCaretInTheLine(new CaretLeftOffsetDTO(this.releasingRange.endContainer, this.releasingRange.endContainerOffset, this.releasingRange.endOffset))
+
+        const mouseXPosition = mouseMoveEvent.offsetX
+        const differenseInXPositionOfEndingReleaseLineFromMouseX = mouseXPosition > widthOfEndingLineOfReleaseRange ? mouseXPosition - widthOfEndingLineOfReleaseRange : widthOfEndingLineOfReleaseRange - mouseXPosition
+        const differenseInXPositionOfStartingReleaseLineFromMouseX = mouseXPosition > widthOfStartingLineOfReleaseRange ? mouseXPosition - widthOfStartingLineOfReleaseRange : widthOfStartingLineOfReleaseRange - mouseXPosition
+        const lineOffsetTop = document.getElementById(String(line)).offsetTop
+        let selection = new CustomMultiLineRange(
+            offsetTop, widthOfStartingLineOfReleaseRange,
+            lineOffsetTop, 0,
+            line,
+            Number(this.releasingRange.lineOfStartContainer.id)
+        )
+        if (differenseInXPositionOfEndingReleaseLineFromMouseX < differenseInXPositionOfStartingReleaseLineFromMouseX) {
+            selection = new CustomMultiLineRange(
+                offsetTop, widthOfEndingLineOfReleaseRange,
+                lineOffsetTop, 0,
+                line,
+                Number(this.releasingRange.lineOfEndContainer.id)
+            )
+        }
+        this._calculateCoordinatesForSelection(selection)
     }
 
     /**

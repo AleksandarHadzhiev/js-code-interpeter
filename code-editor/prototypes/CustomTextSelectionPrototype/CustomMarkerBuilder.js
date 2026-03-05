@@ -4,6 +4,7 @@ import MultilineCodeSelector from "./MultilineCodeSelector.js"
 import ScrollingSingleLineSelector from "./SingleLineSelectionWithScrolling.js"
 import MultilineCodeSelectorScrolling from "./MultilineCodeSelectorScrolling.js"
 import NewAlgorithm from "./NewAlgorithm.js"
+import LineColoriser from "./ColoriseLines.js"
 /**
  * The class makes use of the CustomRangeElement class and based on the first selection of the user - the point where the user started selecting text
  * and the last selection of the user - the point where the user stopped selecting and released the mouse
@@ -23,6 +24,28 @@ export default class CustomContentMarker {
     }
 
     /**
+    * 
+    * @param {MouseEvent} event 
+    * @param {Number} firstVisibleLine 
+    * @param {Number} lastVisibleLine 
+    */
+    buildForSpecialCase(event, firstVisibleLine, lastVisibleLine) {
+        const alg = new NewAlgorithm(this.startingPoint, this.releasingPoint)
+        const multilineCoordinates = alg.markContent(event, firstVisibleLine, lastVisibleLine)
+        multilineCoordinates.forEach((coordinates) => {
+            this._buildLineInMarkerForCoordinates(coordinates)
+        });
+    }
+
+    buildForAllLines(firstVisibleLine, lastVisibleLine) {
+        this.algorithm = new NewAlgorithm(this.startingPoint, this.releasingPoint)
+        const multilineCoordinates = this.algorithm.colorizeAllLines(firstVisibleLine, lastVisibleLine)
+        multilineCoordinates.forEach((coordinates) => {
+            this._buildLineInMarkerForCoordinates(coordinates)
+        });
+    }
+
+    /**
      * 
      * @param {MouseEvent} event 
      * @param {Number} firstVisibleLine 
@@ -31,6 +54,32 @@ export default class CustomContentMarker {
     build(event, firstVisibleLine, lastVisibleLine) {
         this.algorithm = new NewAlgorithm(this.startingPoint, this.releasingPoint)
         const multilineCoordinates = this.algorithm.markContent(event, firstVisibleLine, lastVisibleLine)
+        // console.log(multilineCoordinates)
+        multilineCoordinates.forEach((coordinates) => {
+            this._buildLineInMarkerForCoordinates(coordinates)
+        });
+        // console.log(document.getElementById('marker'))
+    }
+
+    buildForTopSection(firstVisibleLine, lastVisibleLine) {
+        this.algorithm = new LineColoriser(this.startingPoint, this.releasingPoint)
+        const multilineCoordinates = this.algorithm.coloriseLinesForTopInBetweenFirstAndLastVisibleLines(firstVisibleLine, lastVisibleLine)
+        multilineCoordinates.forEach((coordinates) => {
+            this._buildLineInMarkerForCoordinates(coordinates)
+        });
+    }
+
+    buildForBottomSection(firstVisibleLine, lastVisibleLine) {
+        this.algorithm = new LineColoriser(this.startingPoint, this.releasingPoint)
+        const multilineCoordinates = this.algorithm.coloriseLinesForBottomInBetweenFirstAndLastVisibleLines(firstVisibleLine, lastVisibleLine)
+        multilineCoordinates.forEach((coordinates) => {
+            this._buildLineInMarkerForCoordinates(coordinates)
+        });
+    }
+
+    buildForLeftSection(firstVisibleLine, lastVisibleLine) {
+        this.algorithm = new LineColoriser(this.startingPoint, this.releasingPoint)
+        const multilineCoordinates = this.algorithm.coloriseLinesForLeftBetweeenFirsAndLastVisibleLines(firstVisibleLine, lastVisibleLine)
         multilineCoordinates.forEach((coordinates) => {
             this._buildLineInMarkerForCoordinates(coordinates)
         });
@@ -42,10 +91,12 @@ export default class CustomContentMarker {
      * @param {Number} lastVisibleLine 
      */
     display(firstVisibleLine, lastVisibleLine) {
-        const multilineCoordinates = this.algorithm.displayMarker(firstVisibleLine, lastVisibleLine)
-        multilineCoordinates.forEach((coordinates) => {
-            this._buildLineInMarkerForCoordinates(coordinates)
-        });
+        if (this.algorithm) {
+            const multilineCoordinates = this.algorithm.displayMarker(firstVisibleLine, lastVisibleLine)
+            multilineCoordinates.forEach((coordinates) => {
+                this._buildLineInMarkerForCoordinates(coordinates)
+            });
+        }
     }
 
     /**
@@ -73,7 +124,7 @@ export default class CustomContentMarker {
         if (this._checkIfEventIsTriggeredOnStartingLineOfSelection(event)) {
             const singleLineSelector = new ScrollingSingleLineSelector(this.startingPoint, this.releasingPoint)
             const coordinates = singleLineSelector.getCoordinatesForSingleLineSelection()
-            console.log(coordinates)
+            // console.log(coordinates)
             this._buildLineInMarkerForCoordinates(coordinates)
         }
         else {
@@ -147,6 +198,7 @@ export default class CustomContentMarker {
      * @param {StartingPositionOfLine} coordinates 
      */
     _buildLineInMarkerForCoordinates(coordinates) {
+        // console.log(coordinates)
         const marker = document.getElementById('marker')
         const lineInMarker = document.createElement('div')
         lineInMarker.style = `

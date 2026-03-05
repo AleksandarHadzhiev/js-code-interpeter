@@ -9,12 +9,15 @@ export default class LineBUilder {
 
     buildLine() {
         const lineElement = document.createElement('div')
-        lineElement.innerHTML = this._buildWordsForLine()
+        lineElement.innerHTML = this.buildWordsForLine()
+        // lineElement.innerHTML = `Howdy partner`
         lineElement.classList.add('line-content')
         return lineElement
     }
 
-    _buildWordsForLine() {
+
+
+    buildWordsForLine() {
         const builder = new WordBuilder()
         let innerHTML = ''
         const colorDefiner = new WordColorDefiner(this.words)

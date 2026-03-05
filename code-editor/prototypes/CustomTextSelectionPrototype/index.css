@@ -26,7 +26,7 @@
 }
 
 .caret {
-    border-right: 2px solid black;
+    border-right: 2px solid red;
     height: 27.6px;
     display: inline-block;
     position: absolute;
@@ -35,6 +35,16 @@
     white-space: pre;
     font-size: 24px;
     animation: blink 1s linear infinite;
+}
+
+@keyframes blink {
+    25% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
 }
 
 .numeration {

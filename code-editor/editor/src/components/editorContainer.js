@@ -16,13 +16,26 @@ class CustomEditorContainer extends HTMLElement {
     _buildEditorView() {
         const editorView = document.createElement('div')
         editorView.classList.add('editor-view')
+        const interpreterScreen = this._buildInterpeterScreen()
         const scrollableArea = this._buildScrollableArea()
+        editorView.appendChild(interpreterScreen)
         editorView.appendChild(scrollableArea)
         return editorView
     }
 
     _buildInterpeterScreen() {
+        const interpreterScreen = document.createElement('div')
+        interpreterScreen.classList.add('interpreter-screen')
+        const loader = this._buildLoader()
+        interpreterScreen.appendChild(loader)
+        return interpreterScreen
+    }
 
+    _buildLoader() {
+        const loader = document.createElement('div')
+        loader.classList.add('loader')
+        loader.setAttribute('id', 'loader')
+        return loader
     }
 
     _buildScrollableArea() {

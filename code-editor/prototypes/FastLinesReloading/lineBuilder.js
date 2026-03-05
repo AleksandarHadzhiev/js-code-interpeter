@@ -10,7 +10,6 @@ export default class LineBUilder {
     buildLine() {
         const lineElement = document.createElement('div')
         lineElement.innerHTML = this._buildWordsForLine()
-        // lineElement.innerHTML = "ALEKS"
         lineElement.classList.add('line-content')
         return lineElement
     }

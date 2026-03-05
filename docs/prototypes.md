@@ -11,6 +11,8 @@
 
 ## Terminal Prototype
 
+## Fast Content rendering
+
 ## Others
 
 In the rest of the prototypes. There isn't much to be found, as they were files tries which quickly proved to be unusable.

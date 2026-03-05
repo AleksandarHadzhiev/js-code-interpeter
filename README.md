@@ -1,6 +1,7 @@
 # Table of Contents
 1. [About me](#about-me)
 2. [What's new](#whats-new)
+   - 2.1 [Version 1.1.4](#version-114)
    - 2.1 [Version 1.1.3](#version-113)
    - 2.2 [Version 1.1.2](#version-112)
    - 2.3 [Version 1.1.1](#version-111)
@@ -26,6 +27,19 @@ This project is an online JS interpeter.
 ## What's new
 
 Order of versions - from newest to oldest. For the full explanation behind the versions and their goals visit the [Roadmap](./docs/roadMap.md)
+
+### Version 1.1.4
+
+Build prototypes to understand how to have fast and stable content loading on the screen, so that there is no black screen when scrolling up/down:
+- change the way elements are loaded: only the maximum visible lines on the screen are created - virtual scrolling
+- change the way elements are relaoded: no new elemens are created or old removed, the visible lines on the screen get updated
+
+Build prototypes for: text selection and search/replace functionalities with the new content loading approach:
+- custom text selection algorithm
+- change the approach for text search and replace in the content
+
+Integrate the learnings from the prototypes in the main project
+
 
 ### Version 1.1.3
 

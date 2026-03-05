@@ -9,31 +9,17 @@
 </head>
 
 <body>
-    <main id="code-editor">
-        <custom-horizontal class="invisible"></custom-horizontal>
-        <custom-vertical class="invisible"></custom-vertical>
-        <textarea spellcheck="false" id="writer"></textarea>
-        <div id="editor-container">
-            <div id="lines"></div>
-            <custom-highlighter id="highlighter" class="highlighter"></custom-highlighter>
-        </div>
-        <custom-preview id="preview"></custom-preview>
-        <custom-reader id="reader"></custom-reader>
-        <custom-search-and-replace id="search" class="invisible">
-            <custom-search></custom-search>
-            <custom-replace></custom-replace>
-        </custom-search-and-replace>
+    <header id="navigation" class="navigation"></header>
+    <main class="container">
+        <custom-view-container class="view-container">
+            <section class="menu"></section>
+            <custom-editor-container class="editor" id="container"></custom-editor-container>
+        </custom-view-container>
     </main>
 
-    <script type="module" src="./src/components/customScrollbars/horizontal.js"></script>
-    <script type="module" src="./src/components/customScrollbars/vertical.js"></script>
-    <script type="module" src="./src/components/reader.js"></script>
-    <script type="module" src="./src/components/preview.js"></script>
-    <script type="module" src="./src/components/highlighter.js"></script>
-    <script type="module" src="./src/components/SearchAndReplace/searchAndReplaceContainer.js"></script>
-    <script type="module" src="./src/components/SearchAndReplace/search.js"></script>
-    <script type="module" src="./src/components/SearchAndReplace/replace.js"></script>
-    <script type="module" src="app.js"></script>
+    <script src="./src/components/viewContainer.js"></script>
+    <script src="./src/components/editorContainer.js"></script>
+    <script src="./app.js" type="module"></script>
 </body>
 
 </html>

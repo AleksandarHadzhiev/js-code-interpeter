@@ -1,0 +1,109 @@
+* {
+    margin: 0%;
+    padding: 0%;
+    width: 100%;
+    height: 100vh;
+    background-color: black;
+
+}
+
+#editor {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    overflow: auto;
+    background-color: transparent;
+}
+
+#line-numeration {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.caret {
+    border-right: 2px solid red;
+    height: 27.6px;
+    display: inline-block;
+    position: absolute;
+    color: transparent;
+    width: fit-content;
+    white-space: pre;
+    font-size: 24px;
+    animation: blink 1s linear infinite;
+}
+
+@keyframes blink {
+    25% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+.numeration {
+    position: absolute;
+    color: white;
+    text-align: center;
+    width: 100%;
+    height: 27.6px;
+    padding: 0%;
+    margin: 0%;
+    font-size: 24px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.line-content {
+    color: white;
+    position: absolute;
+    width: 100%;
+    height: fit-content;
+    white-space: pre;
+    padding: 0%;
+    margin: 0%;
+    font-size: 24px;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: transparent;
+}
+
+.line-content-marker {
+    color: white;
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    white-space: pre;
+    padding: 0%;
+    margin: 0%;
+    font-size: 24px;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: transparent;
+}
+
+.marker {
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    background-color: transparent;
+    color: transparent;
+    left: 5%;
+}
+
+#content {
+    background-color: transparent;
+    position: absolute;
+    top: 0;
+    left: 5%;
+    width: 95%;
+    height: 100%;
+}
+
+
+html::selection {
+    background-color: transparent;
+}

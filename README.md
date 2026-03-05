@@ -25,7 +25,7 @@ This project is an online JS interpeter.
 
 ## What's new
 
-Order of versions - from newest to oldest.
+Order of versions - from newest to oldest. For the full explanation behind the versions and their goals visit the [Roadmap](./docs/roadMap.md)
 
 ### Version 1.1.3
 

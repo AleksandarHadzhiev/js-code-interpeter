@@ -1,4 +1,5 @@
 import Highlighter from "../../classes/highlighters/Highlighter.js"
+import HighlightLineBuilder from "../../classes/highlighters/HighlightLineBuilder.js"
 
 export class Search extends HTMLElement {
     constructor() {
@@ -6,9 +7,16 @@ export class Search extends HTMLElement {
         this.foundElements = []
         this.currentPosition = 0
         this.prevElement = null
+        this.content = ""
+        this.setAttribute('id', 'search-component')
         this.writer = document.getElementById('writer')
         this._buildMainContainer()
         this.highlighter = new Highlighter()
+        this.nodes = document.getElementById('highlighter').childNodes
+        this.index = 0
+        this.indexOf = 0
+        this.epmtyLines = 0
+        this.indexOfEmptyLine = 0
     }
 
     _buildMainContainer() {
@@ -25,8 +33,12 @@ export class Search extends HTMLElement {
         searchBar.setAttribute('id', 'search-field')
         searchBar.placeholder = "Search for..."
         searchBar.addEventListener('input', (event) => {
-            const triggerEvent = new Event('change')
-            this.writer.dispatchEvent(triggerEvent)
+            this.prevElement = null
+            this.currentPosition = 0
+            if (event.target.value != "" && event.target.value.split('\n').length > 1) {
+                const triggerEvent = new Event('change')
+                this.writer.dispatchEvent(triggerEvent)
+            }
             this._highlight(event)
         })
         return searchBar
@@ -34,15 +46,16 @@ export class Search extends HTMLElement {
 
     _highlight(event) {
         this.prevElement = null
-        const content = String(event.target.value)
-        this.foundElements = this.highlighter.getHighlightedElementsAfterHighlightingContent(content)
-        this._updateInfo(event)
+        this.content = String(event.target.value)
+        this.foundElements = this.highlighter.getHighlightedElementsAfterHighlightingContent(this.content)
+        this._updateInfo()
     }
 
-    _updateInfo(event) {
+    _updateInfo() {
+        console.log(this.foundElements)
         const switcher = document.getElementById('position-switcher')
         const info = document.getElementById('info')
-        if (event.target.value == "") this.foundElements = []
+        if (this.content == "") this.foundElements = []
         if (this.foundElements.length > 0) {
             switcher.classList.remove('hidden')
             info.textContent = `${this.currentPosition + 1} : ${this.foundElements.length}`;
@@ -89,6 +102,28 @@ export class Search extends HTMLElement {
     }
 
     _handleChangeInShownHighlightedElement(buttonAction) {
+        if (this.content.split('\n').length == 1) {
+            this._handleSwitchOnSingleLineSearch(buttonAction)
+        }
+        else {
+            this._handleSwitchOnMultiLineSearch(buttonAction)
+        }
+    }
+
+    _handleSwitchOnSingleLineSearch(buttonAction) {
+        this.foundElements = document.getElementsByName('highlighted')
+        if (this.prevElement) {
+            this.prevElement.classList.remove('currently-selected')
+        }
+        this._updatePositionBasedOnAction(buttonAction)
+        const element = this.foundElements[this.currentPosition]
+        element.classList.add('currently-selected')
+        this._updateScrollPosition(element)
+        this._updateInfo()
+        this.prevElement = element
+    }
+
+    _handleSwitchOnMultiLineSearch(buttonAction) {
         if (this.prevElement) {
             this.prevElement.forEach(previousElement => {
                 previousElement.classList.remove('currently-selected')
@@ -98,6 +133,7 @@ export class Search extends HTMLElement {
         const elements = this.foundElements[this.currentPosition]
         elements.forEach((element, index) => {
             element.classList.add('currently-selected')
+            console.log(element)
             if (index == 0) this._updateScrollPosition(element)
         });
 
@@ -107,11 +143,14 @@ export class Search extends HTMLElement {
 
     _updateScrollPosition(element) {
         element.scrollIntoView()
-        // ==> readerPosFromTop === currentHightlightedElement.row.highlighter.editor.scrollTop
-        const readerScrollFromTOp = element.parentElement.parentElement.parentElement.scrollTop
-        document.getElementById('writer').scrollTop = readerScrollFromTOp
-        document.getElementById('reader').scrollTop = readerScrollFromTOp
-        document.getElementById('highlighter').scrollTop = readerScrollFromTOp
+        const readerScrollFromTop = document.getElementById("editor-container").scrollTop
+        const readerScrollFromLeft = document.getElementById("editor-container").scrollLeft
+        document.getElementById('writer').scrollTop = readerScrollFromTop
+        document.getElementById('reader').scrollTop = readerScrollFromTop
+        document.getElementById('highlighter').scrollTop = readerScrollFromTop
+        document.getElementById('writer').scrollLeft = readerScrollFromLeft
+        document.getElementById('reader').scrollLeft = readerScrollFromLeft
+        document.getElementById('highlighter').scrollLeft = readerScrollFromLeft
     }
 
     _updatePositionBasedOnAction(action) {

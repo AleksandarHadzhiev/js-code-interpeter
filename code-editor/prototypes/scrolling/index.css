@@ -1,0 +1,88 @@
+* {
+    margin: 0%;
+    padding: 0%;
+    width: 100%;
+    height: 100vh;
+    background-color: black;
+
+}
+
+.screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.scrollable {
+    position: absolute;
+    width: 50%;
+    height: 600px;
+}
+
+.view {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border: solid 2px white;
+    display: flex;
+
+}
+
+.loader {
+    position: absolute;
+    overflow: hidden;
+    height: 10000px;
+    width: 100%;
+    contain: strict;
+    transform: translate3d(0px, 0px, 0px);
+    background-image: linear-gradient(to bottom, red, yellow);
+}
+
+.content {
+    position: absolute;
+    width: 99%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.lines {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.line {
+    position: absolute;
+    height: 25px;
+    width: 100%;
+    background-color: aqua;
+}
+
+.scrollable-area {
+    position: sticky;
+    top: 0%;
+    left: 100%;
+    width: 10%;
+    height: 100%;
+    background-color: transparent;
+}
+
+.scrollbar {
+    position: sticky;
+    top: 0%;
+    left: 100%;
+    width: 15%;
+    height: 100%;
+    background-color: green;
+}
+
+#bar {
+    width: 100%;
+    height: 25px;
+    position: absolute;
+    background-color: black;
+}

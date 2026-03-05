@@ -1,0 +1,161 @@
+body {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    background-color: antiquewhite;
+}
+
+#code {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    width: 95%;
+    height: 95%;
+    background-color: blue;
+}
+
+#editor {
+    display: flex;
+    position: relative;
+    background-color: red;
+    color: transparent;
+    overflow: auto;
+    scrollbar-width: none;
+    width: 100%;
+    height: 100%;
+}
+
+#reader {
+    /*The reader just shows us how long the text should be*/
+    position: absolute;
+    background-color: rgb(0, 0, 0);
+    left: 5%;
+    top: 0%;
+    height: 100%;
+    width: 100%;
+}
+
+#testing-lines {
+    position: sticky;
+    top: 0%;
+    left: 0%;
+    width: 5%;
+    height: 100%;
+    background-color: green;
+}
+
+#testing-content {
+    position: sticky;
+    top: 0%;
+    left: 5%;
+    width: 95%;
+    height: 100%;
+    background-color: lightskyblue;
+}
+
+.code-displayer {
+    position: sticky;
+    top: 0%;
+    background-color: black;
+    min-width: 95%;
+    min-height: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    line-height: 1.2;
+    display: flex;
+    flex-direction: column;
+}
+
+.line-content {
+    display: flex;
+    min-height: 28.8px;
+    width: fit-content;
+    font-size: 24px;
+    background-color: transparent;
+    color: red;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#lines {
+    position: sticky;
+    top: 0%;
+    left: 0%;
+    width: 5%;
+    z-index: 1;
+    height: 100%;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.line {
+    color: white;
+    width: 100%;
+    text-align: center;
+    font-size: 24px;
+    line-height: 1.2;
+    max-height: 28.8px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#writer {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 1%;
+    height: 1%;
+    background-color: transparent;
+    color: transparent;
+    padding: 0%;
+    margin: 0%;
+    font-size: 24px;
+    line-height: 1.2;
+    font-family: 'Courier New', Courier, monospace;
+    outline: none;
+    border: none;
+    resize: none;
+    overflow: hidden;
+}
+
+.invisible {
+    display: none;
+}
+
+.horizontal-scrollbar {
+    position: absolute;
+    width: 95%;
+    height: 2.5%;
+    bottom: 0;
+    left: 5%;
+    z-index: 1;
+    background-color: transparent;
+}
+
+.vertical-scrollbar {
+    position: absolute;
+    width: 1.5%;
+    height: 100%;
+    top: 0%;
+    z-index: 1;
+    right: 0%;
+    background-color: transparent;
+}
+
+.bar {
+    background-color: gray;
+    opacity: 0.5;
+}
+
+.horizontal-bar {
+    height: 100%;
+    width: 10%;
+}
+
+.vertical-bar {
+    width: 100%;
+    height: 10%;
+}

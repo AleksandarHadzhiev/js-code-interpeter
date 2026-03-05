@@ -1,5 +1,6 @@
 import LineBUilder from "../lineBuilder.js"
 import Line from "./Line.js"
+import LineSelector from "../selectionMechanisms/lineSelector.js"
 
 export default class LinesLoader {
     /**
@@ -77,6 +78,10 @@ export default class LinesLoader {
         lineElement.classList.add('line-content')
         lineElement.setAttribute('id', String(line.index))
         lineElement.style = `top:${line.index * this.lineHeightInPixels}px;`
+        lineElement.addEventListener('click', (event) => {
+            const lineSelector = new LineSelector(event)
+            lineSelector.selectLine()
+        })
         return lineElement
     }
 

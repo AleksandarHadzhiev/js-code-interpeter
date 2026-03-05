@@ -162,3 +162,12 @@ body {
 #bar:hover {
     opacity: 0.5;
 }
+
+.line-selector {
+    position: absolute;
+    left: 5%;
+    width: 95%;
+    height: 28.8px;
+    background-color: transparent;
+    border: solid 1px gray;
+}

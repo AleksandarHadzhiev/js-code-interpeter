@@ -35,7 +35,31 @@ class CustomEditorContainer extends HTMLElement {
         const loader = document.createElement('div')
         loader.classList.add('loader')
         loader.setAttribute('id', 'loader')
+        const contentElement = this._buildContent()
+        loader.appendChild(contentElement)
         return loader
+    }
+
+    _buildContent() {
+        const contentElemet = document.createElement('div')
+        contentElemet.classList.add('content')
+        const lineNumeration = this._buildLineNumeration()
+        const lineContent = this._buildLineContent()
+        contentElemet.appendChild(lineNumeration)
+        contentElemet.appendChild(lineContent)
+        return contentElemet
+    }
+
+    _buildLineNumeration() {
+        const lineNumeration = document.createElement('div')
+        lineNumeration.setAttribute('id', 'line-numeration')
+        return lineNumeration
+    }
+
+    _buildLineContent() {
+        const lineContent = document.createElement('div')
+        lineContent.setAttribute('id', 'line-content')
+        return lineContent
     }
 
     _buildScrollableArea() {

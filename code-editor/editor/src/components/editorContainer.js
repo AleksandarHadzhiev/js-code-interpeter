@@ -65,6 +65,7 @@ class CustomEditorContainer extends HTMLElement {
     _buildScrollableArea() {
         const scrollablearea = document.createElement('div')
         scrollablearea.classList.add('scrollable-area')
+        scrollablearea.setAttribute('id', 'scrollable-area')
         const scrollbar = this._buildScrollbar()
         scrollablearea.appendChild(scrollbar)
         return scrollablearea

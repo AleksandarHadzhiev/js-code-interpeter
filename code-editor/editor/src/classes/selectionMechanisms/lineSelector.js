@@ -1,3 +1,5 @@
+import CaretBuilder from "./caretBuilder.js"
+
 export default class LineSelector {
     /**
      * 
@@ -10,8 +12,11 @@ export default class LineSelector {
     selectLine() {
         const contentElement = document.getElementById('content')
         const targetElement = this.mouseEvent.currentTarget
+        const topOffset = targetElement.offsetTop
         const selector = this._buildSelector()
-        this._positionSelectorBasedonTarget(selector, targetElement)
+        this._positionSelectorBasedonTarget(selector, topOffset)
+        const caretBuilder = new CaretBuilder()
+        caretBuilder.buildCaretForLineSelection(contentElement, topOffset)
         contentElement.appendChild(selector)
     }
 
@@ -27,9 +32,10 @@ export default class LineSelector {
 
     /**
      * @param {HTMLElement} selector 
-     * @param {EventTarget} target
+     * @param {Number} topOffset
      */
-    _positionSelectorBasedonTarget(selector, target) {
-        selector.style = `top: ${target.offsetTop}px;`
+    _positionSelectorBasedonTarget(selector, topOffset) {
+        selector.style = `top: ${topOffset}px;`
+
     }
 }

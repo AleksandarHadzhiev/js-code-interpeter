@@ -171,3 +171,21 @@ body {
     background-color: transparent;
     border: solid 1px gray;
 }
+
+.caret {
+    position: absolute;
+    width: 3px;
+    background-color: orange;
+    height: 28.8px;
+    animation: blink 1s linear infinite;
+}
+
+@keyframes blink {
+    25% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}

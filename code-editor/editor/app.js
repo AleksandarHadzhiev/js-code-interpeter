@@ -29,7 +29,7 @@ let isTextSelecting = false
 
 let startingRange = null
 let endingRange = null
-const textSelection = new TextSelection()
+const textSelection = new TextSelection(lineNumerationElement.scrollWidth, lineContentElement.scrollHeight, lineContentElement.scrollWidth)
 
 
 const barHandler = new BarHandler(scrollbarHeight, barHeight, barElement)
@@ -82,7 +82,8 @@ window.addEventListener('mousemove', (event) => {
         else {
             endingRange = range
             textSelection.setEndingRange(endingRange)
-            const selection = textSelection.selectTextBetweenRanges()
+            const selection = textSelection.selectTextBetweenRanges(event, linesLoader.firstVisibleLine)
+
         }
     }
 })

@@ -16,6 +16,10 @@ body {
     width: 100%;
 }
 
+html::selection {
+    background-color: transparent;
+}
+
 .navigation {
     position: absolute;
     top: 0%;
@@ -123,6 +127,19 @@ body {
 .line-content {
     color: white;
     position: absolute;
+    width: 100%;
+    height: fit-content;
+    white-space: pre;
+    height: 28.8px;
+    padding: 0%;
+    margin: 0%;
+    font-size: 24px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.line-content-marker {
+    color: white;
+    position: absolute;
     width: fit-content;
     height: fit-content;
     white-space: pre;
@@ -140,9 +157,11 @@ body {
     left: 100%;
     top: 0%;
     background-color: transparent;
+    pointer-events: none;
 }
 
 #scrollbar {
+    pointer-events: all;
     position: sticky;
     width: 10%;
     height: 100%;
@@ -161,6 +180,7 @@ body {
 
 #bar:hover {
     opacity: 0.5;
+    background-color: rgb(91, 91, 91);
 }
 
 .line-selector {

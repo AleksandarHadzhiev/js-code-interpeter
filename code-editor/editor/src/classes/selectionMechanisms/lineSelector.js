@@ -17,7 +17,7 @@ export default class LineSelector {
         this._positionSelectorBasedonTarget(selector, topOffset)
         const caretBuilder = new CaretBuilder()
         caretBuilder.buildCaretForLineSelection(contentElement, topOffset)
-        contentElement.appendChild(selector)
+        contentElement.prepend(selector)
     }
 
     _buildSelector() {
@@ -36,6 +36,5 @@ export default class LineSelector {
      */
     _positionSelectorBasedonTarget(selector, topOffset) {
         selector.style = `top: ${topOffset}px;`
-
     }
 }

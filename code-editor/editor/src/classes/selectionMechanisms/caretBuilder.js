@@ -19,7 +19,7 @@ export default class CaretBuilder {
         }
         const left = this._calculateLeftOffsetOfCaret(contentElement)
         caretElement.style = `top: ${topOffset}px; left: ${left}px;`
-        contentElement.appendChild(caretElement)
+        contentElement.prepend(caretElement)
     }
 
 

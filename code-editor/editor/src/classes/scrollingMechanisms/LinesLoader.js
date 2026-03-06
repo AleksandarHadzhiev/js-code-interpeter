@@ -78,7 +78,7 @@ export default class LinesLoader {
         lineElement.classList.add('line-content')
         lineElement.setAttribute('id', String(line.index))
         lineElement.style = `top:${line.index * this.lineHeightInPixels}px;`
-        lineElement.addEventListener('click', (event) => {
+        lineElement.addEventListener('mouseup', (event) => {
             const lineSelector = new LineSelector(event)
             lineSelector.selectLine()
         })

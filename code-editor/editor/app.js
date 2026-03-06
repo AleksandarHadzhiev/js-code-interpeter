@@ -45,6 +45,7 @@ window.addEventListener('wheel', (event) => {
 
 barElement.addEventListener('mousedown', (event) => {
     barIsSelected = true
+    scrollbarAreaElement.style.pointerEvents = "all"
 })
 
 scrollbarAreaElement.addEventListener('mousemove', (event) => {

@@ -29,7 +29,7 @@ let isTextSelecting = false
 
 let startingRange = null
 let endingRange = null
-const textSelection = new TextSelection(lineNumerationElement.scrollWidth, lineContentElement.scrollHeight, lineContentElement.scrollWidth)
+const textSelection = new TextSelection(scrollbarTopOffset, lineNumerationElement.scrollWidth, scrollbarHeight, lineContentElement.scrollWidth)
 
 
 const barHandler = new BarHandler(scrollbarHeight, barHeight, barElement)
@@ -59,6 +59,8 @@ scrollbarAreaElement.addEventListener('mousemove', (event) => {
         const percentage = barHandler.getPercentageOfScroll()
         loaderHandler.scrollWithPercentage(percentage)
         linesLoader.reloadLinesForNewTopOffset(loaderHandler.topOffset)
+        const newHeight = scrollbarHeight + (loaderHandler.topOffset)
+        textSelection.updateHeightOfElementBasedOnVisibleLinesOnTheScreen(newHeight)
     }
 })
 

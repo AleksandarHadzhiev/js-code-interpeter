@@ -21,13 +21,29 @@ const StartingPointVisibility = {
 }
 
 export default class TextSelection {
-    constructor(lineNumerationScrollWidth, contentElementScrollHeight, contentElementScrollWidth) {
+    /**
+     * 
+     * @param {Number} offsetTopOfContentScreen 
+     * @param {Number} lineNumerationScrollWidth 
+     * @param {Number} contentElementScrollHeight 
+     * @param {Number} contentElementScrollWidth 
+     */
+    constructor(offsetTopOfContentScreen, lineNumerationScrollWidth, contentElementScrollHeight, contentElementScrollWidth) {
         this.startingRange = null
         this.endingRange = null
+        this.offsetTopOfContentScreen = offsetTopOfContentScreen
         this.widhtOfLineNumerationElement = lineNumerationScrollWidth
         this.totalWidthOfScreen = contentElementScrollWidth + lineNumerationScrollWidth
         this.heightOfElementBasedOnVisibleLinesOnTheScreen = contentElementScrollHeight
         this.windowSectionScrollig = null
+    }
+
+    /**
+     * 
+     * @param {Number} height 
+     */
+    updateHeightOfElementBasedOnVisibleLinesOnTheScreen(height) {
+        this.heightOfElementBasedOnVisibleLinesOnTheScreen = height
     }
 
     /**
@@ -49,7 +65,7 @@ export default class TextSelection {
      */
     selectTextBetweenRanges(event, firstVisibleLine) {
         this.windowSectionScrollig = WindowSection.CENTRE
-        this._defineSectionOfTextSelection(event, firstVisibleLine)
+        this._defineSectionOfTextSelection(event)
         console.log(this.windowSectionScrollig)
         return null
     }
@@ -57,30 +73,22 @@ export default class TextSelection {
     /**
     * 
     * @param {MouseEvent} event 
-    * @param {Number} firstVisibleLine
     * @returns {String} the position of the mouse
     */
-    _defineSectionOfTextSelection(event, firstVisibleLine) {
-        const firstVisibleLineOnTheScreen = document.getElementById(String(firstVisibleLine))
-        const topOffsetOfTheFirstVisibleLineOnTheScreen = firstVisibleLineOnTheScreen.offsetTop
+    _defineSectionOfTextSelection(event) {
         const mouseYPositionBasedOnPage = event.pageY
         const mouseXPositionBasedOnPage = event.pageX
-        // INCORRECT CHECK
-        // The left and right section can be triggered although it is either top or bottom scrolling
-        // thats why they are commented out for now.
-        // the goal is to make top and bottom text selection work
-        // before working on the rest.
         if (mouseYPositionBasedOnPage == 0 && this.windowSectionScrollig == WindowSection.BOTTOM) {
             return MousePosition.BOTTOM
         }
         else if (mouseYPositionBasedOnPage == 0 && this.windowSectionScrollig == WindowSection.TOP) {
             return MousePosition.TOP
         }
-        else if (mouseYPositionBasedOnPage > this.heightOfElementBasedOnVisibleLinesOnTheScreen) {
+        else if (mouseYPositionBasedOnPage > this.heightOfElementBasedOnVisibleLinesOnTheScreen + this.offsetTopOfContentScreen) {
             this.windowSectionScrollig = WindowSection.BOTTOM
             return MousePosition.BOTTOM
         }
-        else if (mouseYPositionBasedOnPage < topOffsetOfTheFirstVisibleLineOnTheScreen && mouseYPositionBasedOnPage != 0) {
+        else if (mouseYPositionBasedOnPage < this.offsetTopOfContentScreen && mouseYPositionBasedOnPage != 0) {
             this.windowSectionScrollig = WindowSection.TOP
             return MousePosition.TOP
         }

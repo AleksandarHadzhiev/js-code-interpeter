@@ -2,6 +2,7 @@ import BarHandler from "./src/classes/scrollingMechanisms/BarHandler.js"
 import LoaderHandler from "./src/classes/scrollingMechanisms/LoaderHandler.js"
 import OffsetCalculator from "./src/classes/scrollingMechanisms/OffsetCalculator.js"
 import LinesLoader from "./src/classes/scrollingMechanisms/LinesLoader.js"
+import TextSelection from "./src/classes/selectionMechanisms/textSelection.js"
 
 const mainContainer = document.getElementById('container')
 const navigationElement = document.getElementById('navigation')
@@ -24,6 +25,11 @@ const loaderHeight = (lines + maxVisibleLinesOnScreen - 1) * lineHeightInPixels
 loaderElement.style.height = `${loaderHeight}px`
 
 let barIsSelected = false
+let isTextSelecting = false
+
+let startingRange = null
+let endingRange = null
+const textSelection = new TextSelection()
 
 
 const barHandler = new BarHandler(scrollbarHeight, barHeight, barElement)
@@ -32,7 +38,6 @@ const offsetCalculator = new OffsetCalculator()
 const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement)
 
 linesLoader.loadLines()
-
 
 window.addEventListener('wheel', (event) => {
     event.preventDefault()
@@ -59,4 +64,25 @@ scrollbarAreaElement.addEventListener('mousemove', (event) => {
 
 window.addEventListener('mouseup', (event) => {
     if (barIsSelected) barIsSelected = false
+    scrollbarAreaElement.style.pointerEvents = "none"
+    isTextSelecting = false
+})
+
+lineContentElement.addEventListener('mousedown', (event) => {
+    isTextSelecting = true
+})
+
+window.addEventListener('mousemove', (event) => {
+    if (isTextSelecting) {
+        const range = document.getSelection().getRangeAt(0)
+        if (startingRange == null) {
+            startingRange = range
+            textSelection.setStartingRange(startingRange)
+        }
+        else {
+            endingRange = range
+            textSelection.setEndingRange(endingRange)
+            const selection = textSelection.selectTextBetweenRanges()
+        }
+    }
 })

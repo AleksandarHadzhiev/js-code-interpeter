@@ -5,19 +5,19 @@ export default class LineSelector {
      * 
      * @param {MouseEvent} event 
      */
-    constructor(event) {
+    constructor(event, contentElement) {
         this.mouseEvent = event
+        this.contentElement = contentElement
     }
 
     selectLine() {
-        const contentElement = document.getElementById('content')
         const targetElement = this.mouseEvent.currentTarget
         const topOffset = targetElement.offsetTop
         const selector = this._buildSelector()
         this._positionSelectorBasedonTarget(selector, topOffset)
         const caretBuilder = new CaretBuilder()
-        caretBuilder.buildCaretForLineSelection(contentElement, topOffset)
-        contentElement.prepend(selector)
+        caretBuilder.buildCaretForLineSelection(this.contentElement, topOffset)
+        this.contentElement.prepend(selector)
     }
 
     _buildSelector() {

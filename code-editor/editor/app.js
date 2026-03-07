@@ -12,6 +12,7 @@ const scrollbarAreaElement = document.getElementById('scrollable-area')
 const barElement = document.getElementById('bar')
 const lineNumerationElement = document.getElementById('line-numeration')
 const lineContentElement = document.getElementById('line-content')
+const contentElement = document.getElementById('content')
 
 const scrollbarHeight = scrollbarElement.offsetHeight
 const scrollbarTopOffset = navigationElement.offsetHeight
@@ -29,13 +30,13 @@ let isTextSelecting = false
 
 let startingRange = null
 let endingRange = null
-const textSelection = new TextSelection(scrollbarTopOffset, lineNumerationElement.scrollWidth, scrollbarHeight, loaderElement.scrollWidth)
+const textSelection = new TextSelection(scrollbarTopOffset, lineNumerationElement.scrollWidth, scrollbarHeight, loaderElement.scrollWidth, contentElement)
 
 
 const barHandler = new BarHandler(scrollbarHeight, barHeight, barElement)
 const loaderHandler = new LoaderHandler(loaderHeight, scrollbarHeight, loaderElement)
 const offsetCalculator = new OffsetCalculator()
-const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement)
+const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement, contentElement)
 
 linesLoader.loadLines()
 

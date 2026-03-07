@@ -23,16 +23,17 @@ export default class TextSelection {
      * @param {Number} offsetTopOfContentScreen 
      * @param {Number} lineNumerationScrollWidth 
      * @param {Number} contentElementScrollHeight 
-     * @param {Number} contentElementScrollWidth 
+     * @param {Number} contentElementScrollWidth
+     * @param {HTMLElement} contentElement 
      */
-    constructor(offsetTopOfContentScreen, lineNumerationScrollWidth, contentElementScrollHeight, contentElementScrollWidth) {
+    constructor(offsetTopOfContentScreen, lineNumerationScrollWidth, contentElementScrollHeight, contentElementScrollWidth, contentElement) {
         this.offsetTopOfContentScreen = offsetTopOfContentScreen
         this.widhtOfLineNumerationElement = lineNumerationScrollWidth
         this.totalWidthOfScreen = contentElementScrollWidth + lineNumerationScrollWidth
         this.heightOfElementBasedOnVisibleLinesOnTheScreen = contentElementScrollHeight
         this.windowSectionScrollig = null
         this.mousePosition = null
-        this.highlighter = new Highlighter()
+        this.highlighter = new Highlighter(contentElement)
         this.loaderOffset = 0
     }
 

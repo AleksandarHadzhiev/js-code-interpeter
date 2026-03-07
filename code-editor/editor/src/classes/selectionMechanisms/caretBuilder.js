@@ -2,7 +2,6 @@ import calculateWidthForText from "../calculators/widthOfTextCalculator.js"
 
 export default class CaretBuilder {
     constructor() {
-
     }
 
     /**

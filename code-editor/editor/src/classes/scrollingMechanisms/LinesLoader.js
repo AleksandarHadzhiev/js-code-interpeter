@@ -7,8 +7,9 @@ export default class LinesLoader {
      * @param {Number} maxVisibleLinesOnScreen 
      * @param {HTMLElement} lineNumerationElement  
      * @param {HTMLElement} lineContentElement  
+     * @param {HTMLElement} contentElement  
     */
-    constructor(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement) {
+    constructor(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement, contentElement) {
         this.firstVisibleLine = 0
         this.lastVisibleLine = this.firstVisibleLine + maxVisibleLinesOnScreen
         this.maxVisibleLinesOnScreen = maxVisibleLinesOnScreen
@@ -17,6 +18,7 @@ export default class LinesLoader {
         this.lineContentElement = lineContentElement
         this.lineHeightInPixels = 28.8
         this.maxLines = 2000
+        this.contentElement = contentElement
     }
 
     loadLines() {
@@ -79,7 +81,7 @@ export default class LinesLoader {
         lineElement.setAttribute('id', String(line.index))
         lineElement.style = `top:${line.index * this.lineHeightInPixels}px;`
         lineElement.addEventListener('mouseup', (event) => {
-            const lineSelector = new LineSelector(event)
+            const lineSelector = new LineSelector(event, this.contentElement)
             lineSelector.selectLine()
         })
         return lineElement

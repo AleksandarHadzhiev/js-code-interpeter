@@ -27,4 +27,14 @@ export default class LineColoriser {
         this.startingMarkedPoint = null
         this.endingMarkedPoint = null
     }
+
+    /**
+     * 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     */
+    coloriseLinesforLeftBetweenFirstAndLastVisibleLine(firstVisibleLine, lastVisibleLine) {
+        this.coordinatesToHighlight.clear()
+        return this.coordinatesToHighlight
+    }
 }

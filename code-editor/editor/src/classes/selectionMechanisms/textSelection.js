@@ -31,6 +31,7 @@ export default class TextSelection {
         this.totalWidthOfScreen = contentElementScrollWidth + lineNumerationScrollWidth
         this.heightOfElementBasedOnVisibleLinesOnTheScreen = contentElementScrollHeight
         this.windowSectionScrollig = null
+        this.mousePosition = null
         this.highlighter = new Highlighter()
         this.loaderOffset = 0
     }
@@ -75,8 +76,10 @@ export default class TextSelection {
      */
     selectTextBetweenRanges(event, firstVisibleLine, lastVisibleLine) {
         this.windowSectionScrollig = WindowSection.CENTRE
-        this._defineSectionOfTextSelection(event)
-        this._highlightTextBasedOnMousePosition(event, firstVisibleLine, lastVisibleLine)
+        const mouseYPositionBasedOnPage = event.pageY + this.loaderOffset - this.offsetTopOfContentScreen
+
+        this.mousePosition = this._defineSectionOfTextSelection(event, mouseYPositionBasedOnPage)
+        this._highlightTextBasedOnMousePosition(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
         console.log(this.windowSectionScrollig)
         return null
     }
@@ -84,10 +87,10 @@ export default class TextSelection {
     /**
     * 
     * @param {MouseEvent} event 
+    * @param {Number} mouseYPositionBasedOnPage 
     * @returns {String} the position of the mouse
     */
-    _defineSectionOfTextSelection(event) {
-        const mouseYPositionBasedOnPage = event.pageY + this.loaderOffset - this.offsetTopOfContentScreen
+    _defineSectionOfTextSelection(event, mouseYPositionBasedOnPage) {
         const mouseXPositionBasedOnPage = event.pageX
         if (mouseYPositionBasedOnPage == 0 && this.windowSectionScrollig == WindowSection.BOTTOM) {
             return MousePosition.BOTTOM
@@ -117,23 +120,25 @@ export default class TextSelection {
     }
 
     /**
-     * 
-     * @param {MouseEvent} event 
+     * @param {Number} mouseYPositionBasedOnPage 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
      */
-    _highlightTextBasedOnMousePosition(event, firstVisibleLine, lastVisibleLine) {
-        if (this.windowSectionScrollig == MousePosition.RIGHT) {
+    _highlightTextBasedOnMousePosition(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
+        if (this.mousePosition == MousePosition.RIGHT) {
 
         }
-        else if (this.windowSectionScrollig == MousePosition.LEFT) {
-            this.highlighter.highlightForLeftScreenSection(event, firstVisibleLine, lastVisibleLine)
+        else if (this.mousePosition == MousePosition.LEFT) {
+            console.log("HERE")
+            this.highlighter.highlightForLeftScreenSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
         }
-        else if (this.windowSectionScrollig == MousePosition.TOP) {
+        else if (this.mousePosition == MousePosition.TOP) {
 
         }
-        else if (this.windowSectionScrollig == MousePosition.BOTTOM) {
+        else if (this.mousePosition == MousePosition.BOTTOM) {
 
         }
-        else if (this.windowSectionScrollig == MousePosition.CENTRE) {
+        else if (this.mousePosition == MousePosition.CENTRE) {
 
         }
     }

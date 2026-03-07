@@ -1,5 +1,5 @@
 import CustomRangeElement from "./customRangeElement.js"
-
+import CustomContentMarker from "./custonContentMarker.js"
 
 const Operation = {
     ADD: "+",
@@ -16,7 +16,7 @@ export default class Highlighter {
     constructor() {
         this.startingPoint = null
         this.endingPoint = null
-        this.customMarker = null
+        this.customMarker = new CustomContentMarker()
     }
 
     /**
@@ -39,12 +39,12 @@ export default class Highlighter {
     }
 
     /**
-     * @param {MouseEvent} event 
+     * @param {Number} mouseYPositionBasedOnPage 
      * @param {Number} firstVisibleLine 
      * @param {Number} lastVisibleLine 
      */
-    highlightForLeftScreenSection(event, firstVisibleLine, lastVisibleLine) {
-        const range = this._buildForLeft(event, firstVisibleLine, lastVisibleLine)
+    highlightForLeftScreenSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
+        const range = this._buildReleaseRangeForLeft(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
         this.setEndingPointBasedOnRange(range)
         this.customMarker.updatePoints(this.startingPoint, this.endingPoint)
         this.customMarker.buildForLeftSection(firstVisibleLine, lastVisibleLine)
@@ -52,13 +52,13 @@ export default class Highlighter {
 
     /**
      * 
-     * @param {MouseEvent} event 
+     * @param {Number} mouseYPositionBasedOnPage 
      * @param {Number} firstVisibleLine 
      * @param {Number} lastVisibleLine 
      * @returns {Range}
      */
-    _buildForLeft(event, firstVisibleLine, lastVisibleLine) {
-        const y = event.pageY
+    _buildReleaseRangeForLeft(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
+        const y = mouseYPositionBasedOnPage
         let rowBasedOnMouseYPosition = Math.floor(y / 27.6)
         let lineElementBasedOnMouuse = document.getElementById(String(rowBasedOnMouseYPosition))
         while (lineElementBasedOnMouuse == null) {
@@ -68,7 +68,7 @@ export default class Highlighter {
                 rowBasedOnMouseYPosition + 1
             lineElementBasedOnMouuse = document.getElementById(String(rowBasedOnMouseYPosition))
         }
-        const startingPointLineVisibility = this._getStartingPointLinePositionBasedOnVisibleLines()
+        const startingPointLineVisibility = this._getStartingPointLinePositionBasedOnVisibleLines(firstVisibleLine, lastVisibleLine)
         const firstVisibleLineElement = document.getElementById(String(firstVisibleLine))
         const lastVisibleLineElement = this._getElementForVisibleLineAndOperationToExecute(lastVisibleLine, Operation.SUBSTRACT)
         const range = new Range()
@@ -94,8 +94,14 @@ export default class Highlighter {
         return range
     }
 
-    _getStartingPointLinePositionBasedOnVisibleLines() {
-        const lineOfStartingPoint = startingPoint.lineOfStartContainer
+    /**
+     * 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     * @returns {String}
+     */
+    _getStartingPointLinePositionBasedOnVisibleLines(firstVisibleLine, lastVisibleLine) {
+        const lineOfStartingPoint = this.startingPoint.lineOfStartContainer
         const idOfLineOfStartingPoint = lineOfStartingPoint.id
 
         if (idOfLineOfStartingPoint >= firstVisibleLine && idOfLineOfStartingPoint < lastVisibleLine) {

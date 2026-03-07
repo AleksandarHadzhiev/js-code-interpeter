@@ -789,8 +789,6 @@ function highlightTest(event) {
             customMarker = new CustomContentMarker(startingPoint, releasingPoint)
             customMarker.buildForLeftSection(firstVisibleLine, lastVisibleLine)
         }
-
-
     }
     else if (mousePosition == MousePosition.TOP) {
         const range = buildRangeForTop(event)
@@ -821,12 +819,10 @@ function buildForLeft(event) {
     let rowBasedOnMouseYPosition = Math.floor(y / 27.6)
     let lineElementBasedOnMouuse = document.getElementById(String(rowBasedOnMouseYPosition))
     while (lineElementBasedOnMouuse == null) {
-        if (rowBasedOnMouseYPosition > lastVisibleLine) {
+        if (rowBasedOnMouseYPosition > lastVisibleLine)
             rowBasedOnMouseYPosition - 1
-        }
-        else if (rowBasedOnMouseYPosition < firstVisibleLine) {
+        else if (rowBasedOnMouseYPosition < firstVisibleLine)
             rowBasedOnMouseYPosition + 1
-        }
         lineElementBasedOnMouuse = document.getElementById(String(rowBasedOnMouseYPosition))
     }
     const startingPointLineVisibility = getStartingPointLinePositionBasedOnVisibleLines()

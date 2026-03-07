@@ -29,7 +29,7 @@ let isTextSelecting = false
 
 let startingRange = null
 let endingRange = null
-const textSelection = new TextSelection(scrollbarTopOffset, lineNumerationElement.scrollWidth, scrollbarHeight, lineContentElement.scrollWidth)
+const textSelection = new TextSelection(scrollbarTopOffset, lineNumerationElement.scrollWidth, scrollbarHeight, loaderElement.scrollWidth)
 
 
 const barHandler = new BarHandler(scrollbarHeight, barHeight, barElement)

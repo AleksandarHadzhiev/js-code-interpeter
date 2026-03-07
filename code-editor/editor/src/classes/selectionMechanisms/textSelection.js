@@ -32,6 +32,7 @@ export default class TextSelection {
         this.heightOfElementBasedOnVisibleLinesOnTheScreen = contentElementScrollHeight
         this.windowSectionScrollig = null
         this.highlighter = new Highlighter()
+        this.loaderOffset = 0
     }
 
     /**
@@ -50,8 +51,20 @@ export default class TextSelection {
         this.highlighter.setStartingPointBasedOnRange(range)
     }
 
+    /**
+     * 
+     * @param {Range} range 
+     */
     setEndingRange(range) {
         this.highlighter.setEndingPointBasedOnRange(range)
+    }
+
+    /**
+     * 
+     * @param {Number} offset 
+     */
+    setLoaderOffset(offset) {
+        this.loaderOffset = offset
     }
 
     /**
@@ -74,7 +87,7 @@ export default class TextSelection {
     * @returns {String} the position of the mouse
     */
     _defineSectionOfTextSelection(event) {
-        const mouseYPositionBasedOnPage = event.pageY
+        const mouseYPositionBasedOnPage = event.pageY + this.loaderOffset - this.offsetTopOfContentScreen
         const mouseXPositionBasedOnPage = event.pageX
         if (mouseYPositionBasedOnPage == 0 && this.windowSectionScrollig == WindowSection.BOTTOM) {
             return MousePosition.BOTTOM
@@ -82,11 +95,11 @@ export default class TextSelection {
         else if (mouseYPositionBasedOnPage == 0 && this.windowSectionScrollig == WindowSection.TOP) {
             return MousePosition.TOP
         }
-        else if (mouseYPositionBasedOnPage > this.heightOfElementBasedOnVisibleLinesOnTheScreen + this.offsetTopOfContentScreen) {
+        else if (mouseYPositionBasedOnPage > this.heightOfElementBasedOnVisibleLinesOnTheScreen) {
             this.windowSectionScrollig = WindowSection.BOTTOM
             return MousePosition.BOTTOM
         }
-        else if (mouseYPositionBasedOnPage < this.offsetTopOfContentScreen && mouseYPositionBasedOnPage != 0) {
+        else if (mouseYPositionBasedOnPage < this.loaderOffset && mouseYPositionBasedOnPage != 0) {
             this.windowSectionScrollig = WindowSection.TOP
             return MousePosition.TOP
         }

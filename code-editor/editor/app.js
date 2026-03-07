@@ -46,6 +46,9 @@ window.addEventListener('wheel', (event) => {
     const percentage = loaderHandler.getPercentageOfScroll()
     barHandler.scrollBasedOnPercentage(percentage)
     linesLoader.reloadLinesForNewTopOffset(loaderHandler.topOffset)
+    const newHeight = scrollbarHeight + (loaderHandler.topOffset)
+    textSelection.updateHeightOfElementBasedOnVisibleLinesOnTheScreen(newHeight)
+    textSelection.setLoaderOffset(loaderHandler.topOffset)
 })
 
 barElement.addEventListener('mousedown', (event) => {
@@ -61,6 +64,7 @@ scrollbarAreaElement.addEventListener('mousemove', (event) => {
         linesLoader.reloadLinesForNewTopOffset(loaderHandler.topOffset)
         const newHeight = scrollbarHeight + (loaderHandler.topOffset)
         textSelection.updateHeightOfElementBasedOnVisibleLinesOnTheScreen(newHeight)
+        textSelection.setLoaderOffset(loaderHandler.topOffset)
     }
 })
 

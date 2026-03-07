@@ -25,5 +25,6 @@ export default class CustomContentMarker {
     buildForLeftSection(firstVisibleLine, lastVisibleLine) {
         this.algorithm = new LineColoriser(this.startingPoint, this.releasingPoint)
         const multilineCoordinates = this.algorithm.coloriseLinesforLeftBetweenFirstAndLastVisibleLine(firstVisibleLine, lastVisibleLine)
+
     }
 }

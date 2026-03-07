@@ -35,6 +35,28 @@ export default class LineColoriser {
      */
     coloriseLinesforLeftBetweenFirstAndLastVisibleLine(firstVisibleLine, lastVisibleLine) {
         this.coordinatesToHighlight.clear()
-        return this.coordinatesToHighlight
+        const lineOfStartingPoint = Number(this.startingPoint.lineOfStartContainer.id)
+        const startingLineOfEndingPoint = Number(this.endingPoint.lineOfStartContainer.id)
+        const endingLineOfEndingPoint = Number(this.endingPoint.lineOfEndContainer.id)
+
+        if (lineOfStartingPoint >= firstVisibleLine && lineOfStartingPoint <= lastVisibleLine) {
+            if (endingLineOfEndingPoint == lineOfStartingPoint) {
+
+            }
+            else if (endingLineOfEndingPoint < lineOfStartingPoint) {
+
+            }
+            else if (endingLineOfEndingPoint > lineOfStartingPoint) {
+
+            }
+        }
+
+        else if (startingLineOfEndingPoint > lineOfStartingPoint) {
+
+        }
+
+        else if (startingLineOfEndingPoint < lineOfStartingPoint)
+
+            return this.coordinatesToHighlight
     }
 }

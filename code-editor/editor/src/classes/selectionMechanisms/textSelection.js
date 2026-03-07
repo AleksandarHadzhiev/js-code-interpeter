@@ -61,11 +61,13 @@ export default class TextSelection {
     /**
      * @param {MouseEvent} event 
      * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
      * @returns {null}
      */
-    selectTextBetweenRanges(event, firstVisibleLine) {
+    selectTextBetweenRanges(event, firstVisibleLine, lastVisibleLine) {
         this.windowSectionScrollig = WindowSection.CENTRE
         this._defineSectionOfTextSelection(event)
+        this._highlightTextBasedOnMousePosition(event, firstVisibleLine, lastVisibleLine)
         console.log(this.windowSectionScrollig)
         return null
     }
@@ -103,5 +105,27 @@ export default class TextSelection {
         }
         this.windowSectionScrollig = WindowSection.CENTRE
         return MousePosition.CENTRE
+    }
+
+    /**
+     * 
+     * @param {MouseEvent} event 
+     */
+    _highlightTextBasedOnMousePosition(event, firstVisibleLine, lastVisibleLine) {
+        if (this.windowSectionScrollig == MousePosition.RIGHT) {
+
+        }
+        else if (this.windowSectionScrollig == MousePosition.LEFT) {
+
+        }
+        else if (this.windowSectionScrollig == MousePosition.TOP) {
+
+        }
+        else if (this.windowSectionScrollig == MousePosition.BOTTOM) {
+
+        }
+        else if (this.windowSectionScrollig == MousePosition.CENTRE) {
+
+        }
     }
 }

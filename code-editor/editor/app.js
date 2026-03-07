@@ -84,7 +84,7 @@ window.addEventListener('mousemove', (event) => {
         else {
             endingRange = range
             textSelection.setEndingRange(endingRange)
-            const selection = textSelection.selectTextBetweenRanges(event, linesLoader.firstVisibleLine)
+            const selection = textSelection.selectTextBetweenRanges(event, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
 
         }
     }

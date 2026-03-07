@@ -1,3 +1,5 @@
+import Highlighter from "./highlighter"
+
 const MousePosition = {
     LEFT: "left",
     RIGHT: "right",
@@ -14,11 +16,6 @@ const WindowSection = {
     RIGHT: "RIGHT"
 }
 
-const StartingPointVisibility = {
-    VISIBLE: "VISIBLE",
-    EARLIER_ROW_THAN_FIRST_VISIBLE_ON_THE_SCREEN: "EARLIER_ROW_THAN_FIRST_VISIBLE_ON_THE_SCREEN",
-    LAIER_ROW_THAN_LAST_VISIBLE_ON_THE_SCREEN: "LAIER_ROW_THAN_LAST_VISIBLE_ON_THE_SCREEN"
-}
 
 export default class TextSelection {
     /**
@@ -29,13 +26,12 @@ export default class TextSelection {
      * @param {Number} contentElementScrollWidth 
      */
     constructor(offsetTopOfContentScreen, lineNumerationScrollWidth, contentElementScrollHeight, contentElementScrollWidth) {
-        this.startingRange = null
-        this.endingRange = null
         this.offsetTopOfContentScreen = offsetTopOfContentScreen
         this.widhtOfLineNumerationElement = lineNumerationScrollWidth
         this.totalWidthOfScreen = contentElementScrollWidth + lineNumerationScrollWidth
         this.heightOfElementBasedOnVisibleLinesOnTheScreen = contentElementScrollHeight
         this.windowSectionScrollig = null
+        this.highlighter = new Highlighter()
     }
 
     /**
@@ -51,11 +47,11 @@ export default class TextSelection {
      * @param {Range} range 
      */
     setStartingRange(range) {
-        this.startingRange = range
+        this.highlighter.setStartingPointBasedOnRange(range)
     }
 
     setEndingRange(range) {
-        this.endingRange = range
+        this.highlighter.setEndingPointBasedOnRange(range)
     }
 
     /**
@@ -116,7 +112,7 @@ export default class TextSelection {
 
         }
         else if (this.windowSectionScrollig == MousePosition.LEFT) {
-
+            this.highlighter.highlightForLeftScreenSection(event, firstVisibleLine, lastVisibleLine)
         }
         else if (this.windowSectionScrollig == MousePosition.TOP) {
 
@@ -128,4 +124,5 @@ export default class TextSelection {
 
         }
     }
+
 }

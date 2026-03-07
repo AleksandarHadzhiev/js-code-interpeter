@@ -73,6 +73,7 @@ window.addEventListener('mouseup', (event) => {
     if (barIsSelected) barIsSelected = false
     scrollbarAreaElement.style.pointerEvents = "none"
     isTextSelecting = false
+    startingRange = null
 })
 
 lineContentElement.addEventListener('mousedown', (event) => {
@@ -81,6 +82,7 @@ lineContentElement.addEventListener('mousedown', (event) => {
 
 window.addEventListener('mousemove', (event) => {
     if (isTextSelecting) {
+        buildMarker()
         const range = document.getSelection().getRangeAt(0)
         if (startingRange == null) {
             startingRange = range
@@ -90,7 +92,15 @@ window.addEventListener('mousemove', (event) => {
             endingRange = range
             textSelection.setEndingRange(endingRange)
             const selection = textSelection.selectTextBetweenRanges(event, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
-
         }
     }
 })
+
+function buildMarker() {
+    let markerElement = document.getElementById('marker')
+    if (markerElement) marker.remove()
+    markerElement = document.createElement('div')
+    markerElement.classList.add('marker')
+    markerElement.setAttribute('id', 'marker')
+    contentElement.prepend(markerElement)
+}

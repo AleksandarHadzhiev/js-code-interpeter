@@ -78,11 +78,8 @@ export default class TextSelection {
     selectTextBetweenRanges(event, firstVisibleLine, lastVisibleLine) {
         this.windowSectionScrollig = WindowSection.CENTRE
         const mouseYPositionBasedOnPage = event.pageY + this.loaderOffset - this.offsetTopOfContentScreen
-
         this.mousePosition = this._defineSectionOfTextSelection(event, mouseYPositionBasedOnPage)
         this._highlightTextBasedOnMousePosition(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
-        console.log(this.windowSectionScrollig)
-        return null
     }
 
     /**

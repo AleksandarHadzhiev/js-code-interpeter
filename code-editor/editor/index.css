@@ -209,3 +209,12 @@ html::selection {
         opacity: 0;
     }
 }
+
+.marker {
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    background-color: transparent;
+    color: transparent;
+    left: 5%;
+}

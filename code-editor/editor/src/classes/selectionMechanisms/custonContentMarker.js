@@ -27,5 +27,27 @@ export default class CustomContentMarker {
         this.algorithm = new LineColoriser(this.startingPoint, this.releasingPoint, this.contentElement)
         const multilineCoordinates = this.algorithm.coloriseLinesforLeftBetweenFirstAndLastVisibleLine(firstVisibleLine, lastVisibleLine)
         console.log(multilineCoordinates)
+        multilineCoordinates.forEach((coordinates) => {
+            this._buildLineInMarkerForCoordinates(coordinates)
+        });
+    }
+
+    /**
+     * Creates a line and appends it to the marker.
+     * @param {StartingPositionOfLine} coordinates 
+     */
+    _buildLineInMarkerForCoordinates(coordinates) {
+        const marker = document.getElementById('marker')
+        const lineInMarker = document.createElement('div')
+        lineInMarker.style = `
+            position: absolute;
+            top: ${coordinates.top}px;
+            left: ${coordinates.left}px;
+            width: ${coordinates.width}px;
+            background-color: green;
+            height: 27.6px;
+            color: transparent;
+        `
+        marker.append(lineInMarker)
     }
 }

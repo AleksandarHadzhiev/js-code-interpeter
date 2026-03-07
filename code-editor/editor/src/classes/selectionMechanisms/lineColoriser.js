@@ -74,11 +74,12 @@ export default class LineColoriser {
     }
 
     _defineCoordinatesForStartingPointWithoutLeftOffset() {
+        console.log(this.startingPoint)
         const widthOfTextToSelect = calculateTotalLeftOffsetOfCaretInTheLine(
             new CaretLeftOffsetDTO(
-                this.startingPoint.startContainer,
-                this.startingPoint.startContainerOffset,
-                this.startingPoint.startOffset
+                this.startingPoint.endContainer,
+                this.startingPoint.endContainerOffset,
+                this.startingPoint.endOffset
             ),
             this.contentElement
         )

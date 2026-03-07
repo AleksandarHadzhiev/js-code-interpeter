@@ -1,4 +1,4 @@
-import Highlighter from "./highlighter"
+import Highlighter from "./highlighter.js"
 
 const MousePosition = {
     LEFT: "left",

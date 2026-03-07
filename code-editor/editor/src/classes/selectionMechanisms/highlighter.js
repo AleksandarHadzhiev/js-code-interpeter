@@ -1,4 +1,4 @@
-import CustomRangeElement from "./customRangeElement"
+import CustomRangeElement from "./customRangeElement.js"
 
 
 const Operation = {

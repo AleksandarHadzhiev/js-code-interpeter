@@ -60,13 +60,16 @@ export default class Highlighter {
      */
     _buildReleaseRangeForLeft(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
         const y = mouseYPositionBasedOnPage
-        let rowBasedOnMouseYPosition = Math.floor(y / 27.6)
+        let rowBasedOnMouseYPosition = Math.floor(y / 28.8)
         let lineElementBasedOnMouuse = document.getElementById(String(rowBasedOnMouseYPosition))
         while (lineElementBasedOnMouuse == null) {
-            if (rowBasedOnMouseYPosition > lastVisibleLine)
-                rowBasedOnMouseYPosition - 1
-            else if (rowBasedOnMouseYPosition < firstVisibleLine)
-                rowBasedOnMouseYPosition + 1
+            if (rowBasedOnMouseYPosition > lastVisibleLine + 2) {
+                rowBasedOnMouseYPosition -= 1
+            }
+            else if (rowBasedOnMouseYPosition < firstVisibleLine + 2) {
+                rowBasedOnMouseYPosition += 1
+            }
+            else { console.log("EDGE CASE") }
             lineElementBasedOnMouuse = document.getElementById(String(rowBasedOnMouseYPosition))
         }
         const startingPointLineVisibility = this._getStartingPointLinePositionBasedOnVisibleLines(firstVisibleLine, lastVisibleLine)

@@ -82,7 +82,7 @@ export default class TextSelection {
         else if (mouseYPositionBasedOnPage == 0 && this.windowSectionScrollig == WindowSection.TOP) {
             return MousePosition.TOP
         }
-        else if (mouseYPositionBasedOnPage > this.heightOfElementBasedOnVisibleLinesOnTheScreen) {
+        else if (mouseYPositionBasedOnPage > this.loaderOffset + this.heightOfElementBasedOnVisibleLinesOnTheScreen) {
             this.windowSectionScrollig = WindowSection.BOTTOM
             return MousePosition.BOTTOM
         }
@@ -113,7 +113,6 @@ export default class TextSelection {
 
         }
         else if (this.mousePosition == MousePosition.LEFT) {
-            console.log("HERE")
             this.highlighter.highlightForLeftScreenSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
         }
         else if (this.mousePosition == MousePosition.TOP) {

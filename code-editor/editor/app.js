@@ -94,6 +94,8 @@ window.addEventListener('mousemove', (event) => {
             textSelection.setEndingRange(endingRange)
             const mousePosition = textSelection.selectTextBetweenRanges(event, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
             textSelectionScrolling.scrollOnMousePosition(mousePosition)
+            textSelection.setLoaderOffset(loaderHandler.topOffset)
+            console.log(mousePosition)
         }
     }
 })

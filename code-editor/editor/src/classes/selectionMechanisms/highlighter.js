@@ -47,7 +47,6 @@ export default class Highlighter {
         const range = this._buildReleaseRangeForLeft(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
         this.setEndingPointBasedOnRange(range)
         this.customMarker.updatePoints(this.startingPoint, this.endingPoint)
-        console.log(this.customMarker)
         this.customMarker.buildForLeftSection(firstVisibleLine, lastVisibleLine)
     }
 

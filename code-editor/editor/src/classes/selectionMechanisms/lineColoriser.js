@@ -45,15 +45,13 @@ export default class LineColoriser {
         const lineOfStartingPoint = Number(this.startingPoint.lineOfStartContainer.id)
         const startingLineOfEndingPoint = Number(this.endingPoint.lineOfStartContainer.id)
         const endingLineOfEndingPoint = Number(this.endingPoint.lineOfEndContainer.id)
-
-        if (lineOfStartingPoint >= firstVisibleLine && lineOfStartingPoint <= lastVisibleLine) {
+        console.log("HERE")
+        if (lineOfStartingPoint >= firstVisibleLine && lineOfStartingPoint <= lastVisibleLine)
             this._coloriseLeftForStartingPointStillVisible(endingLineOfEndingPoint, lineOfStartingPoint)
-        }
-        else if (startingLineOfEndingPoint > lineOfStartingPoint) {
-            console.log("NEEDS TO BE ABLE TO SCROLL FIRST")
-        }
+        else if (startingLineOfEndingPoint > lineOfStartingPoint)
+            this._coloriseForLeftWhenMouseIsLaterThanStartingPointNotVisible(firstVisibleLine, endingLineOfEndingPoint, lineOfStartingPoint)
         else if (startingLineOfEndingPoint < lineOfStartingPoint)
-            console.log("NEEDS TO BE ABLE TO SCROLL FIRST")
+            this._coloriseForLeftWhenMouseIsOnEarlierLineThanStartingPointNotVisible(endingLineOfEndingPoint, lastVisibleLine, lineOfStartingPoint)
         return this.coordinatesToHighlight
     }
 
@@ -168,5 +166,21 @@ export default class LineColoriser {
         const widthOfTextContent = calculateWidthForText(this.contentElement, textContentOfLine)
         const textToSelect = widthOfTextContent - widthOfTextToSelect
         return new MarkedLineCoordinates(widthOfTextToSelect, topOffset, textToSelect)
+    }
+
+    _coloriseForLeftWhenMouseIsLaterThanStartingPointNotVisible(firstVisibleLine, endingLineOfEndingPoint, lineOfStartingPoint) {
+        this._fullyColoriselinesBetweenTwoLines(firstVisibleLine, endingLineOfEndingPoint - 1)
+        let coordinates = this._defineCoordinatesForStartingPointWithLeftOffset()
+        this._defineStartingMarkedPointBasedOnCoordinatesAndLineId(coordinates, lineOfStartingPoint)
+        coordinates = this._calculateCoordinatesForLineAtIndex(endingLineOfEndingPoint)
+        this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, endingLineOfEndingPoint)
+    }
+
+    _coloriseForLeftWhenMouseIsOnEarlierLineThanStartingPointNotVisible(endingLineOfEndingPoint, lastVisibleLine, lineOfStartingPoint) {
+        this._fullyColoriselinesBetweenTwoLines(endingLineOfEndingPoint, lastVisibleLine)
+        let coordinates = this._calculateCoordinatesForLineAtIndex(endingLineOfEndingPoint)
+        this._defineStartingMarkedPointBasedOnCoordinatesAndLineId(coordinates, endingLineOfEndingPoint)
+        coordinates = this._defineCoordinatesForStartingPointWithoutLeftOffset()
+        this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, lineOfStartingPoint)
     }
 }

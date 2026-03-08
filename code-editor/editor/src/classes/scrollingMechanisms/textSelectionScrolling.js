@@ -30,9 +30,7 @@ export default class TextSelectionScrolling {
     }
 
     _scrollDown() {
-        console.log("here")
         this.loaderHandler.scrollWithOffset(50)
-        console.log(this.loaderHandler.topOffset)
         const percentage = this.loaderHandler.getPercentageOfScroll()
         this.barHandler.scrollBasedOnPercentage(percentage)
         this.linesLoader.reloadLinesForNewTopOffset(this.loaderHandler.topOffset)
@@ -40,7 +38,6 @@ export default class TextSelectionScrolling {
 
     _scrollUp() {
         this.loaderHandler.scrollWithOffset(-50)
-        console.log(this.loaderHandler.topOffset)
         const percentage = this.loaderHandler.getPercentageOfScroll()
         this.barHandler.scrollBasedOnPercentage(percentage)
         this.linesLoader.reloadLinesForNewTopOffset(this.loaderHandler.topOffset)

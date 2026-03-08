@@ -1,6 +1,7 @@
 import MarkedLineCoordinates from "./markedLineCoordinates.js"
 import calculateTotalLeftOffsetOfCaretInTheLine from "../calculators/caretLeftOffsetCalculator.js"
 import { CaretLeftOffsetDTO } from "../dtos/caretDTOs.js"
+import calculateWidthForText from "../calculators/widthOfTextCalculator.js"
 
 class MarkedPoint {
     /**
@@ -46,24 +47,26 @@ export default class LineColoriser {
         const endingLineOfEndingPoint = Number(this.endingPoint.lineOfEndContainer.id)
 
         if (lineOfStartingPoint >= firstVisibleLine && lineOfStartingPoint <= lastVisibleLine) {
-            if (endingLineOfEndingPoint == lineOfStartingPoint) {
-                this._colorsieForLeftWhenMouseIsOnSameLineAsStartingPoint(lineOfStartingPoint)
-            }
-            else if (endingLineOfEndingPoint < lineOfStartingPoint) {
-
-            }
-            else if (endingLineOfEndingPoint > lineOfStartingPoint) {
-
-            }
+            this._coloriseLeftForStartingPointStillVisible(endingLineOfEndingPoint, lineOfStartingPoint)
         }
-
         else if (startingLineOfEndingPoint > lineOfStartingPoint) {
-
+            console.log("NEEDS TO BE ABLE TO SCROLL FIRST")
         }
-
         else if (startingLineOfEndingPoint < lineOfStartingPoint)
-            console.log("SOMETHING")
+            console.log("NEEDS TO BE ABLE TO SCROLL FIRST")
         return this.coordinatesToHighlight
+    }
+
+    _coloriseLeftForStartingPointStillVisible(endingLineOfEndingPoint, lineOfStartingPoint) {
+        if (endingLineOfEndingPoint == lineOfStartingPoint) {
+            this._colorsieForLeftWhenMouseIsOnSameLineAsStartingPoint(lineOfStartingPoint)
+        }
+        else if (endingLineOfEndingPoint < lineOfStartingPoint) {
+            this._colorsieForLeftWhenMouseIsOnearlinerLineThanStartingPoint(endingLineOfEndingPoint, lineOfStartingPoint)
+        }
+        else if (endingLineOfEndingPoint > lineOfStartingPoint) {
+            this._colorsieForLeftWhenMouseIsOnLaterLineThanStartingPoint(lineOfStartingPoint, endingLineOfEndingPoint)
+        }
     }
 
     _colorsieForLeftWhenMouseIsOnSameLineAsStartingPoint(lineOfStartingPoint) {
@@ -91,5 +94,79 @@ export default class LineColoriser {
         this.endingMarkedPoint = new MarkedPoint(
             coordinates.top, coordinates.left, coordinates.width, lineId
         )
+    }
+
+    _colorsieForLeftWhenMouseIsOnearlinerLineThanStartingPoint(endingLineOfEndingPoint, lineOfStartingPoint) {
+        this._fullyColoriselinesBetweenTwoLines(endingLineOfEndingPoint, lineOfStartingPoint - 1)
+        let coordinates = this._calculateCoordinatesForLineAtIndex(endingLineOfEndingPoint)
+        this._defineStartingMarkedPointBasedOnCoordinatesAndLineId(coordinates, endingLineOfEndingPoint)
+        coordinates = this._defineCoordinatesForStartingPointWithoutLeftOffset()
+        this.coordinatesToHighlight.set(lineOfStartingPoint, coordinates)
+        this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, lineOfStartingPoint)
+    }
+
+    /**
+     * 
+     * @param {Number} firstLine 
+     * @param {Number} lastLine 
+     */
+    _fullyColoriselinesBetweenTwoLines(firstLine, lastLine) {
+        for (let index = firstLine; index <= lastLine; index++) {
+            const coordinates = this._calculateCoordinatesForLineAtIndex(index)
+            this.coordinatesToHighlight.set(index, coordinates)
+        }
+    }
+
+    /**
+     * 
+     * @param {Number} index 
+     * @param {Number} firstLine
+     */
+    _calculateCoordinatesForLineAtIndex(index) {
+        const lineElement = document.getElementById(String(index));
+        const textContentOfLine = lineElement.textContent
+        const widthOfTextContent = calculateWidthForText(this.contentElement, textContentOfLine)
+        const topOffset = lineElement.offsetTop
+        const coordinates = new MarkedLineCoordinates(0, topOffset, widthOfTextContent)
+        return coordinates
+    }
+
+    /**
+    * 
+    * @param {MarkedLineCoordinates} coordinates 
+    * @param {Number} lineId 
+    */
+    _defineStartingMarkedPointBasedOnCoordinatesAndLineId(coordinates, lineId) {
+        this.startingMarkedPoint = new MarkedPoint(
+            coordinates.top, coordinates.left, coordinates.width, lineId
+        )
+    }
+
+    _colorsieForLeftWhenMouseIsOnLaterLineThanStartingPoint(lineOfStartingPoint, endingLineOfEndingPoint) {
+        this._fullyColoriselinesBetweenTwoLines(lineOfStartingPoint + 1, endingLineOfEndingPoint - 1)
+        let coordinates = this._defineCoordinatesForStartingPointWithLeftOffset()
+        this.coordinatesToHighlight.set(lineOfStartingPoint, coordinates)
+        this._defineStartingMarkedPointBasedOnCoordinatesAndLineId(coordinates, lineOfStartingPoint)
+        coordinates = this._calculateCoordinatesForLineAtIndex(endingLineOfEndingPoint)
+        this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, endingLineOfEndingPoint)
+    }
+
+    /**
+     * 
+     * @returns {MarkedLineCoordinates} coordinates to select
+     */
+    _defineCoordinatesForStartingPointWithLeftOffset() {
+        const widthOfTextToSelect = calculateTotalLeftOffsetOfCaretInTheLine(
+            new CaretLeftOffsetDTO(
+                this.startingPoint.endContainer,
+                this.startingPoint.endContainerOffset,
+                this.startingPoint.endOffset
+            ), this.contentElement
+        )
+        const topOffset = this.startingPoint.offsetTopForStartingLine
+        const textContentOfLine = this.startingPoint.lineOfStartContainer.textContent
+        const widthOfTextContent = calculateWidthForText(this.contentElement, textContentOfLine)
+        const textToSelect = widthOfTextContent - widthOfTextToSelect
+        return new MarkedLineCoordinates(widthOfTextToSelect, topOffset, textToSelect)
     }
 }

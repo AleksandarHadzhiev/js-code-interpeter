@@ -3,6 +3,7 @@ import LoaderHandler from "./src/classes/scrollingMechanisms/LoaderHandler.js"
 import OffsetCalculator from "./src/classes/scrollingMechanisms/OffsetCalculator.js"
 import LinesLoader from "./src/classes/scrollingMechanisms/LinesLoader.js"
 import TextSelection from "./src/classes/selectionMechanisms/textSelection.js"
+import TextSelectionScrolling from "./src/classes/scrollingMechanisms/textSelectionScrolling.js"
 
 const mainContainer = document.getElementById('container')
 const navigationElement = document.getElementById('navigation')
@@ -30,13 +31,13 @@ let isTextSelecting = false
 
 let startingRange = null
 let endingRange = null
+
 const textSelection = new TextSelection(scrollbarTopOffset, lineNumerationElement.scrollWidth, scrollbarHeight, loaderElement.scrollWidth, contentElement)
-
-
 const barHandler = new BarHandler(scrollbarHeight, barHeight, barElement)
 const loaderHandler = new LoaderHandler(loaderHeight, scrollbarHeight, loaderElement)
 const offsetCalculator = new OffsetCalculator()
 const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement, contentElement)
+const textSelectionScrolling = new TextSelectionScrolling(barHandler, loaderHandler, linesLoader)
 
 linesLoader.loadLines()
 
@@ -91,7 +92,8 @@ window.addEventListener('mousemove', (event) => {
         else {
             endingRange = range
             textSelection.setEndingRange(endingRange)
-            const selection = textSelection.selectTextBetweenRanges(event, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
+            const mousePosition = textSelection.selectTextBetweenRanges(event, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
+            textSelectionScrolling.scrollOnMousePosition(mousePosition)
         }
     }
 })

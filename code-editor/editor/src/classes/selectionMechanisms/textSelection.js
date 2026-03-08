@@ -1,20 +1,5 @@
 import Highlighter from "./highlighter.js"
-
-const MousePosition = {
-    LEFT: "left",
-    RIGHT: "right",
-    TOP: "top",
-    BOTTOM: "bottom",
-    CENTRE: "centre"
-}
-
-const WindowSection = {
-    TOP: "TOP",
-    BOTTOM: "BOTTOM",
-    CENTRE: "CENTRE",
-    LEFT: "LEFT",
-    RIGHT: "RIGHT"
-}
+import { MousePosition, WindowSection } from "./enums.js"
 
 
 export default class TextSelection {
@@ -80,6 +65,7 @@ export default class TextSelection {
         const mouseYPositionBasedOnPage = event.pageY + this.loaderOffset - this.offsetTopOfContentScreen
         this.mousePosition = this._defineSectionOfTextSelection(event, mouseYPositionBasedOnPage)
         this._highlightTextBasedOnMousePosition(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
+        return this.mousePosition
     }
 
     /**

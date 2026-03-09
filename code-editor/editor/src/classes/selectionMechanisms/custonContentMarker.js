@@ -1,5 +1,5 @@
-import CustomRangeElement from "./customRangeElement.js"
 import LineColoriser from "./lineColoriser.js"
+import { StartingPoint } from "../dtos/caretDTOs.js"
 
 export default class CustomContentMarker {
     constructor(contentElement) {
@@ -10,8 +10,8 @@ export default class CustomContentMarker {
     }
 
     /**
-     * @param {CustomRangeElement} starintPoint  
-     * @param {CustomRangeElement} releasignPoint
+     * @param {StartingPoint} starintPoint  
+     * @param {StartingPoint} releasignPoint
      */
     updatePoints(starintPoint, releasignPoint) {
         this.startingPoint = starintPoint
@@ -26,7 +26,6 @@ export default class CustomContentMarker {
     buildForLeftSection(firstVisibleLine, lastVisibleLine) {
         this.algorithm = new LineColoriser(this.startingPoint, this.releasingPoint, this.contentElement)
         const multilineCoordinates = this.algorithm.coloriseLinesforLeftBetweenFirstAndLastVisibleLine(firstVisibleLine, lastVisibleLine)
-        console.log(multilineCoordinates)
         multilineCoordinates.forEach((coordinates) => {
             this._buildLineInMarkerForCoordinates(coordinates)
         });

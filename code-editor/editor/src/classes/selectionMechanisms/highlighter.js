@@ -1,5 +1,6 @@
 import CustomRangeElement from "./customRangeElement.js"
 import CustomContentMarker from "./custonContentMarker.js"
+import { StartingPoint } from "../dtos/caretDTOs.js"
 
 const Operation = {
     ADD: "+",
@@ -15,22 +16,23 @@ const StartingPointVisibility = {
 export default class Highlighter {
     constructor(contentElement) {
         this.startingPoint = null
+        this.endingRange = null
         this.endingPoint = null
         this.customMarker = new CustomContentMarker(contentElement)
     }
 
     /**
-     * @param {Range} range 
+     * @param {StartingPoint} point 
      */
-    setStartingPointBasedOnRange(range) {
-        this.startingPoint = new CustomRangeElement(range)
+    setStartingPointBasedOnRange(point) {
+        this.startingPoint = point
     }
 
     /**
      * @param {Range} range 
      */
-    setEndingPointBasedOnRange(range) {
-        this.endingPoint = new CustomRangeElement(range)
+    setEndingRangeBasedOnRange(range) {
+        this.endingRange = range
     }
 
 
@@ -44,8 +46,7 @@ export default class Highlighter {
      * @param {Number} lastVisibleLine 
      */
     highlightForLeftScreenSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
-        const range = this._buildReleaseRangeForLeft(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
-        this.setEndingPointBasedOnRange(range)
+        this.endingPoint = this._buildReleaseRangeForLeft(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
         this.customMarker.updatePoints(this.startingPoint, this.endingPoint)
         this.customMarker.buildForLeftSection(firstVisibleLine, lastVisibleLine)
     }
@@ -59,42 +60,28 @@ export default class Highlighter {
      */
     _buildReleaseRangeForLeft(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
         const y = mouseYPositionBasedOnPage
+        let endingPoint = null
         let rowBasedOnMouseYPosition = Math.floor(y / 28.8)
+        console.log(rowBasedOnMouseYPosition)
         let lineElementBasedOnMouuse = document.getElementById(String(rowBasedOnMouseYPosition))
         while (lineElementBasedOnMouuse == null) {
+
             if (rowBasedOnMouseYPosition > lastVisibleLine + 2) {
-                rowBasedOnMouseYPosition -= 1
+                rowBasedOnMouseYPosition - 1
             }
             else if (rowBasedOnMouseYPosition < firstVisibleLine + 2) {
-                rowBasedOnMouseYPosition += 1
+                rowBasedOnMouseYPosition + 1
             }
             else { console.log("EDGE CASE") }
             lineElementBasedOnMouuse = document.getElementById(String(rowBasedOnMouseYPosition))
         }
-        const startingPointLineVisibility = this._getStartingPointLinePositionBasedOnVisibleLines(firstVisibleLine, lastVisibleLine)
-        const firstVisibleLineElement = document.getElementById(String(firstVisibleLine))
-        const lastVisibleLineElement = this._getElementForVisibleLineAndOperationToExecute(lastVisibleLine, Operation.SUBSTRACT)
-        const range = new Range()
-        if (startingPointLineVisibility == StartingPointVisibility.VISIBLE) {
-            const startingLine = Number(this.startingPoint.lineOfStartContainer.id)
-            if (startingLine > rowBasedOnMouseYPosition) {
-                range.setStart(lineElementBasedOnMouuse.lastChild.firstChild, lineElementBasedOnMouuse.lastChild.firstChild.textContent.length)
-                range.setEnd(lineElementBasedOnMouuse.lastChild.firstChild, lineElementBasedOnMouuse.lastChild.firstChild.textContent.length)
-            }
-            else {
-                range.setStart(lineElementBasedOnMouuse.firstChild.firstChild, 0)
-                range.setEnd(lineElementBasedOnMouuse.firstChild.firstChild, 0)
-            }
-        }
-        else if (startingPointLineVisibility == StartingPointVisibility.EARLIER_ROW_THAN_FIRST_VISIBLE_ON_THE_SCREEN) {
-            range.setStart(firstVisibleLineElement.lastChild.firstChild, firstVisibleLineElement.lastChild.firstChild.textContent.length)
-            range.setEnd(lineElementBasedOnMouuse.firstChild.firstChild, 0)
-        }
-        else if (startingPointLineVisibility == StartingPointVisibility.LAIER_ROW_THAN_LAST_VISIBLE_ON_THE_SCREEN) {
-            range.setEnd(lineElementBasedOnMouuse.lastChild.firstChild, lineElementBasedOnMouuse.lastChild.firstChild.textContent.length)
-            range.setStart(lastVisibleLineElement.lastChild.firstChild, lastVisibleLineElement.lastChild.firstChild.textContent.length)
-        }
-        return range
+        endingPoint = new StartingPoint(
+            Number(lineElementBasedOnMouuse.id),
+            Number(lineElementBasedOnMouuse.offsetTop),
+            0,
+            lineElementBasedOnMouuse.textContent
+        )
+        return endingPoint
     }
 
     /**
@@ -104,9 +91,7 @@ export default class Highlighter {
      * @returns {String}
      */
     _getStartingPointLinePositionBasedOnVisibleLines(firstVisibleLine, lastVisibleLine) {
-        const lineOfStartingPoint = this.startingPoint.lineOfStartContainer
-        const idOfLineOfStartingPoint = lineOfStartingPoint.id
-
+        const idOfLineOfStartingPoint = this.startingPoint.lineId
         if (idOfLineOfStartingPoint >= firstVisibleLine && idOfLineOfStartingPoint < lastVisibleLine) {
             return StartingPointVisibility.VISIBLE
         }

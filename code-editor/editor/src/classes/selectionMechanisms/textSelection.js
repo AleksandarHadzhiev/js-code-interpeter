@@ -1,5 +1,6 @@
 import Highlighter from "./highlighter.js"
 import { MousePosition, WindowSection } from "./enums.js"
+import { StartingPoint } from "../dtos/caretDTOs.js"
 
 
 export default class TextSelection {
@@ -32,10 +33,10 @@ export default class TextSelection {
 
     /**
      * 
-     * @param {Range} range 
+     * @param {StartingPoint} startingPoint 
      */
-    setStartingRange(range) {
-        this.highlighter.setStartingPointBasedOnRange(range)
+    setStartingRange(startingPoint) {
+        this.highlighter.setStartingPointBasedOnRange(startingPoint)
     }
 
     /**
@@ -43,7 +44,7 @@ export default class TextSelection {
      * @param {Range} range 
      */
     setEndingRange(range) {
-        this.highlighter.setEndingPointBasedOnRange(range)
+        this.highlighter.setEndingRangeBasedOnRange(range)
     }
 
     /**

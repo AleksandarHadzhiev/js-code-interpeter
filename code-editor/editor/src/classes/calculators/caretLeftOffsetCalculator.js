@@ -22,3 +22,5 @@ function _calculateOffsetOfCaretBasedOnContainerAndOffsetInsideTheContainer(cont
     const neededText = spanText.substring(0, offset)
     return calculateWidthForText(contentElement, neededText)
 }
+
+// I need this functtionalities earlier to be used earlier...

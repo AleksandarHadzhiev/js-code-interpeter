@@ -4,6 +4,9 @@ import OffsetCalculator from "./src/classes/scrollingMechanisms/OffsetCalculator
 import LinesLoader from "./src/classes/scrollingMechanisms/LinesLoader.js"
 import TextSelection from "./src/classes/selectionMechanisms/textSelection.js"
 import TextSelectionScrolling from "./src/classes/scrollingMechanisms/textSelectionScrolling.js"
+import calculateTotalLeftOffsetOfCaretInTheLine from "./src/classes/calculators/caretLeftOffsetCalculator.js"
+import { CaretLeftOffsetDTO } from "./src/classes/dtos/caretDTOs.js"
+
 
 const mainContainer = document.getElementById('container')
 const navigationElement = document.getElementById('navigation')
@@ -30,7 +33,6 @@ let barIsSelected = false
 let isTextSelecting = false
 
 let startingRange = null
-let endingRange = null
 
 const textSelection = new TextSelection(scrollbarTopOffset, lineNumerationElement.scrollWidth, scrollbarHeight, loaderElement.scrollWidth, contentElement)
 const barHandler = new BarHandler(scrollbarHeight, barHeight, barElement)
@@ -83,15 +85,24 @@ window.addEventListener('mousemove', (event) => {
         const range = document.getSelection().getRangeAt(0)
         if (startingRange == null) {
             startingRange = range
+            const leftOffsetDTO = new CaretLeftOffsetDTO(range.endContainer.parentElement, range.endContainer.parentElement.offsetLeft, range.endOffset)
+            const offset = calculateTotalLeftOffsetOfCaretInTheLine(leftOffsetDTO, contentElement)
+            const id = range.startContainer.parentElement.parentElement.id
+            const topOffset = range.startContainer.parentElement.parentElement.offsetTop
+            startingRange = {
+                lineId: Number(id),
+                topOffset: topOffset,
+                leftOffset: offset,
+                fullText: range.startContainer.parentElement.parentElement.textContent
+            }
             textSelection.setStartingRange(startingRange)
         }
         else {
-            endingRange = range
-            textSelection.setEndingRange(endingRange)
+            textSelection.setEndingRange(range)
             const mousePosition = textSelection.selectTextBetweenRanges(event, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
             textSelectionScrolling.scrollOnMousePosition(mousePosition)
+            console.log(loaderHandler.topOffset)
             textSelection.setLoaderOffset(loaderHandler.topOffset)
-            console.log(mousePosition)
         }
     }
 })

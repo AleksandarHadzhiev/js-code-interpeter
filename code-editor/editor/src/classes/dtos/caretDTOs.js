@@ -32,3 +32,19 @@ export class SelectedTextDTO {
         this.offsetLeft = offsetLeft
     }
 }
+
+export class StartingPoint {
+    /**
+     * 
+     * @param {Number} lineId 
+     * @param {Number} topOffset 
+     * @param {Number} leftOffset 
+     * @param {String} fullText 
+     */
+    constructor(lineId, topOffset, leftOffset, fullText) {
+        this.lineId = lineId
+        this.topOffset = topOffset
+        this.leftOffset = leftOffset
+        this.fullText = fullText
+    }
+}

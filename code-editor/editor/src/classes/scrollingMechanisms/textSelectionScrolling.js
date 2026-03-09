@@ -20,7 +20,6 @@ export default class TextSelectionScrolling {
      * @param {String} mousePosition 
      */
     scrollOnMousePosition(mousePosition) {
-        console.log(mousePosition)
         if (mousePosition == MousePosition.BOTTOM) {
             this._scrollDown()
         }
@@ -31,7 +30,6 @@ export default class TextSelectionScrolling {
 
     _scrollDown() {
         this.loaderHandler.scrollWithOffset(50)
-        console.log(this.loaderHandler.topOffset)
         const percentage = this.loaderHandler.getPercentageOfScroll()
         this.barHandler.scrollBasedOnPercentage(percentage)
         this.linesLoader.reloadLinesForNewTopOffset(this.loaderHandler.topOffset)

@@ -167,4 +167,45 @@ export default class LineColoriser {
         coordinates = this._defineCoordinatesForStartingPointWithoutLeftOffset()
         this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, lineOfStartingPoint)
     }
+
+
+    /**
+     * 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     */
+    displayMarker(firstVisibleLine, lastVisibleLine) {
+        const lineOfStartingPoint = this.startingMarkedPoint.lineId
+        const lineOfEndingPoint = this.endingMarkedPoint.lineId
+        if (lineOfStartingPoint > lastVisibleLine) {
+            return new Map()
+        }
+        else if (lineOfEndingPoint < firstVisibleLine) {
+            return new Map()
+        }
+        this._loadCoordinatesBetweenFirstVisbleLineAndLastVisibleLine(firstVisibleLine, lastVisibleLine)
+        return this.coordinatesToHighlight
+    }
+
+    /**
+     * 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     */
+    _loadCoordinatesBetweenFirstVisbleLineAndLastVisibleLine(firstVisibleLine, lastVisibleLine) {
+        this.coordinatesToHighlight = new Map()
+        for (let index = firstVisibleLine; index < lastVisibleLine; index++) {
+            if (index == this.startingMarkedPoint.lineId) {
+                this.coordinatesToHighlight.set(this.startingMarkedPoint.lineId, this.startingMarkedPoint)
+            }
+            else if (index == this.endingMarkedPoint.lineId) {
+                this.coordinatesToHighlight.set(this.endingMarkedPoint.lineId, this.endingMarkedPoint)
+            }
+            else if (index > this.startingMarkedPoint.lineId && index < this.endingMarkedPoint.lineId) {
+                const lineElement = document.getElementById(String(index))
+                const coordinates = this._calculateCoordinatesForLineAtIndex(lineElement)
+                this.coordinatesToHighlight.set(index, coordinates)
+            }
+        }
+    }
 }

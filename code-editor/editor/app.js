@@ -7,7 +7,6 @@ import TextSelectionScrolling from "./src/classes/scrollingMechanisms/textSelect
 import calculateTotalLeftOffsetOfCaretInTheLine from "./src/classes/calculators/caretLeftOffsetCalculator.js"
 import { CaretLeftOffsetDTO } from "./src/classes/dtos/caretDTOs.js"
 
-
 const mainContainer = document.getElementById('container')
 const navigationElement = document.getElementById('navigation')
 const loaderElement = document.getElementById('loader')
@@ -51,7 +50,15 @@ window.addEventListener('wheel', (event) => {
     barHandler.scrollBasedOnPercentage(percentage)
     linesLoader.reloadLinesForNewTopOffset(loaderHandler.topOffset)
     textSelection.setLoaderOffset(loaderHandler.topOffset)
+    displayHighlightIfThereIsSelectedText()
 })
+
+function displayHighlightIfThereIsSelectedText() {
+    const markerElement = document.getElementById('marker')
+    if (markerElement) {
+        textSelection.display(linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
+    }
+}
 
 barElement.addEventListener('mousedown', (event) => {
     barIsSelected = true
@@ -65,6 +72,7 @@ scrollbarAreaElement.addEventListener('mousemove', (event) => {
         loaderHandler.scrollWithPercentage(percentage)
         linesLoader.reloadLinesForNewTopOffset(loaderHandler.topOffset)
         textSelection.setLoaderOffset(loaderHandler.topOffset)
+        displayHighlightIfThereIsSelectedText()
     }
 })
 
@@ -101,17 +109,24 @@ window.addEventListener('mousemove', (event) => {
             textSelection.setEndingRange(range)
             const mousePosition = textSelection.selectTextBetweenRanges(event, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
             textSelectionScrolling.scrollOnMousePosition(mousePosition)
-            console.log(loaderHandler.topOffset)
             textSelection.setLoaderOffset(loaderHandler.topOffset)
         }
     }
 })
 
 function buildMarker() {
-    let markerElement = document.getElementById('marker')
-    if (markerElement) marker.remove()
-    markerElement = document.createElement('div')
-    markerElement.classList.add('marker')
-    markerElement.setAttribute('id', 'marker')
-    contentElement.prepend(markerElement)
+    removeExistingHighlighter()
+    const newMarker = document.createElement('div')
+    newMarker.classList.add('marker')
+    newMarker.setAttribute('id', 'marker')
+    contentElement.prepend(newMarker)
+}
+
+mainContainer.addEventListener('mousedown', (event) => {
+    removeExistingHighlighter()
+})
+
+function removeExistingHighlighter() {
+    const markerElement = document.getElementById('marker')
+    if (markerElement) markerElement.remove()
 }

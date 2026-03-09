@@ -127,4 +127,13 @@ export default class TextSelection {
         }
     }
 
+
+    /**
+     * 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     */
+    display(firstVisibleLine, lastVisibleLine) {
+        this.highlighter.display(firstVisibleLine, lastVisibleLine)
+    }
 }

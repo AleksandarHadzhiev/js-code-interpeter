@@ -21,6 +21,16 @@ export default class Highlighter {
         this.customMarker = new CustomContentMarker(contentElement)
     }
 
+
+    /**
+     * 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     */
+    display(firstVisibleLine, lastVisibleLine) {
+        this.customMarker.display(firstVisibleLine, lastVisibleLine)
+    }
+
     /**
      * @param {StartingPoint} point 
      */
@@ -62,7 +72,6 @@ export default class Highlighter {
         const y = mouseYPositionBasedOnPage
         let endingPoint = null
         let rowBasedOnMouseYPosition = Math.floor(y / 28.8)
-        console.log(rowBasedOnMouseYPosition)
         let lineElementBasedOnMouuse = document.getElementById(String(rowBasedOnMouseYPosition))
         while (lineElementBasedOnMouuse == null) {
 

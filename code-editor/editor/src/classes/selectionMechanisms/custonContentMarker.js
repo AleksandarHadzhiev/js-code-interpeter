@@ -32,6 +32,18 @@ export default class CustomContentMarker {
     }
 
     /**
+     * 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     */
+    display(firstVisibleLine, lastVisibleLine) {
+        const multilineCoordinates = this.algorithm.displayMarker(firstVisibleLine, lastVisibleLine)
+        multilineCoordinates.forEach((coordinates) => {
+            this._buildLineInMarkerForCoordinates(coordinates)
+        });
+    }
+
+    /**
      * Creates a line and appends it to the marker.
      * @param {StartingPositionOfLine} coordinates 
      */

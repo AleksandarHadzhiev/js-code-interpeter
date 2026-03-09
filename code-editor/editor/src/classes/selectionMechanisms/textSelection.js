@@ -76,13 +76,14 @@ export default class TextSelection {
     */
     _defineSectionOfTextSelection(event, mouseYPositionBasedOnPage) {
         const mouseXPositionBasedOnPage = event.pageX
+        const pointWhenBottomBegins = this.heightOfElementBasedOnVisibleLinesOnTheScreen + this.loaderOffset
         if (mouseYPositionBasedOnPage == 0 && this.windowSectionScrollig == WindowSection.BOTTOM) {
             return MousePosition.BOTTOM
         }
         else if (mouseYPositionBasedOnPage == 0 && this.windowSectionScrollig == WindowSection.TOP) {
             return MousePosition.TOP
         }
-        else if (mouseYPositionBasedOnPage > this.loaderOffset + this.heightOfElementBasedOnVisibleLinesOnTheScreen) {
+        else if (mouseYPositionBasedOnPage > pointWhenBottomBegins) {
             this.windowSectionScrollig = WindowSection.BOTTOM
             return MousePosition.BOTTOM
         }
@@ -90,7 +91,6 @@ export default class TextSelection {
             this.windowSectionScrollig = WindowSection.TOP
             return MousePosition.TOP
         }
-        // LEFT AND RIGHT CONFIGURATION NEED FIXING
         else if (mouseXPositionBasedOnPage < this.widhtOfLineNumerationElement) {
             this.windowSectionScrollig = WindowSection.LEFT
             return MousePosition.LEFT

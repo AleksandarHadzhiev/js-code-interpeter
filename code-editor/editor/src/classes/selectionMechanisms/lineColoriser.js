@@ -268,13 +268,13 @@ export default class LineColoriser {
             this._coloriseBetweenTwoLines(lineOfStartingPoint + 1, lastVisibleLine)
         }
         // - starting point is earlier than current mouse line
-        else if (lineOfStartingPoint > lineOfEndingPoint) {
+        else if (lineOfStartingPoint < lineOfEndingPoint) {
             lastVisibleLine = this._filterLastVisibleLine(lastVisibleLine)
             this._defineStartingPointMarkerForStartingPointNotVisibleButEarlierThanReleasePoint(lineOfStartingPoint)
             this._coloriseBetweenTwoLines(firstVisibleLine, lastVisibleLine)
         }
         // - starting point is later than current mouse line
-        else if (lineOfStartingPoint < lineOfEndingPoint) {
+        else if (lineOfStartingPoint > lineOfEndingPoint) {
             // Do not colorise, just build starting and ending marked point
             lastVisibleLine = this._filterLastVisibleLine(lastVisibleLine)
             this._defineStartingPointMarkerForBottomTextSelection(lastVisibleLine)
@@ -337,13 +337,10 @@ export default class LineColoriser {
      */
     _defineEndingPointMarkerForBottomTextSelection(lineOfStartingPoint) {
         const topOffset = this.startingPoint.topOffset
-        const textContentOfLine = this.startingPoint.fullText
-        const widthOfTextContent = calculateWidthForText(this.contentElement, textContentOfLine)
-        const textToSelect = widthOfTextContent - this.startingPoint.leftOffset
         this.endingMarkedPoint = new MarkedPoint(
             topOffset,
-            widthOfTextToSelect,
-            textToSelect,
+            0,
+            this.startingPoint.leftOffset,
             lineOfStartingPoint
         )
     }

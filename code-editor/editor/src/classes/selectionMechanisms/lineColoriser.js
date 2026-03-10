@@ -360,9 +360,9 @@ export default class LineColoriser {
         if (lineOfStartingPoint >= firstVisibleLine && lineOfStartingPoint <= lastVisibleLine)
             this._coloriseRightForStartingPointStillVisible(lineOfReleasingPoint, lineOfStartingPoint)
         else if (lineOfReleasingPoint > lineOfStartingPoint)
-            this._coloriseForLeftWhenMouseIsLaterThanStartingPointNotVisible(firstVisibleLine, lineOfReleasingPoint, lineOfStartingPoint)
+            this._coloriseForRightWhenMouseIsLaterThanStartingPointNotVisible(firstVisibleLine, lineOfReleasingPoint, lineOfStartingPoint)
         else if (lineOfReleasingPoint < lineOfStartingPoint)
-            this._coloriseForLeftWhenMouseIsOnEarlierLineThanStartingPointNotVisible(lineOfReleasingPoint, lastVisibleLine, lineOfStartingPoint)
+            this._coloriseForRightWhenMouseIsOnEarlierLineThanStartingPointNotVisible(lineOfReleasingPoint, lastVisibleLine, lineOfStartingPoint)
         return this.coordinatesToHighlight
     }
 
@@ -411,6 +411,32 @@ export default class LineColoriser {
         )
         this.coordinatesToHighlight.set(lineOfReleasingPoint, coordinates)
         this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, lineOfReleasingPoint)
+    }
+
+
+    _coloriseForRightWhenMouseIsLaterThanStartingPointNotVisible(firstVisibleLine, lineOfReleasingPoint, lineOfStartingPoint) {
+        this._fullyColoriselinesBetweenTwoLines(firstVisibleLine, lineOfReleasingPoint - 1)
+        let coordinates = this._defineCoordinatesForStartingPointWithLeftOffset()
+        this._defineStartingMarkedPointBasedOnCoordinatesAndLineId(coordinates, lineOfStartingPoint)
+        const width = calculateWidthForText(this.contentElement, this.endingPoint.fullText)
+        coordinates = new MarkedLineCoordinates(
+            0, this.endingPoint.topOffset, width
+        )
+        this.coordinatesToHighlight.set(lineOfReleasingPoint, coordinates)
+        this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, lineOfReleasingPoint)
+    }
+
+
+    _coloriseForRightWhenMouseIsOnEarlierLineThanStartingPointNotVisible(lineOfReleasingPoint, lastVisibleLine, lineOfStartingPoint) {
+        this._fullyColoriselinesBetweenTwoLines(lineOfReleasingPoint + 1, lastVisibleLine)
+        const width = calculateWidthForText(this.contentElement, this.endingPoint.fullText)
+        let coordinates = new MarkedLineCoordinates(
+            width, this.endingPoint.topOffset, 0
+        )
+        this.coordinatesToHighlight.set(lineOfReleasingPoint, coordinates)
+        this._defineStartingMarkedPointBasedOnCoordinatesAndLineId(coordinates, lineOfReleasingPoint)
+        coordinates = this._defineCoordinatesForStartingPointWithoutLeftOffset()
+        this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, lineOfStartingPoint)
     }
 
     /**

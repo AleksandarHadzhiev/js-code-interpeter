@@ -58,6 +58,19 @@ export default class CustomContentMarker {
         });
     }
 
+    /**
+ * 
+ * @param {Number} firstVisibleLine 
+ * @param {Number} lastVisibleLine 
+ */
+    buildForRightSection(firstVisibleLine, lastVisibleLine) {
+        this.algorithm = new LineColoriser(this.startingPoint, this.releasingPoint, this.contentElement)
+        const multilineCoordinates = this.algorithm.coloriseLinesforRightBetweenFirstAndLastVisibleLine(firstVisibleLine, lastVisibleLine)
+        multilineCoordinates.forEach((coordinates) => {
+            this._buildLineInMarkerForCoordinates(coordinates)
+        });
+    }
+
 
     /**
      * 

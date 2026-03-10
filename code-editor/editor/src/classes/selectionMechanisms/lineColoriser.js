@@ -345,6 +345,47 @@ export default class LineColoriser {
         )
     }
 
+    /**
+     * 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     */
+    coloriseLinesforRightBetweenFirstAndLastVisibleLine(firstVisibleLine, lastVisibleLine) {
+        this.coordinatesToHighlight.clear()
+        const lineOfStartingPoint = Number(this.startingPoint.lineId)
+        const lineOfReleasingPoint = Number(this.endingPoint.lineId)
+
+        if (lineOfStartingPoint >= firstVisibleLine && lineOfStartingPoint <= lastVisibleLine)
+            this._coloriseRightForStartingPointStillVisible(lineOfReleasingPoint, lineOfStartingPoint)
+        else if (lineOfReleasingPoint > lineOfStartingPoint)
+            this._coloriseForLeftWhenMouseIsLaterThanStartingPointNotVisible(firstVisibleLine, lineOfReleasingPoint, lineOfStartingPoint)
+        else if (lineOfReleasingPoint < lineOfStartingPoint)
+            this._coloriseForLeftWhenMouseIsOnEarlierLineThanStartingPointNotVisible(lineOfReleasingPoint, lastVisibleLine, lineOfStartingPoint)
+        return this.coordinatesToHighlight
+    }
+
+
+    _coloriseRightForStartingPointStillVisible(lineOfReleasingPoint, lineOfStartingPoint) {
+        if (lineOfReleasingPoint == lineOfStartingPoint) {
+            this._coloriseForRightWhenMouseIsonSameLineAsStartingPoint(lineOfStartingPoint)
+        }
+        else if (lineOfReleasingPoint < lineOfStartingPoint) {
+            this._colorsieForLeftWhenMouseIsOnearlinerLineThanStartingPoint(lineOfReleasingPoint, lineOfStartingPoint)
+        }
+        else if (lineOfReleasingPoint > lineOfStartingPoint) {
+            this._colorsieForLeftWhenMouseIsOnLaterLineThanStartingPoint(lineOfStartingPoint, lineOfReleasingPoint)
+        }
+    }
+
+    _coloriseForRightWhenMouseIsonSameLineAsStartingPoint(lineOfStartingPoint) {
+        const coordinates = this._defineCoordinatesForStartingPointWithLeftOffset()
+        this.coordinatesToHighlight.set(lineOfStartingPoint, coordinates)
+        const totalWidth = calculateWidthForText(this.contentElement, this.startingPoint.topOffset)
+        const width = totalWidth - this.startingPoint.leftOffset
+        this.startingMarkedPoint = new MarkedPoint(coordinates.top, coordinates.left, width, lineOfStartingPoint)
+        this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, lineOfStartingPoint)
+
+    }
 
     /**
      * 

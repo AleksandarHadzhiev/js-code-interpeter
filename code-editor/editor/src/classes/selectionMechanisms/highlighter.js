@@ -120,6 +120,17 @@ export default class Highlighter {
     }
 
     /**
+     * @param {Number} mouseYPositionBasedOnPage 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     */
+    highlightForRightScreenSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
+        this.endingPoint = this._buildReleaseRange(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
+        this.customMarker.updatePoints(this.startingPoint, this.endingPoint)
+        this.customMarker.buildForRightSection(firstVisibleLine, lastVisibleLine)
+    }
+
+    /**
      * 
      * @param {Number} firstVisibleLine 
      * @param {Number} lastVisibleLine 

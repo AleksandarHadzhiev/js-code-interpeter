@@ -84,7 +84,8 @@ export default class LineColoriser {
 
     _colorsieForLeftWhenMouseIsOnearlinerLineThanStartingPoint(lineOfReleasingPoint, lineOfStartingPoint) {
         this._fullyColoriselinesBetweenTwoLines(lineOfReleasingPoint, lineOfStartingPoint - 1)
-        let coordinates = this._calculateCoordinatesForLineAtIndex(lineOfReleasingPoint)
+        const lineElement = document.getElementById(String(lineOfReleasingPoint))
+        let coordinates = this._calculateCoordinatesForLineAtIndex(lineElement)
         this._defineStartingMarkedPointBasedOnCoordinatesAndLineId(coordinates, lineOfReleasingPoint)
         coordinates = this._defineCoordinatesForStartingPointWithoutLeftOffset()
         this.coordinatesToHighlight.set(lineOfStartingPoint, coordinates)
@@ -135,7 +136,8 @@ export default class LineColoriser {
         let coordinates = this._defineCoordinatesForStartingPointWithLeftOffset()
         this.coordinatesToHighlight.set(lineOfStartingPoint, coordinates)
         this._defineStartingMarkedPointBasedOnCoordinatesAndLineId(coordinates, lineOfStartingPoint)
-        coordinates = this._calculateCoordinatesForLineAtIndex(lineOfReleasingPoint)
+        const lineElement = document.getElementById(String(lineOfReleasingPoint))
+        coordinates = this._calculateCoordinatesForLineAtIndex(lineElement)
         this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, lineOfReleasingPoint)
     }
 
@@ -370,7 +372,7 @@ export default class LineColoriser {
             this._coloriseForRightWhenMouseIsonSameLineAsStartingPoint(lineOfStartingPoint)
         }
         else if (lineOfReleasingPoint < lineOfStartingPoint) {
-            this._colorsieForLeftWhenMouseIsOnearlinerLineThanStartingPoint(lineOfReleasingPoint, lineOfStartingPoint)
+            this._colorsieForRightWhenMouseIsOnearlinerLineThanStartingPoint(lineOfReleasingPoint, lineOfStartingPoint)
         }
         else if (lineOfReleasingPoint > lineOfStartingPoint) {
             this._colorsieForLeftWhenMouseIsOnLaterLineThanStartingPoint(lineOfStartingPoint, lineOfReleasingPoint)
@@ -385,6 +387,17 @@ export default class LineColoriser {
         this.startingMarkedPoint = new MarkedPoint(coordinates.top, coordinates.left, width, lineOfStartingPoint)
         this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, lineOfStartingPoint)
 
+    }
+
+    _colorsieForRightWhenMouseIsOnearlinerLineThanStartingPoint(lineOfReleasingPoint, lineOfStartingPoint) {
+        this._fullyColoriselinesBetweenTwoLines(lineOfReleasingPoint + 1, lineOfStartingPoint - 1)
+        let coordinates = new MarkedLineCoordinates(
+            0, this.endingPoint.topOffset, 0
+        )
+        this._defineStartingMarkedPointBasedOnCoordinatesAndLineId(coordinates, lineOfReleasingPoint)
+        coordinates = this._defineCoordinatesForStartingPointWithoutLeftOffset()
+        this.coordinatesToHighlight.set(lineOfStartingPoint, coordinates)
+        this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, lineOfStartingPoint)
     }
 
     /**

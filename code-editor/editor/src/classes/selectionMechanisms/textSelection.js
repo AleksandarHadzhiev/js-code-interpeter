@@ -110,7 +110,6 @@ export default class TextSelection {
      * @param {Number} lastVisibleLine 
      */
     _highlightTextBasedOnMousePosition(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
-        console.log("HIGHLIGHTING")
         if (this.mousePosition == MousePosition.RIGHT) {
             this.highlighter.highlightForRightScreenSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
         }

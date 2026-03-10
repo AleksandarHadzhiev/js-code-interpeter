@@ -98,7 +98,6 @@ export default class LineColoriser {
      * @param {Number} lastLine 
      */
     _fullyColoriselinesBetweenTwoLines(firstLine, lastLine) {
-        console.log(firstLine)
         for (let index = firstLine; index <= lastLine; index++) {
             const lineElement = document.getElementById(String(index));
             if (lineElement != null) {
@@ -181,15 +180,11 @@ export default class LineColoriser {
         this.coordinatesToHighlight.clear()
         const lineOfStartingPoint = Number(this.startingPoint.lineId)
         const lineOfEndingPoint = Number(this.endingPoint.lineId)
-        console.log(`Line Of Ending Point: ${lineOfEndingPoint}`)
-        console.log(`Line Of Starting Point: ${lineOfStartingPoint}`)
-        console.log(firstVisibleLine, lastVisibleLine)
         if (lineOfStartingPoint >= firstVisibleLine && lineOfStartingPoint <= lastVisibleLine) {
             this._coloriseForStartingPointVisible(firstVisibleLine, lineOfStartingPoint)
             this._defineMarkedPointsForFirstVisibleLineAndStartingPointWithoutLeftOffset(firstVisibleLine, lineOfStartingPoint)
         }
         else if (lineOfStartingPoint > lineOfEndingPoint) {
-            console.log(firstVisibleLine)
             this._fullyColoriselinesBetweenTwoLines(firstVisibleLine, lastVisibleLine)
             this._defineMarkedPointsForFirstVisibleLineAndStartingPointWithoutLeftOffset(firstVisibleLine, lineOfStartingPoint)
         }
@@ -259,9 +254,6 @@ export default class LineColoriser {
         this.coordinatesToHighlight.clear()
         const lineOfStartingPoint = Number(this.startingPoint.lineId)
         const lineOfEndingPoint = Number(this.endingPoint.lineId)
-        console.log(`Line Of Ending Point: ${lineOfEndingPoint}`)
-        console.log(`Line Of Starting Point: ${lineOfStartingPoint}`)
-        console.log(firstVisibleLine, lastVisibleLine)
         // - starting point is visible on the screen
         if (lineOfStartingPoint >= firstVisibleLine && lineOfStartingPoint <= lastVisibleLine) {
             this._defineStartingPointMarkerForStartingPointNotVisibleButEarlierThanReleasePoint(lineOfStartingPoint)

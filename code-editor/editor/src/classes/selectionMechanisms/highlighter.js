@@ -72,10 +72,7 @@ export default class Highlighter {
         const y = mouseYPositionBasedOnPage
         let endingPoint = null
         let rowBasedOnMouseYPosition = Math.floor(y / 28.8)
-        console.log(mouseYPositionBasedOnPage)
         let lineElementBasedOnMouuse = document.getElementById(String(rowBasedOnMouseYPosition))
-        console.log(rowBasedOnMouseYPosition, lastVisibleLine)
-        console.log(lineElementBasedOnMouuse)
         while (lineElementBasedOnMouuse == null) {
 
             if (rowBasedOnMouseYPosition >= lastVisibleLine) {
@@ -84,8 +81,7 @@ export default class Highlighter {
             else if (rowBasedOnMouseYPosition <= firstVisibleLine) {
                 rowBasedOnMouseYPosition += 1
             }
-            // else { console.log("EDGE CASE") }
-            // console.log(rowBasedOnMouseYPosition)
+            else { console.log("EDGE CASE") }
             lineElementBasedOnMouuse = document.getElementById(String(rowBasedOnMouseYPosition))
         }
         endingPoint = new StartingPoint(

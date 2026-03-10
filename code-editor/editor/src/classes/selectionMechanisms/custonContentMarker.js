@@ -36,6 +36,34 @@ export default class CustomContentMarker {
      * @param {Number} firstVisibleLine 
      * @param {Number} lastVisibleLine 
      */
+    buildForTopSection(firstVisibleLine, lastVisibleLine) {
+        this.algorithm = new LineColoriser(this.startingPoint, this.releasingPoint, this.contentElement)
+        const multilineCoordinates = this.algorithm.coloriseLinesForTopInBetweenFirstAndLastVisibleLines(firstVisibleLine, lastVisibleLine)
+        multilineCoordinates.forEach((coordinates) => {
+            this._buildLineInMarkerForCoordinates(coordinates)
+        });
+    }
+
+
+    /**
+     * 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     */
+    buildForBottomSection(firstVisibleLine, lastVisibleLine) {
+        this.algorithm = new LineColoriser(this.startingPoint, this.releasingPoint, this.contentElement)
+        const multilineCoordinates = this.algorithm.coloriseLinesForBottomInBetweenFirstAndLastVisibleLines(firstVisibleLine, lastVisibleLine)
+        multilineCoordinates.forEach((coordinates) => {
+            this._buildLineInMarkerForCoordinates(coordinates)
+        });
+    }
+
+
+    /**
+     * 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     */
     display(firstVisibleLine, lastVisibleLine) {
         const multilineCoordinates = this.algorithm.displayMarker(firstVisibleLine, lastVisibleLine)
         multilineCoordinates.forEach((coordinates) => {

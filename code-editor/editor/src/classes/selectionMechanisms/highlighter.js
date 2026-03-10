@@ -56,32 +56,34 @@ export default class Highlighter {
      * @param {Number} lastVisibleLine 
      */
     highlightForLeftScreenSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
-        this.endingPoint = this._buildReleaseRangeForLeft(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
+        this.endingPoint = this._buildReleaseRange(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
         this.customMarker.updatePoints(this.startingPoint, this.endingPoint)
         this.customMarker.buildForLeftSection(firstVisibleLine, lastVisibleLine)
     }
 
     /**
-     * 
-     * @param {Number} mouseYPositionBasedOnPage 
-     * @param {Number} firstVisibleLine 
-     * @param {Number} lastVisibleLine 
-     * @returns {Range}
-     */
-    _buildReleaseRangeForLeft(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
+ * 
+ * @param {Number} mouseYPositionBasedOnPage 
+ * @param {Number} firstVisibleLine 
+ * @param {Number} lastVisibleLine 
+ * @returns {Range}
+ */
+    _buildReleaseRange(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
         const y = mouseYPositionBasedOnPage
         let endingPoint = null
         let rowBasedOnMouseYPosition = Math.floor(y / 28.8)
         let lineElementBasedOnMouuse = document.getElementById(String(rowBasedOnMouseYPosition))
+        console.log(lineElementBasedOnMouuse)
         while (lineElementBasedOnMouuse == null) {
 
             if (rowBasedOnMouseYPosition > lastVisibleLine + 2) {
-                rowBasedOnMouseYPosition - 1
+                rowBasedOnMouseYPosition -= 1
             }
             else if (rowBasedOnMouseYPosition < firstVisibleLine + 2) {
-                rowBasedOnMouseYPosition + 1
+                rowBasedOnMouseYPosition += 1
             }
             else { console.log("EDGE CASE") }
+            console.log(rowBasedOnMouseYPosition)
             lineElementBasedOnMouuse = document.getElementById(String(rowBasedOnMouseYPosition))
         }
         endingPoint = new StartingPoint(
@@ -91,6 +93,28 @@ export default class Highlighter {
             lineElementBasedOnMouuse.textContent
         )
         return endingPoint
+    }
+
+    /**
+     * @param {Number} mouseYPositionBasedOnPage 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     */
+    highlightForTopScreenSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
+        this.endingPoint = this._buildReleaseRange(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
+        this.customMarker.updatePoints(this.startingPoint, this.endingPoint)
+        this.customMarker.buildForTopSection(firstVisibleLine, lastVisibleLine)
+    }
+
+    /**
+     * @param {Number} mouseYPositionBasedOnPage 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     */
+    highlightForBottomScreenSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
+        this.endingPoint = this._buildReleaseRange(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
+        this.customMarker.updatePoints(this.startingPoint, this.endingPoint)
+        this.customMarker.buildForBottomSection(firstVisibleLine, lastVisibleLine)
     }
 
     /**

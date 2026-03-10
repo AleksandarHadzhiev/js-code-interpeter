@@ -97,6 +97,7 @@ export default class LineColoriser {
      * @param {Number} lastLine 
      */
     _fullyColoriselinesBetweenTwoLines(firstLine, lastLine) {
+        console.log(firstLine)
         for (let index = firstLine; index <= lastLine; index++) {
             const lineElement = document.getElementById(String(index));
             if (lineElement != null) {
@@ -166,6 +167,185 @@ export default class LineColoriser {
         this._defineStartingMarkedPointBasedOnCoordinatesAndLineId(coordinates, lineOfReleasingPoint)
         coordinates = this._defineCoordinatesForStartingPointWithoutLeftOffset()
         this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, lineOfStartingPoint)
+    }
+
+
+    /**
+     * 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     */
+    coloriseLinesForTopInBetweenFirstAndLastVisibleLines(firstVisibleLine, lastVisibleLine) {
+        this.coordinatesToHighlight.clear()
+        const lineOfStartingPoint = Number(this.startingPoint.lineId)
+        const lineOfEndingPoint = Number(this.endingPoint.lineId)
+        console.log(`Line Of Ending Point: ${lineOfEndingPoint}`)
+        console.log(`Line Of Starting Point: ${lineOfStartingPoint}`)
+        console.log(firstVisibleLine, lastVisibleLine)
+        if (lineOfStartingPoint >= firstVisibleLine && lineOfStartingPoint <= lastVisibleLine) {
+            this._coloriseForStartingPointVisible(firstVisibleLine, lineOfStartingPoint)
+            this._defineMarkedPointsForFirstVisibleLineAndStartingPointWithoutLeftOffset(firstVisibleLine, lineOfStartingPoint)
+        }
+        else if (lineOfStartingPoint > lineOfEndingPoint) {
+            console.log(firstVisibleLine)
+            this._fullyColoriselinesBetweenTwoLines(firstVisibleLine, lastVisibleLine)
+            this._defineMarkedPointsForFirstVisibleLineAndStartingPointWithoutLeftOffset(firstVisibleLine, lineOfStartingPoint)
+        }
+        else if (lineOfStartingPoint < lineOfEndingPoint) {
+            this._defineStartingPointMarkerForStartingPointNotVisibleButEarlierThanReleasePoint(lineOfStartingPoint)
+            this._defineEndingPointMarkerForStartingPointNotVisibleButEarlierThanReleasePoint(firstVisibleLine)
+        }
+        return this.coordinatesToHighlight
+    }
+
+
+    /**
+ * 
+ * @param {Number} firstVisibleLine 
+ * @param {Number} lineOfStartingPoint 
+ */
+    _coloriseForStartingPointVisible(firstVisibleLine, lineOfStartingPoint) {
+        const lineBeforeStartingPoint = lineOfStartingPoint - 1
+        this._fullyColoriselinesBetweenTwoLines(firstVisibleLine, lineBeforeStartingPoint)
+        const coordinates = this._defineCoordinatesForStartingPointWithoutLeftOffset()
+        this.coordinatesToHighlight.set(lineOfStartingPoint, coordinates)
+    }
+
+    /**
+     * 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lineOfStartingPoint 
+     */
+    _defineMarkedPointsForFirstVisibleLineAndStartingPointWithoutLeftOffset(firstVisibleLine, lineOfStartingPoint) {
+        const lineElement = document.getElementById(String(firstVisibleLine))
+        let coordinates = this._calculateCoordinatesForLineAtIndex(lineElement)
+        this._defineStartingMarkedPointBasedOnCoordinatesAndLineId(coordinates, firstVisibleLine)
+        coordinates = this._defineCoordinatesForStartingPointWithoutLeftOffset()
+        this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, lineOfStartingPoint)
+    }
+
+
+    /**
+ * 
+ * @param {Number} lineOfStartingPoint 
+ */
+    _defineStartingPointMarkerForStartingPointNotVisibleButEarlierThanReleasePoint(lineOfStartingPoint) {
+        const coordinates = this._defineCoordinatesForStartingPointWithLeftOffset()
+        this.startingMarkedPoint = new MarkedPoint(
+            coordinates.top,
+            coordinates.left,
+            coordinates.width,
+            lineOfStartingPoint
+        )
+    }
+
+    /**
+     * 
+     * @param {Number} firstVisibleLine 
+     */
+    _defineEndingPointMarkerForStartingPointNotVisibleButEarlierThanReleasePoint(firstVisibleLine) {
+        const line = document.getElementById(String(firstVisibleLine))
+        this.endingMarkedPoint = new MarkedPoint(
+            line.offsetTop,
+            0,
+            0,
+            Number(line.id)
+        )
+    }
+
+    coloriseLinesForBottomInBetweenFirstAndLastVisibleLines(firstVisibleLine, lastVisibleLine) {
+        this.coordinatesToHighlight.clear()
+        const lineOfStartingPoint = Number(this.startingPoint.lineId)
+        const lineOfEndingPoint = Number(this.endingPoint.lineId)
+        console.log(`Line Of Ending Point: ${lineOfEndingPoint}`)
+        console.log(`Line Of Starting Point: ${lineOfStartingPoint}`)
+        console.log(firstVisibleLine, lastVisibleLine)
+        // - starting point is visible on the screen
+        if (lineOfStartingPoint >= firstVisibleLine && lineOfStartingPoint <= lastVisibleLine) {
+            this._defineStartingPointMarkerForStartingPointNotVisibleButEarlierThanReleasePoint(lineOfStartingPoint)
+            this._coloriseFirstLine(lineOfStartingPoint)
+            lastVisibleLine = this._filterLastVisibleLine(lastVisibleLine)
+            this._coloriseBetweenTwoLines(lineOfStartingPoint + 1, lastVisibleLine)
+        }
+        // - starting point is earlier than current mouse line
+        else if (lineOfStartingPoint > lineOfEndingPoint) {
+            lastVisibleLine = this._filterLastVisibleLine(lastVisibleLine)
+            this._defineStartingPointMarkerForStartingPointNotVisibleButEarlierThanReleasePoint(lineOfStartingPoint)
+            this._coloriseBetweenTwoLines(firstVisibleLine, lastVisibleLine)
+        }
+        // - starting point is later than current mouse line
+        else if (lineOfStartingPoint < lineOfEndingPoint) {
+            // Do not colorise, just build starting and ending marked point
+            lastVisibleLine = this._filterLastVisibleLine(lastVisibleLine)
+            this._defineStartingPointMarkerForBottomTextSelection(lastVisibleLine)
+            this._defineEndingPointMarkerForBottomTextSelection(lineOfStartingPoint)
+        }
+        return this.coordinatesToHighlight
+    }
+
+    _coloriseFirstLine(lineOfStartingPoint) {
+        const widthOfTextToSelect = this.startingPoint.leftOffset
+        const widthOfText = calculateWidthForText(this.contentElement, this.startingPoint.fullText)
+        const width = widthOfText - widthOfTextToSelect
+        const topOffset = this.startingPoint.topOffset
+        const coordinates = new MarkedLineCoordinates(widthOfTextToSelect, topOffset, width)
+        this.coordinatesToHighlight.set(lineOfStartingPoint, coordinates)
+    }
+
+    _coloriseBetweenTwoLines(firstLine, lastLine) {
+        for (let index = firstLine; index <= lastLine; index++) {
+            const lineElement = document.getElementById(String(index))
+            const coordinates = this._calculateCoordinatesForLineAtIndex(lineElement)
+            this.coordinatesToHighlight.set(index, coordinates)
+            if (index == lastLine) {
+                this.endingMarkedPoint = new MarkedPoint(
+                    coordinates.top,
+                    0,
+                    coordinates.width,
+                    index
+                )
+            }
+        }
+    }
+
+    _filterLastVisibleLine(lastVisibleLine) {
+        let lastVisibleLineElement = document.getElementById(String(lastVisibleLine))
+        while (lastVisibleLineElement == null) {
+            lastVisibleLine -= 1
+            lastVisibleLineElement = document.getElementById(String(lastVisibleLine))
+        }
+        return lastVisibleLine
+    }
+
+    /**
+     * 
+     * @param {Number} lastVisibleLine 
+     */
+    _defineStartingPointMarkerForBottomTextSelection(lastVisibleLine) {
+        const line = document.getElementById(String(lastVisibleLine))
+        this.startingMarkedPoint = new MarkedPoint(
+            line.offsetTop,
+            0,
+            0,
+            Number(line.id)
+        )
+    }
+
+    /**
+     * 
+     * @param {Number} lineOfStartingPoint 
+     */
+    _defineEndingPointMarkerForBottomTextSelection(lineOfStartingPoint) {
+        const topOffset = this.startingPoint.topOffset
+        const textContentOfLine = this.startingPoint.fullText
+        const widthOfTextContent = calculateWidthForText(this.contentElement, textContentOfLine)
+        const textToSelect = widthOfTextContent - this.startingPoint.leftOffset
+        this.endingMarkedPoint = new MarkedPoint(
+            topOffset,
+            widthOfTextToSelect,
+            textToSelect,
+            lineOfStartingPoint
+        )
     }
 
 

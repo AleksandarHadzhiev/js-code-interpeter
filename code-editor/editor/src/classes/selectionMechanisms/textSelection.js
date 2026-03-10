@@ -110,6 +110,7 @@ export default class TextSelection {
      * @param {Number} lastVisibleLine 
      */
     _highlightTextBasedOnMousePosition(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
+        console.log("HIGHLIGHTING")
         if (this.mousePosition == MousePosition.RIGHT) {
 
         }
@@ -117,10 +118,10 @@ export default class TextSelection {
             this.highlighter.highlightForLeftScreenSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
         }
         else if (this.mousePosition == MousePosition.TOP) {
-
+            this.highlighter.highlightForTopScreenSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
         }
         else if (this.mousePosition == MousePosition.BOTTOM) {
-
+            this.highlighter.highlightForBottomScreenSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
         }
         else if (this.mousePosition == MousePosition.CENTRE) {
 

@@ -121,8 +121,7 @@ export default class LineColoriser {
         let coordinates = this._defineCoordinatesForStartingPointWithLeftOffset()
         this.coordinatesToHighlight.set(lineOfStartingPoint, coordinates)
         this._defineStartingMarkedPointBasedOnCoordinatesAndLineId(coordinates, lineOfStartingPoint)
-        const lineElement = document.getElementById(String(lineOfReleasingPoint))
-        coordinates = this._calculateCoordinatesForLineAtIndex(lineElement)
+        coordinates = new MarkedLineCoordinates(0, this.endingPoint.topOffset, 0)
         this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, lineOfReleasingPoint)
     }
 
@@ -142,8 +141,7 @@ export default class LineColoriser {
         this._fullyColoriselinesBetweenTwoLines(firstVisibleLine, lineOfReleasingPoint - 1)
         let coordinates = this._defineCoordinatesForStartingPointWithLeftOffset()
         this._defineStartingMarkedPointBasedOnCoordinatesAndLineId(coordinates, lineOfStartingPoint)
-        const lineElement = document.getElementById(`${lineOfReleasingPoint}`)
-        coordinates = this._calculateCoordinatesForLineAtIndex(lineElement)
+        coordinates = new MarkedLineCoordinates(0, this.endingPoint.topOffset, 0)
         this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, lineOfReleasingPoint)
     }
 
@@ -242,10 +240,22 @@ export default class LineColoriser {
         const lineOfEndingPoint = Number(this.endingPoint.lineId)
         // - starting point is visible on the screen
         if (lineOfStartingPoint >= firstVisibleLine && lineOfStartingPoint <= lastVisibleLine) {
-            this._defineStartingPointMarkerForStartingPointNotVisibleButEarlierThanReleasePoint(lineOfStartingPoint)
-            this._coloriseFirstLine(lineOfStartingPoint)
             lastVisibleLine = this._filterLastVisibleLine(lastVisibleLine)
-            this._coloriseBetweenTwoLines(lineOfStartingPoint + 1, lastVisibleLine)
+            if (lastVisibleLine == lineOfStartingPoint) {
+                this._defineStartingPointMarkerForBottomTextSelection(lastVisibleLine)
+                const lineElement = document.getElementById(String(lastVisibleLine))
+                const coordinates = this._calculateCoordinatesForLineAtIndex(lineElement)
+                this.coordinatesToHighlight.set(lastVisibleLine, coordinates)
+                this._defineEndingPointMarkerForBottomTextSelection(lineOfStartingPoint)
+            }
+            else if (lastVisibleLine > lineOfStartingPoint) {
+                this._defineStartingPointMarkerForStartingPointNotVisibleButEarlierThanReleasePoint(lineOfStartingPoint)
+                this._coloriseBetweenTwoLines(lineOfStartingPoint + 1, lastVisibleLine)
+            }
+            else if (lastVisibleLine < lineOfStartingPoint) {
+                this._defineStartingPointMarkerForBottomTextSelection(lastVisibleLine)
+                this._coloriseBetweenTwoLines(lastVisibleLine, lineOfStartingPoint - 1)
+            }
         }
         // - starting point is earlier than current mouse line
         else if (lineOfStartingPoint < lineOfEndingPoint) {
@@ -303,9 +313,10 @@ export default class LineColoriser {
      */
     _defineStartingPointMarkerForBottomTextSelection(lastVisibleLine) {
         const line = document.getElementById(String(lastVisibleLine))
+        const leftOffset = calculateWidthForText(this.contentElement, line.textContent)
         this.startingMarkedPoint = new MarkedPoint(
             line.offsetTop,
-            0,
+            leftOffset,
             0,
             Number(line.id)
         )
@@ -368,8 +379,9 @@ export default class LineColoriser {
 
     _colorsieForRightWhenMouseIsOnearlinerLineThanStartingPoint(lineOfReleasingPoint, lineOfStartingPoint) {
         this._fullyColoriselinesBetweenTwoLines(lineOfReleasingPoint + 1, lineOfStartingPoint - 1)
+        const width = calculateWidthForText(this.contentElement, this.endingPoint.fullText)
         let coordinates = new MarkedLineCoordinates(
-            0, this.endingPoint.topOffset, 0
+            width, this.endingPoint.topOffset, 0
         )
         this._defineStartingMarkedPointBasedOnCoordinatesAndLineId(coordinates, lineOfReleasingPoint)
         coordinates = this._defineCoordinatesForStartingPointWithoutLeftOffset()

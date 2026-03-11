@@ -15,6 +15,10 @@ const StartingPointVisibility = {
 }
 
 export default class Highlighter {
+    /**
+     * 
+     * @param {HTMLElement} contentElement 
+     */
     constructor(contentElement) {
         this.startingPoint = null
         this.endingRange = null
@@ -129,7 +133,6 @@ export default class Highlighter {
 
     highlightForMouseInEditorSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine, mouseXPosition) {
         this.endingPoint = this._buildReleasePointForMouseInEditorSection(mouseYPositionBasedOnPage, mouseXPosition)
-        console.log(this.endingPoint)
         if (this.endingPoint != null) {
             this.customMarker.updatePoints(this.startingPoint, this.endingPoint)
             this.customMarker.buildForMouseInEditorSection(firstVisibleLine, lastVisibleLine)
@@ -138,27 +141,37 @@ export default class Highlighter {
 
     _buildReleasePointForMouseInEditorSection(mouseYPositionBasedOnPage, mouseXPosition) {
         let endingPoint = null
-        const endContainerPoint = this._buildPointBasedOnContainerAndOffset(this.endingRange.endContainer, this.endingRange.endOffset)
-        const startContainerPoint = this._buildPointBasedOnContainerAndOffset(this.endingRange.startContainer, this.endingRange.startOffset)
-        const lineForEndContainer = this.endingRange.endContainer.parentElement.parentElement
-        const lineForStartContainer = this.endingRange.startContainer.parentElement.parentElement
-        const distanceBetweenMouseLineIdAndIdOfEndLine = mouseYPositionBasedOnPage > lineForEndContainer.offsetTop ? mouseYPositionBasedOnPage - lineForEndContainer.offsetTop : lineForEndContainer.offsetTop - mouseYPositionBasedOnPage
-        const distanceBetweenMouseLineIdAndIdOfStartLine = mouseYPositionBasedOnPage > lineForStartContainer.offsetTop ? mouseYPositionBasedOnPage - lineForStartContainer.offsetTop : lineForStartContainer.offsetTop - mouseYPositionBasedOnPage
-        const distanceBetweenMouseXAndStartContainerX = mouseXPosition > startContainerPoint.leftOffset ? mouseXPosition - startContainerPoint.leftOffset : startContainerPoint.leftOffset - mouseXPosition
-        const distanceBetweenMouseXAndEndContainerX = mouseXPosition > endContainerPoint.leftOffset ? mouseXPosition - endContainerPoint.leftOffset : endContainerPoint.leftOffset - mouseXPosition
 
-        if (distanceBetweenMouseLineIdAndIdOfEndLine < distanceBetweenMouseLineIdAndIdOfStartLine) {
-            endingPoint = endContainerPoint
+        const commonContainer = this.endingRange.commonAncestorContainer
+        let isSelectable = true
+        if (commonContainer.id !== "line-content") {
+            if (isNaN(Number(commonContainer.id)) || commonContainer.id == "") {
+                isSelectable = false
+            }
         }
-        else if (distanceBetweenMouseLineIdAndIdOfEndLine > distanceBetweenMouseLineIdAndIdOfStartLine) {
-            endingPoint = startContainerPoint
-        }
-        else {
-            if (distanceBetweenMouseXAndEndContainerX < distanceBetweenMouseXAndStartContainerX) {
+        if (isSelectable) {
+            const endContainerPoint = this._buildPointBasedOnContainerAndOffset(this.endingRange.endContainer, this.endingRange.endOffset)
+            const startContainerPoint = this._buildPointBasedOnContainerAndOffset(this.endingRange.startContainer, this.endingRange.startOffset)
+            const lineForEndContainer = this.endingRange.endContainer.parentElement.parentElement
+            const lineForStartContainer = this.endingRange.startContainer.parentElement.parentElement
+            const distanceBetweenMouseLineIdAndIdOfEndLine = mouseYPositionBasedOnPage > lineForEndContainer.offsetTop ? mouseYPositionBasedOnPage - lineForEndContainer.offsetTop : lineForEndContainer.offsetTop - mouseYPositionBasedOnPage
+            const distanceBetweenMouseLineIdAndIdOfStartLine = mouseYPositionBasedOnPage > lineForStartContainer.offsetTop ? mouseYPositionBasedOnPage - lineForStartContainer.offsetTop : lineForStartContainer.offsetTop - mouseYPositionBasedOnPage
+            const distanceBetweenMouseXAndStartContainerX = mouseXPosition > startContainerPoint.leftOffset ? mouseXPosition - startContainerPoint.leftOffset : startContainerPoint.leftOffset - mouseXPosition
+            const distanceBetweenMouseXAndEndContainerX = mouseXPosition > endContainerPoint.leftOffset ? mouseXPosition - endContainerPoint.leftOffset : endContainerPoint.leftOffset - mouseXPosition
+
+            if (distanceBetweenMouseLineIdAndIdOfEndLine < distanceBetweenMouseLineIdAndIdOfStartLine) {
                 endingPoint = endContainerPoint
             }
-            else if (distanceBetweenMouseXAndEndContainerX > distanceBetweenMouseXAndStartContainerX) {
+            else if (distanceBetweenMouseLineIdAndIdOfEndLine > distanceBetweenMouseLineIdAndIdOfStartLine) {
                 endingPoint = startContainerPoint
+            }
+            else {
+                if (distanceBetweenMouseXAndEndContainerX < distanceBetweenMouseXAndStartContainerX) {
+                    endingPoint = endContainerPoint
+                }
+                else if (distanceBetweenMouseXAndEndContainerX > distanceBetweenMouseXAndStartContainerX) {
+                    endingPoint = startContainerPoint
+                }
             }
         }
         return endingPoint

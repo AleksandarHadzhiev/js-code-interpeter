@@ -2,7 +2,6 @@ import Highlighter from "./highlighter.js"
 import { MousePosition, WindowSection } from "./enums.js"
 import { StartingPoint } from "../dtos/caretDTOs.js"
 import CaretBuilder from "./caretBuilder.js"
-import MarkedPoint from "./MarkedPoint.js"
 
 
 export default class TextSelection {
@@ -134,25 +133,29 @@ export default class TextSelection {
         }
     }
 
+    /**
+     * 
+     * @param {Number} mouseYPositionBasedOnPage 
+     */
     _buildCaretForTextSelection(mouseYPositionBasedOnPage) {
         const caretBuilder = new CaretBuilder()
         if (this.highlighter.endingPoint != null) {
-            const startingPoint = this.highlighter.customMarker.algorithm.startingPoint
-            const endingPoint = this.highlighter.customMarker.algorithm.endingPoint
-            const differenceBetweenEndingPointTopOffsetAndMouseY = mouseYPositionBasedOnPage > endingPoint.topOffset ? mouseYPositionBasedOnPage - endingPoint.topOffset : endingPoint.topOffset - mouseYPositionBasedOnPage
-            const differenceBetweenStartingPointTopOffsetAndMouseY = mouseYPositionBasedOnPage > startingPoint.topOffset ? mouseYPositionBasedOnPage - startingPoint.topOffset : startingPoint.topOffset - mouseYPositionBasedOnPage
+            const startingPoint = this.highlighter.customMarker.algorithm.startingMarkedPoint
+            const endingPoint = this.highlighter.customMarker.algorithm.endingMarkedPoint
+            const differenceBetweenEndingPointTopOffsetAndMouseY = mouseYPositionBasedOnPage > endingPoint.top ? mouseYPositionBasedOnPage - endingPoint.top : endingPoint.top - mouseYPositionBasedOnPage
+            const differenceBetweenStartingPointTopOffsetAndMouseY = mouseYPositionBasedOnPage > startingPoint.top ? mouseYPositionBasedOnPage - startingPoint.top : startingPoint.top - mouseYPositionBasedOnPage
             if (differenceBetweenEndingPointTopOffsetAndMouseY < differenceBetweenStartingPointTopOffsetAndMouseY)
-                caretBuilder.buildCaretForTextSelection(this.contentElement, endingPoint)
+                caretBuilder.buildCaretForTextSelection(this.contentElement, endingPoint, this.mousePosition)
             else if (differenceBetweenEndingPointTopOffsetAndMouseY > differenceBetweenStartingPointTopOffsetAndMouseY)
-                caretBuilder.buildCaretForTextSelection(this.contentElement, startingPoint)
+                caretBuilder.buildCaretForTextSelection(this.contentElement, startingPoint, this.mousePosition)
             else {
-                const differenceBetweenEndingPointLeftOffsetAndMouseX = this.xForMouseInEditor > endingPoint.leftOffset ? this.xForMouseInEditor - endingPoint.leftOffset : endingPoint.leftOffset - this.xForMouseInEditor
-                const differenceBetweenStartingPointLeftOffsetAndMouseX = this.xForMouseInEditor > startingPoint.leftOffset ? this.xForMouseInEditor - startingPoint.leftOffset : startingPoint.leftOffset - this.xForMouseInEditor
+                const differenceBetweenEndingPointLeftOffsetAndMouseX = this.xForMouseInEditor > endingPoint.left ? this.xForMouseInEditor - endingPoint.left : endingPoint.left - this.xForMouseInEditor
+                const differenceBetweenStartingPointLeftOffsetAndMouseX = this.xForMouseInEditor > startingPoint.left ? this.xForMouseInEditor - startingPoint.left : startingPoint.left - this.xForMouseInEditor
                 if (differenceBetweenEndingPointLeftOffsetAndMouseX < differenceBetweenStartingPointLeftOffsetAndMouseX) {
-                    caretBuilder.buildCaretForTextSelection(this.contentElement, endingPoint)
+                    caretBuilder.buildCaretForTextSelection(this.contentElement, endingPoint, this.mousePosition)
                 }
                 else if (differenceBetweenStartingPointLeftOffsetAndMouseX < differenceBetweenEndingPointLeftOffsetAndMouseX) {
-                    caretBuilder.buildCaretForTextSelection(this.contentElement, startingPoint)
+                    caretBuilder.buildCaretForTextSelection(this.contentElement, startingPoint, this.mousePosition)
                 }
             }
         }

@@ -14,6 +14,7 @@ body {
     left: 0;
     height: 100%;
     width: 100%;
+    pointer-events: none;
 }
 
 html::selection {
@@ -30,6 +31,7 @@ html::selection {
 }
 
 .container {
+    pointer-events: all;
     position: absolute;
     top: 5%;
     left: 0%;
@@ -198,6 +200,7 @@ html::selection {
     background-color: orange;
     height: 28.8px;
     animation: blink 1s linear infinite;
+    z-index: 0;
 }
 
 @keyframes blink {
@@ -217,4 +220,5 @@ html::selection {
     background-color: transparent;
     color: transparent;
     left: 5%;
+    z-index: -1;
 }

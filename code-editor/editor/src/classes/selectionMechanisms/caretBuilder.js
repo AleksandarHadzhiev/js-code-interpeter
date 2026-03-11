@@ -1,6 +1,6 @@
 import calculateWidthForText from "../calculators/widthOfTextCalculator.js"
-import { StartingPoint } from "../dtos/caretDTOs.js"
 import MarkedPoint from "./MarkedPoint.js"
+import { MousePosition } from "./enums.js"
 
 export default class CaretBuilder {
     constructor() {
@@ -40,9 +40,10 @@ export default class CaretBuilder {
     /**
      * 
      * @param {HTMLElement} contentElement 
-     * @param {StartingPoint} point 
+     * @param {MarkedPoint} point 
+     * @param {String} mousePosition 
      */
-    buildCaretForTextSelection(contentElement, point) {
+    buildCaretForTextSelection(contentElement, point, mousePosition) {
         const lineNumeration = document.getElementById('line-numeration')
         const lineNumerationWidth = lineNumeration.offsetWidth
         let caretElement = document.getElementById('caret')
@@ -51,7 +52,14 @@ export default class CaretBuilder {
             caretElement.classList.add('caret')
             caretElement.setAttribute('id', 'caret')
         }
-        caretElement.style = `top: ${point.topOffset}px; left: ${point.leftOffset + lineNumerationWidth}px;`
+        let left = point.left == 0 ? point.width : point.left
+        if (mousePosition == MousePosition.TOP) {
+            left = point.left == 0 && point.width == 0 ? point.width : point.left
+        }
+        else if (mousePosition == MousePosition.LEFT) {
+            left = point.left == 0 && point.width == 0 ? point.width : point.left
+        }
+        caretElement.style = `top: ${point.top}px; left: ${left + lineNumerationWidth}px;`
         contentElement.prepend(caretElement)
     }
 }

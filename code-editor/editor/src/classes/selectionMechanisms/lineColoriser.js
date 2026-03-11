@@ -432,6 +432,15 @@ export default class LineColoriser {
 
     coloriseForMouseInEditorSection(firstVisibleLine, lastVisibleLine) {
         console.log(firstVisibleLine, lastVisibleLine)
+        if (this.startingPoint.lineId >= firstVisibleLine && this.startingPoint.lineId <= lastVisibleLine) {
+
+        }
+        else if (this.startingPoint.lineId < firstVisibleLine) {
+
+        }
+        else if (this.startingPoint > lastVisibleLine) {
+
+        }
     }
 
     /**

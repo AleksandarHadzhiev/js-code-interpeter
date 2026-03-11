@@ -433,14 +433,42 @@ export default class LineColoriser {
     coloriseForMouseInEditorSection(firstVisibleLine, lastVisibleLine) {
         console.log(firstVisibleLine, lastVisibleLine)
         if (this.startingPoint.lineId >= firstVisibleLine && this.startingPoint.lineId <= lastVisibleLine) {
-
+            this._coloriseForWhenMouseIsInEditorScreenWithStartingPointVisible(this.endingPoint.lineId, this.startingPoint.lineId)
         }
         else if (this.startingPoint.lineId < firstVisibleLine) {
-
+            this._coloriseForWhenMouseIsInEditorScreenWithStartingLineEarlierThanReleasingLine(this.endingPoint.lineId, firstVisibleLine, this.startingPoint.lineId)
         }
         else if (this.startingPoint > lastVisibleLine) {
-
+            this._coloriseForWhenMouseIsInEditorScreenWithStartingLineLaterThanReleasingLine(this.endingPoint.lineId, lastVisibleLine, this.startingPoint.lineId)
         }
+    }
+
+    _coloriseForWhenMouseIsInEditorScreenWithStartingPointVisible() {
+
+    }
+
+    _coloriseForWhenMouseIsInEditorScreenWithStartingLineEarlierThanReleasingLine(lineOfReleasingPoint, firstVisibleLine, lineOfStartingPoint) {
+        this._fullyColoriselinesBetweenTwoLines(firstVisibleLine, lineOfReleasingPoint - 1)
+        let coordinates = new MarkedLineCoordinates(
+            0, this.endingPoint.topOffset, this.endingPoint.leftOffset
+        )
+        this.coordinatesToHighlight.set(lineOfReleasingPoint, coordinates)
+        this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, lineOfReleasingPoint)
+        coordinates = this._defineCoordinatesForStartingPointWithLeftOffset()
+        this.coordinatesToHighlight.set(lineOfStartingPoint, coordinates)
+        this._defineStartingMarkedPointBasedOnCoordinatesAndLineId(coordinates, lineOfStartingPoint)
+    }
+
+    _coloriseForWhenMouseIsInEditorScreenWithStartingLineLaterThanReleasingLine(lineOfReleasingPoint, lastVisibleLine, lineOfStartingPoint) {
+        this._fullyColoriselinesBetweenTwoLines(lineOfReleasingPoint + 1, lastVisibleLine)
+        const width = calculateWidthForText(this.contentElement, this.endingPoint.fullText)
+        let coordinates = new MarkedLineCoordinates(
+            this.endingPoint.leftOffset, this.endingPoint.topOffset, width - this.endingPoint.leftOffset
+        )
+        this.coordinatesToHighlight.set(lineOfReleasingPoint, coordinates)
+        this._defineStartingMarkedPointBasedOnCoordinatesAndLineId(coordinates, lineOfReleasingPoint)
+        coordinates = this._defineCoordinatesForStartingPointWithoutLeftOffset()
+        this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, lineOfStartingPoint)
     }
 
     /**

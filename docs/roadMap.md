@@ -24,6 +24,7 @@ generate the code colorised (VSCode colorisation as example of color composition
       - One by one
       - All at once
 - Fast loading/reloading of the content
+- Text Selection
 
 #### 1.2.x
 - Redirect between code in file

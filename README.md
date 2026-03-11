@@ -37,6 +37,7 @@ Build prototypes to understand how to have fast and stable content loading on th
 Build prototypes for: text selection and search/replace functionalities with the new content loading approach:
 - custom text selection algorithm
 - change the approach for text search and replace in the content
+- custom caret element
 
 Integrate the learnings from the prototypes in the main project
 

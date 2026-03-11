@@ -37,7 +37,7 @@ let isTextSelecting = false
 
 let startingRange = null
 
-const textSelection = new TextSelection(scrollbarTopOffset, lineNumerationElement.scrollWidth, scrollbarHeight, loaderElement.scrollWidth, contentElement, contentElementOffsetLeft)
+const textSelection = new TextSelection(scrollbarTopOffset, lineNumerationElement.scrollWidth, scrollbarHeight, loaderElement.scrollWidth, contentElement, contentElementOffsetLeft, lines)
 const barHandler = new BarHandler(scrollbarHeight, barHeight, barElement)
 const loaderHandler = new LoaderHandler(loaderHeight, scrollbarHeight, loaderElement)
 const offsetCalculator = new OffsetCalculator()

@@ -479,8 +479,11 @@ export default class LineColoriser {
             this.startingPoint.leftOffset, this.endingPoint.topOffset, this.endingPoint.leftOffset - this.startingPoint.leftOffset
         )
         this.coordinatesToHighlight.set(this.endingPoint.lineId, coordinates)
-        this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, this.endingPoint.lineId)
         this._defineStartingMarkedPointBasedOnCoordinatesAndLineId(coordinates, this.endingPoint.lineId)
+        coordinates = new MarkedLineCoordinates(
+            this.endingPoint.leftOffset, this.endingPoint.topOffset, this.endingPoint.leftOffset - this.startingPoint.leftOffset
+        )
+        this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, this.endingPoint.lineId)
     }
 
     _coloriseForEndingPointEarlierOnLine() {
@@ -488,8 +491,11 @@ export default class LineColoriser {
             this.endingPoint.leftOffset, this.endingPoint.topOffset, this.startingPoint.leftOffset - this.endingPoint.leftOffset
         )
         this.coordinatesToHighlight.set(this.endingPoint.lineId, coordinates)
-        this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, this.endingPoint.lineId)
         this._defineStartingMarkedPointBasedOnCoordinatesAndLineId(coordinates, this.endingPoint.lineId)
+        coordinates = new MarkedLineCoordinates(
+            this.startingPoint.leftOffset, this.endingPoint.topOffset, this.startingPoint.leftOffset - this.endingPoint.leftOffset
+        )
+        this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, this.endingPoint.lineId)
 
     }
 

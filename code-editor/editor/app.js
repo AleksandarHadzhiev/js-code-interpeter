@@ -103,9 +103,10 @@ window.addEventListener('mousemove', (event) => {
                 leftOffset: offset,
                 fullText: range.startContainer.parentElement.parentElement.textContent
             }
-            textSelection.setStartingRange(startingRange)
+            textSelection.setStartingPoint(startingRange)
         }
         else {
+            console.log(range)
             textSelection.setEndingRange(range)
             const mousePosition = textSelection.selectTextBetweenRanges(event, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
             textSelectionScrolling.scrollOnMousePosition(mousePosition)

@@ -36,7 +36,7 @@ export default class Highlighter {
     /**
      * @param {StartingPoint} point 
      */
-    setStartingPointBasedOnRange(point) {
+    setStartingPoint(point) {
         this.startingPoint = point
     }
 
@@ -142,26 +142,29 @@ export default class Highlighter {
         const lineForStartContainer = this.endingRange.startContainer.parentElement.parentElement
         const idOfEndLine = Number(lineForEndContainer.id)
         const idOfStartLine = Number(lineForStartContainer.id)
-
+        let endingPoint = null
+        console.log(this.endingRange)
         if (mouseLineId == idOfEndLine && mouseLineId == idOfStartLine) {
-            // SPECIAL CASE
             const endContainerPoint = this._buildPointBasedOnContainerAndOffset(this.endingRange.endContainer, this.endingRange.endOffset)
             const startContainerPoint = this._buildPointBasedOnContainerAndOffset(this.endingRange.startContainer, this.endingRange.startOffset)
             if (this.startingPoint.leftOffset == endContainerPoint.leftOffset) {
-                return startContainerPoint
+                endingPoint = startContainerPoint
             }
             else if (this.startingPoint.leftOffset == startContainerPoint.leftOffset) {
-                return endContainerPoint
+                endingPoint = endContainerPoint
             }
         }
         else if (mouseLineId == idOfEndLine) {
-            return this._buildPointBasedOnContainerAndOffset(this.endingRange.endContainer, this.endingRange.endOffset)
+            console.log("HERE")
+            endingPoint = this._buildPointBasedOnContainerAndOffset(this.endingRange.endContainer, this.endingRange.endOffset)
         }
         else if (mouseLineId == idOfStartLine) {
-            return this._buildPointBasedOnContainerAndOffset(this.endingRange.startContainer, this.endingRange.startOffset)
+            console.log("THERE")
+            endingPoint = this._buildPointBasedOnContainerAndOffset(this.endingRange.startContainer, this.endingRange.startOffset)
         }
         else console.log(idOfEndLine, idOfStartLine, mouseLineId)
-        return null
+        console.log(endingPoint)
+        return endingPoint
     }
 
     /**

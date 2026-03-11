@@ -35,8 +35,8 @@ export default class TextSelection {
      * 
      * @param {StartingPoint} startingPoint 
      */
-    setStartingRange(startingPoint) {
-        this.highlighter.setStartingPointBasedOnRange(startingPoint)
+    setStartingPoint(startingPoint) {
+        this.highlighter.setStartingPoint(startingPoint)
     }
 
     /**

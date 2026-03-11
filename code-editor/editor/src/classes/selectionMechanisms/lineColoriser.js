@@ -234,12 +234,23 @@ export default class LineColoriser {
         )
     }
 
-    coloriseLinesForBottomInBetweenFirstAndLastVisibleLines(firstVisibleLine, lastVisibleLine) {
+    /**
+     * 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     * @param {Number} lastTextLine 
+     * @returns 
+     */
+    coloriseLinesForBottomInBetweenFirstAndLastVisibleLines(firstVisibleLine, lastVisibleLine, lastTextLine) {
         this.coordinatesToHighlight.clear()
         const lineOfStartingPoint = Number(this.startingPoint.lineId)
         const lineOfEndingPoint = Number(this.endingPoint.lineId)
         // - starting point is visible on the screen
-        if (lineOfStartingPoint >= firstVisibleLine && lineOfStartingPoint <= lastVisibleLine) {
+        if (lineOfEndingPoint == lastTextLine) {
+            this._defineStartingPointMarkerForStartingPointNotVisibleButEarlierThanReleasePoint(lineOfStartingPoint)
+            this._coloriseBetweenTwoLines(firstVisibleLine, lastTextLine)
+        }
+        else if (lineOfStartingPoint >= firstVisibleLine && lineOfStartingPoint <= lastVisibleLine) {
             lastVisibleLine = this._filterLastVisibleLine(lastVisibleLine)
             if (lastVisibleLine == lineOfStartingPoint) {
                 this._defineStartingPointMarkerForBottomTextSelection(lastVisibleLine)

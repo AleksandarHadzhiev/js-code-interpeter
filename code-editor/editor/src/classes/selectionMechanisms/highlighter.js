@@ -67,17 +67,29 @@ export default class Highlighter {
  * @param {Number} mouseYPositionBasedOnPage 
  * @param {Number} firstVisibleLine 
  * @param {Number} lastVisibleLine 
+ * @param {Number} lastTextLine 
  * @returns {Range}
  */
-    _buildReleasePoint(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
+    _buildReleasePoint(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine, lastTextLine) {
         let endingPoint = null
-        let lineElementBasedOnMouuse = this._buildLineForMousePositionOnY(mouseYPositionBasedOnPage, lastVisibleLine, firstVisibleLine)
-        endingPoint = new StartingPoint(
-            Number(lineElementBasedOnMouuse.id),
-            Number(lineElementBasedOnMouuse.offsetTop),
-            0,
-            lineElementBasedOnMouuse.textContent
-        )
+        if (lastVisibleLine > lastTextLine) {
+            const lineElement = document.getElementById(lastTextLine)
+            endingPoint = new StartingPoint(
+                lastTextLine,
+                Number(lineElement.offsetTop),
+                0,
+                lineElement.textContent
+            )
+        }
+        else {
+            let lineElementBasedOnMouuse = this._buildLineForMousePositionOnY(mouseYPositionBasedOnPage, lastVisibleLine, firstVisibleLine)
+            endingPoint = new StartingPoint(
+                Number(lineElementBasedOnMouuse.id),
+                Number(lineElementBasedOnMouuse.offsetTop),
+                0,
+                lineElementBasedOnMouuse.textContent
+            )
+        }
         return endingPoint
     }
 
@@ -113,11 +125,13 @@ export default class Highlighter {
      * @param {Number} mouseYPositionBasedOnPage 
      * @param {Number} firstVisibleLine 
      * @param {Number} lastVisibleLine 
+     * @param {Number} lastTextLine
      */
-    highlightForBottomScreenSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
-        this.endingPoint = this._buildReleasePoint(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
+    highlightForBottomScreenSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine, lastTextLine) {
+        this.endingPoint = this._buildReleasePoint(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine, lastTextLine)
+        console.log(this.endingPoint)
         this.customMarker.updatePoints(this.startingPoint, this.endingPoint)
-        this.customMarker.buildForBottomSection(firstVisibleLine, lastVisibleLine)
+        this.customMarker.buildForBottomSection(firstVisibleLine, lastVisibleLine, lastTextLine)
     }
 
     /**

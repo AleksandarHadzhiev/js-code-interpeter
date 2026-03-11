@@ -358,7 +358,6 @@ export default class LineColoriser {
         return this.coordinatesToHighlight
     }
 
-
     _coloriseRightForStartingPointStillVisible(lineOfReleasingPoint, lineOfStartingPoint) {
         if (lineOfReleasingPoint == lineOfStartingPoint) {
             this._coloriseForRightWhenMouseIsonSameLineAsStartingPoint(lineOfStartingPoint)
@@ -429,6 +428,10 @@ export default class LineColoriser {
         this._defineStartingMarkedPointBasedOnCoordinatesAndLineId(coordinates, lineOfReleasingPoint)
         coordinates = this._defineCoordinatesForStartingPointWithoutLeftOffset()
         this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, lineOfStartingPoint)
+    }
+
+    coloriseForMouseInEditorSection(firstVisibleLine, lastVisibleLine) {
+        console.log(firstVisibleLine, lastVisibleLine)
     }
 
     /**

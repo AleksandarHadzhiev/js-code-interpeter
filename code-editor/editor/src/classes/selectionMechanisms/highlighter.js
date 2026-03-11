@@ -56,7 +56,7 @@ export default class Highlighter {
      * @param {Number} lastVisibleLine 
      */
     highlightForLeftScreenSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
-        this.endingPoint = this._buildReleaseRange(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
+        this.endingPoint = this._buildReleasePoint(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
         this.customMarker.updatePoints(this.startingPoint, this.endingPoint)
         this.customMarker.buildForLeftSection(firstVisibleLine, lastVisibleLine)
     }
@@ -68,13 +68,12 @@ export default class Highlighter {
  * @param {Number} lastVisibleLine 
  * @returns {Range}
  */
-    _buildReleaseRange(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
+    _buildReleasePoint(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
         const y = mouseYPositionBasedOnPage
         let endingPoint = null
         let rowBasedOnMouseYPosition = Math.floor(y / 28.8)
         let lineElementBasedOnMouuse = document.getElementById(String(rowBasedOnMouseYPosition))
         while (lineElementBasedOnMouuse == null) {
-
             if (rowBasedOnMouseYPosition >= lastVisibleLine) {
                 rowBasedOnMouseYPosition -= 1
             }
@@ -99,7 +98,7 @@ export default class Highlighter {
      * @param {Number} lastVisibleLine 
      */
     highlightForTopScreenSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
-        this.endingPoint = this._buildReleaseRange(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
+        this.endingPoint = this._buildReleasePoint(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
         this.customMarker.updatePoints(this.startingPoint, this.endingPoint)
         this.customMarker.buildForTopSection(firstVisibleLine, lastVisibleLine)
     }
@@ -110,7 +109,7 @@ export default class Highlighter {
      * @param {Number} lastVisibleLine 
      */
     highlightForBottomScreenSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
-        this.endingPoint = this._buildReleaseRange(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
+        this.endingPoint = this._buildReleasePoint(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
         this.customMarker.updatePoints(this.startingPoint, this.endingPoint)
         this.customMarker.buildForBottomSection(firstVisibleLine, lastVisibleLine)
     }
@@ -121,9 +120,19 @@ export default class Highlighter {
      * @param {Number} lastVisibleLine 
      */
     highlightForRightScreenSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
-        this.endingPoint = this._buildReleaseRange(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
+        this.endingPoint = this._buildReleasePoint(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
         this.customMarker.updatePoints(this.startingPoint, this.endingPoint)
         this.customMarker.buildForRightSection(firstVisibleLine, lastVisibleLine)
+    }
+
+    highlightForMouseInEditorSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
+        this.endingPoint = this._buildReleasePointForMouseInEditorSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
+        this.customMarker.updatePoints(this.startingPoint, this.endingPoint)
+        this.customMarker.buildForMouseInEditorSection(firstVisibleLine, lastVisibleLine)
+    }
+
+    _buildReleasePointForMouseInEditorSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
+        console.log(this.endingRange)
     }
 
     /**

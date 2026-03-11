@@ -71,6 +71,13 @@ export default class CustomContentMarker {
         });
     }
 
+    buildForMouseInEditorSection(firstVisibleLine, lastVisibleLine) {
+        this.algorithm = new LineColoriser(this.startingPoint, this.releasingPoint, this.contentElement)
+        const multilineCoordinates = this.algorithm.coloriseForMouseInEditorSection(firstVisibleLine, lastVisibleLine)
+        multilineCoordinates.forEach((coordinates) => {
+            this._buildLineInMarkerForCoordinates(coordinates)
+        });
+    }
 
     /**
      * 

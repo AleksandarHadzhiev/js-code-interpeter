@@ -129,6 +129,7 @@ export default class Highlighter {
 
     highlightForMouseInEditorSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine, mouseXPosition) {
         this.endingPoint = this._buildReleasePointForMouseInEditorSection(mouseYPositionBasedOnPage, mouseXPosition)
+        console.log(this.endingPoint)
         if (this.endingPoint != null) {
             this.customMarker.updatePoints(this.startingPoint, this.endingPoint)
             this.customMarker.buildForMouseInEditorSection(firstVisibleLine, lastVisibleLine)

@@ -1,22 +1,8 @@
 import MarkedLineCoordinates from "./markedLineCoordinates.js"
 import calculateWidthForText from "../calculators/widthOfTextCalculator.js"
 import { StartingPoint } from "../dtos/caretDTOs.js"
+import MarkedPoint from "./MarkedPoint.js"
 
-class MarkedPoint {
-    /**
- * 
- * @param {Number} top 
- * @param {Number} left 
- * @param {Number} width 
- * @param {Number} lineId 
- */
-    constructor(top, left, width, lineId) {
-        this.top = top
-        this.left = left
-        this.lineId = lineId
-        this.width = width
-    }
-}
 
 export default class LineColoriser {
     /**

@@ -8,6 +8,7 @@ import calculateTotalLeftOffsetOfCaretInTheLine from "./src/classes/calculators/
 import { CaretLeftOffsetDTO } from "./src/classes/dtos/caretDTOs.js"
 
 const mainContainer = document.getElementById('container')
+const menuContainer = document.getElementById('menu')
 const navigationElement = document.getElementById('navigation')
 const loaderElement = document.getElementById('loader')
 const scrollbarElement = document.getElementById('scrollbar')
@@ -21,6 +22,9 @@ const scrollbarHeight = scrollbarElement.offsetHeight
 const scrollbarTopOffset = navigationElement.offsetHeight
 const barHeight = barElement.offsetHeight
 
+const contentElementOffsetLeft = menuContainer.offsetWidth + lineNumerationElement.scrollWidth
+
+
 const lines = 2000
 const lineHeightInPixels = 28.8
 const maxVisibleLinesOnScreen = Math.ceil(mainContainer.offsetHeight / lineHeightInPixels)
@@ -33,7 +37,7 @@ let isTextSelecting = false
 
 let startingRange = null
 
-const textSelection = new TextSelection(scrollbarTopOffset, lineNumerationElement.scrollWidth, scrollbarHeight, loaderElement.scrollWidth, contentElement)
+const textSelection = new TextSelection(scrollbarTopOffset, lineNumerationElement.scrollWidth, scrollbarHeight, loaderElement.scrollWidth, contentElement, contentElementOffsetLeft)
 const barHandler = new BarHandler(scrollbarHeight, barHeight, barElement)
 const loaderHandler = new LoaderHandler(loaderHeight, scrollbarHeight, loaderElement)
 const offsetCalculator = new OffsetCalculator()
@@ -79,12 +83,14 @@ scrollbarAreaElement.addEventListener('mousemove', (event) => {
 window.addEventListener('mouseup', (event) => {
     if (barIsSelected) barIsSelected = false
     scrollbarAreaElement.style.pointerEvents = "none"
+    if (isTextSelecting) scrollbarElement.style.pointerEvents = "all"
     isTextSelecting = false
     startingRange = null
 })
 
 lineContentElement.addEventListener('mousedown', (event) => {
     isTextSelecting = true
+    scrollbarElement.style.pointerEvents = "none"
 })
 
 window.addEventListener('mousemove', (event) => {
@@ -106,7 +112,6 @@ window.addEventListener('mousemove', (event) => {
             textSelection.setStartingPoint(startingRange)
         }
         else {
-            console.log(range)
             textSelection.setEndingRange(range)
             const mousePosition = textSelection.selectTextBetweenRanges(event, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
             textSelectionScrolling.scrollOnMousePosition(mousePosition)

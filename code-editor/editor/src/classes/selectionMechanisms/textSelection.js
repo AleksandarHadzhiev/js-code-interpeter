@@ -11,16 +11,18 @@ export default class TextSelection {
      * @param {Number} contentElementScrollHeight 
      * @param {Number} contentElementScrollWidth
      * @param {HTMLElement} contentElement 
+     * @param {Number} contentElementOffsetLeft 
      */
-    constructor(offsetTopOfContentScreen, lineNumerationScrollWidth, contentElementScrollHeight, contentElementScrollWidth, contentElement) {
+    constructor(offsetTopOfContentScreen, lineNumerationScrollWidth, contentElementScrollHeight, contentElementScrollWidth, contentElement, contentElementOffsetLeft) {
         this.offsetTopOfContentScreen = offsetTopOfContentScreen
-        this.widhtOfLineNumerationElement = lineNumerationScrollWidth
         this.totalWidthOfScreen = contentElementScrollWidth + lineNumerationScrollWidth
         this.heightOfElementBasedOnVisibleLinesOnTheScreen = contentElementScrollHeight
         this.windowSectionScrollig = null
         this.mousePosition = null
         this.highlighter = new Highlighter(contentElement)
         this.loaderOffset = 0
+        this.mouseXPosition = 0
+        this.contentElementOffsetLeft = contentElementOffsetLeft
     }
 
     /**
@@ -76,7 +78,8 @@ export default class TextSelection {
     * @returns {String} the position of the mouse
     */
     _defineSectionOfTextSelection(event, mouseYPositionBasedOnPage) {
-        const mouseXPositionBasedOnPage = event.pageX
+        this.mouseXPosition = event.pageX
+        this.xForMouseInEditor = this.mouseXPosition - this.contentElementOffsetLeft
         const pointWhenBottomBegins = this.heightOfElementBasedOnVisibleLinesOnTheScreen + this.loaderOffset
         if (mouseYPositionBasedOnPage == 0 && this.windowSectionScrollig == WindowSection.BOTTOM) {
             return MousePosition.BOTTOM
@@ -92,11 +95,11 @@ export default class TextSelection {
             this.windowSectionScrollig = WindowSection.TOP
             return MousePosition.TOP
         }
-        else if (mouseXPositionBasedOnPage < this.widhtOfLineNumerationElement) {
+        else if (this.mouseXPosition < this.contentElementOffsetLeft) {
             this.windowSectionScrollig = WindowSection.LEFT
             return MousePosition.LEFT
         }
-        else if (mouseXPositionBasedOnPage > this.totalWidthOfScreen) {
+        else if (this.mouseXPosition > this.totalWidthOfScreen) {
             this.windowSectionScrollig = WindowSection.RIGHT
             return MousePosition.RIGHT
         }
@@ -123,7 +126,7 @@ export default class TextSelection {
             this.highlighter.highlightForBottomScreenSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
         }
         else if (this.mousePosition == MousePosition.CENTRE) {
-            this.highlighter.highlightForMouseInEditorSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
+            this.highlighter.highlightForMouseInEditorSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine, this.xForMouseInEditor)
         }
     }
 

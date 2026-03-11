@@ -432,14 +432,13 @@ export default class LineColoriser {
 
     coloriseForMouseInEditorSection(firstVisibleLine, lastVisibleLine) {
         this.coordinatesToHighlight.clear()
-        console.log(this.endingPoint)
         if (this.startingPoint.lineId >= firstVisibleLine && this.startingPoint.lineId <= lastVisibleLine) {
             this._coloriseForWhenMouseIsInEditorScreenWithStartingPointVisible(this.endingPoint.lineId, this.startingPoint.lineId)
         }
         else if (this.startingPoint.lineId < firstVisibleLine) {
             this._coloriseForWhenMouseIsInEditorScreenWithStartingLineEarlierThanReleasingLine(this.endingPoint.lineId, firstVisibleLine, this.startingPoint.lineId)
         }
-        else if (this.startingPoint > lastVisibleLine) {
+        else if (this.startingPoint.lineId > lastVisibleLine) {
             this._coloriseForWhenMouseIsInEditorScreenWithStartingLineLaterThanReleasingLine(this.endingPoint.lineId, lastVisibleLine, this.startingPoint.lineId)
         }
         return this.coordinatesToHighlight
@@ -462,7 +461,6 @@ export default class LineColoriser {
             this._coloriseForStartingPointEarlierOnline()
         }
         else if (this.endingPoint.leftOffset <= this.startingPoint.leftOffset) {
-            console.log("HERE")
             this._coloriseForEndingPointEarlierOnLine()
         }
     }
@@ -493,7 +491,7 @@ export default class LineColoriser {
         this._defineStartingMarkedPointBasedOnCoordinatesAndLineId(coordinates, this.startingPoint.lineId)
         coordinates = new MarkedLineCoordinates(0, this.endingPoint.topOffset, this.endingPoint.leftOffset)
         this.coordinatesToHighlight.set(this.endingPoint.lineId, coordinates)
-        this._defineStartingMarkedPointBasedOnCoordinatesAndLineId(coordinates, this.endingPoint.lineId)
+        this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, this.endingPoint.lineId)
     }
 
     _colorsieForReleasingPointEarlierWithStartingPointStillVisible() {

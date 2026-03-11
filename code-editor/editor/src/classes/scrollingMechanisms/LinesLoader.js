@@ -80,9 +80,19 @@ export default class LinesLoader {
         lineElement.classList.add('line-content')
         lineElement.setAttribute('id', String(line.index))
         lineElement.style = `top:${line.index * this.lineHeightInPixels}px;`
+        lineElement.addEventListener('mousedown', (event) => {
+            const lineSeleect = document.getElementById('line-selector')
+            if (lineSeleect) lineSeleect.remove()
+        })
         lineElement.addEventListener('mouseup', (event) => {
-            const lineSelector = new LineSelector(event, this.contentElement)
-            lineSelector.selectLine()
+            const range = document.getSelection().getRangeAt(0)
+            const isSameIndex = range.endOffset == range.startOffset
+            const isSameElement = range.startContainer.parentElement.offsetLeft == range.endContainer.parentElement.offsetLeft
+            const isSameLine = range.startContainer.parentElement.parentElement.offsetTop == range.endContainer.parentElement.parentElement.offsetTop
+            if (isSameIndex && isSameElement && isSameLine) {
+                const lineSelector = new LineSelector(event, this.contentElement)
+                lineSelector.selectLine()
+            }
         })
         return lineElement
     }

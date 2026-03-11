@@ -14,6 +14,11 @@ body {
     left: 0;
     height: 100%;
     width: 100%;
+    pointer-events: none;
+}
+
+html::selection {
+    background-color: transparent;
 }
 
 .navigation {
@@ -26,6 +31,7 @@ body {
 }
 
 .container {
+    pointer-events: all;
     position: absolute;
     top: 5%;
     left: 0%;
@@ -123,6 +129,19 @@ body {
 .line-content {
     color: white;
     position: absolute;
+    width: 100%;
+    height: fit-content;
+    white-space: pre;
+    height: 28.8px;
+    padding: 0%;
+    margin: 0%;
+    font-size: 24px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.line-content-marker {
+    color: white;
+    position: absolute;
     width: fit-content;
     height: fit-content;
     white-space: pre;
@@ -140,9 +159,11 @@ body {
     left: 100%;
     top: 0%;
     background-color: transparent;
+    pointer-events: none;
 }
 
 #scrollbar {
+    pointer-events: all;
     position: sticky;
     width: 10%;
     height: 100%;
@@ -161,4 +182,43 @@ body {
 
 #bar:hover {
     opacity: 0.5;
+    background-color: rgb(91, 91, 91);
+}
+
+.line-selector {
+    position: absolute;
+    left: 5%;
+    width: 95%;
+    height: 28.8px;
+    background-color: transparent;
+    border: solid 1px gray;
+}
+
+.caret {
+    position: absolute;
+    width: 3px;
+    background-color: orange;
+    height: 28.8px;
+    animation: blink 1s linear infinite;
+    z-index: 0;
+}
+
+@keyframes blink {
+    25% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+.marker {
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    background-color: transparent;
+    color: transparent;
+    left: 5%;
+    z-index: -1;
 }

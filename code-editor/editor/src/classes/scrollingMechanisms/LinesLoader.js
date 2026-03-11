@@ -1,13 +1,15 @@
 import LineBUilder from "../lineBuilder.js"
 import Line from "./Line.js"
+import LineSelector from "../selectionMechanisms/lineSelector.js"
 
 export default class LinesLoader {
     /**
      * @param {Number} maxVisibleLinesOnScreen 
      * @param {HTMLElement} lineNumerationElement  
      * @param {HTMLElement} lineContentElement  
+     * @param {HTMLElement} contentElement  
     */
-    constructor(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement) {
+    constructor(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement, contentElement) {
         this.firstVisibleLine = 0
         this.lastVisibleLine = this.firstVisibleLine + maxVisibleLinesOnScreen
         this.maxVisibleLinesOnScreen = maxVisibleLinesOnScreen
@@ -16,6 +18,7 @@ export default class LinesLoader {
         this.lineContentElement = lineContentElement
         this.lineHeightInPixels = 28.8
         this.maxLines = 2000
+        this.contentElement = contentElement
     }
 
     loadLines() {
@@ -77,6 +80,20 @@ export default class LinesLoader {
         lineElement.classList.add('line-content')
         lineElement.setAttribute('id', String(line.index))
         lineElement.style = `top:${line.index * this.lineHeightInPixels}px;`
+        lineElement.addEventListener('mousedown', (event) => {
+            const lineSeleect = document.getElementById('line-selector')
+            if (lineSeleect) lineSeleect.remove()
+        })
+        lineElement.addEventListener('mouseup', (event) => {
+            const range = document.getSelection().getRangeAt(0)
+            const isSameIndex = range.endOffset == range.startOffset
+            const isSameElement = range.startContainer.parentElement.offsetLeft == range.endContainer.parentElement.offsetLeft
+            const isSameLine = range.startContainer.parentElement.parentElement.offsetTop == range.endContainer.parentElement.parentElement.offsetTop
+            if (isSameIndex && isSameElement && isSameLine) {
+                const lineSelector = new LineSelector(event, this.contentElement)
+                lineSelector.selectLine()
+            }
+        })
         return lineElement
     }
 

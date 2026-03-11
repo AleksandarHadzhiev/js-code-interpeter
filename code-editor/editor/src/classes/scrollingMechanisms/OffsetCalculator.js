@@ -22,7 +22,6 @@ export default class OffsetCalculator {
             return deltaY / this.scrollingPowerInPixelsForChrome
         }
         else {
-            console.log(deltaY)
             return deltaY / this.scrollingPowerInPixelsForEdge
         }
     }

@@ -43,6 +43,7 @@ class CustomEditorContainer extends HTMLElement {
     _buildContent() {
         const contentElemet = document.createElement('div')
         contentElemet.classList.add('content')
+        contentElemet.setAttribute('id', 'content')
         const lineNumeration = this._buildLineNumeration()
         const lineContent = this._buildLineContent()
         contentElemet.appendChild(lineNumeration)

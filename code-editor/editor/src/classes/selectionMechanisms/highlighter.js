@@ -143,7 +143,18 @@ export default class Highlighter {
         const idOfEndLine = Number(lineForEndContainer.id)
         const idOfStartLine = Number(lineForStartContainer.id)
 
-        if (mouseLineId == idOfEndLine) {
+        if (mouseLineId == idOfEndLine && mouseLineId == idOfStartLine) {
+            // SPECIAL CASE
+            const endContainerPoint = this._buildPointBasedOnContainerAndOffset(this.endingRange.endContainer, this.endingRange.endOffset)
+            const startContainerPoint = this._buildPointBasedOnContainerAndOffset(this.endingRange.startContainer, this.endingRange.startOffset)
+            if (this.startingPoint.leftOffset == endContainerPoint.leftOffset) {
+                return startContainerPoint
+            }
+            else if (this.startingPoint.leftOffset == startContainerPoint.leftOffset) {
+                return endContainerPoint
+            }
+        }
+        else if (mouseLineId == idOfEndLine) {
             return this._buildPointBasedOnContainerAndOffset(this.endingRange.endContainer, this.endingRange.endOffset)
         }
         else if (mouseLineId == idOfStartLine) {

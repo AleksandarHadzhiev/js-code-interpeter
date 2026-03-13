@@ -245,7 +245,7 @@ export default class LineColoriser {
         this.coordinatesToHighlight.clear()
         const lineOfStartingPoint = Number(this.startingPoint.lineId)
         const lineOfEndingPoint = Number(this.endingPoint.lineId)
-        // - starting point is visible on the screen
+        // - starting point is visible on the screentB
         if (lineOfEndingPoint == lastTextLine) {
             this._defineStartingPointMarkerForStartingPointNotVisibleButEarlierThanReleasePoint(lineOfStartingPoint)
             this._coloriseBetweenTwoLines(firstVisibleLine, lastTextLine)
@@ -254,7 +254,7 @@ export default class LineColoriser {
             lastVisibleLine = this._filterLastVisibleLine(lastVisibleLine)
             if (lastVisibleLine == lineOfStartingPoint) {
                 this._defineStartingPointMarkerForBottomTextSelection(lastVisibleLine)
-                const lineElement = document.getElementById(String(lastVisibleLine))
+                const lineElement = document.getElemenyId(String(lastVisibleLine))
                 const coordinates = this._calculateCoordinatesForLineAtIndex(lineElement)
                 this.coordinatesToHighlight.set(lastVisibleLine, coordinates)
                 this._defineEndingPointMarkerForBottomTextSelection(lineOfStartingPoint)

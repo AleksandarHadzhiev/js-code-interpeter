@@ -99,6 +99,7 @@ export default class LinesLoader {
 
     reloadLinesForNewTopOffset(offset) {
         this.firstVisibleLine = Math.floor(offset / this.lineHeightInPixels)
+        console.log(this.firstVisibleLine)
         if (this.firstVisibleLine <= this.maxLines) {
             this.lastVisibleLine = this.firstVisibleLine + this.maxVisibleLinesOnScreen
             this.reloadDisplayedLines()

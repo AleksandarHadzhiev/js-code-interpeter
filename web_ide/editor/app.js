@@ -149,6 +149,7 @@ window.addEventListener('keydown', (event) => {
     const caret = document.getElementById('caret')
     if (caret) {
         console.log(scrollOncaretMovement)
-        caretMover.moveCaretBasedOnKeybordKey(event.key, caret)
+        console.log(event.key)
+        caretMover.moveCaretBasedOnKeybordKey(event, caret)
     }
 })

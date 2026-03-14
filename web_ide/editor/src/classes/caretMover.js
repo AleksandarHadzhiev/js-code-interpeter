@@ -31,10 +31,10 @@ export default class CaretMover {
         console.log(keybordKey)
         const isUsingCtrl = mouseEvent.ctrlKey
         if (keybordKey == "ArrowLeft") {
-            this._moveLeft(caret)
+            this._moveLeft(caret, isUsingCtrl)
         }
         else if (keybordKey == "ArrowRight") {
-            this._moveRight(caret)
+            this._moveRight(caret, isUsingCtrl)
         }
         else if (keybordKey == "ArrowUp") {
             this._moveUp(caret, isUsingCtrl)
@@ -46,33 +46,44 @@ export default class CaretMover {
 
     /**
      * @param {HTMLElement} caret
+     * @param {Boolean} isUsingCtrl
      */
-    _moveLeft(caret) {
+    _moveLeft(caret, isUsingCtrl) {
         const leftOffset = caret.offsetLeft
         const topOffset = caret.offsetTop
         const lineId = Math.round(topOffset / 28.8)
-
-        if (leftOffset - this.lineNumerationWidth > 0) {
+        if (isUsingCtrl) {
             const caretIndex = this._getCurrentIndexForTopOffset(topOffset, leftOffset)
-            const text = caretIndex.fullText.substring(0, caretIndex.index - 1)
-            const newLeftOffset = calculateWidthForText(this.contentElement, text) + this.lineNumerationWidth
+            const text = caretIndex.fullText.substring(0, caretIndex.index)
+            const lastIndexOfEmptyString = text.lastIndexOf(" ")
+            const textTillEmpty = text.substring(0, lastIndexOfEmptyString)
+            const newLeftOffset = calculateWidthForText(this.contentElement, textTillEmpty) + this.lineNumerationWidth
             this.leftOffset = newLeftOffset
             caret.style = `top: ${topOffset}px; left: ${newLeftOffset}px;`
         }
-        else if (leftOffset - this.lineNumerationWidth == 0 && lineId > 0) {
-            console.log("HERE")
-            const newLineId = lineId - 1
-            const previousLine = document.getElementById(String(newLineId))
-            const newLeftOffset = calculateWidthForText(this.contentElement, previousLine.textContent) + this.lineNumerationWidth
-            this.leftOffset = newLeftOffset
-            caret.style = `top: ${previousLine.offsetTop}px; left: ${newLeftOffset}px;`
-        }
-        const firstVisibleLine = this.scroller.linesLoader.firstVisibleLine
-        console.log(lineId, firstVisibleLine)
-        if (lineId - firstVisibleLine <= 5) {
-            const difference = lineId - firstVisibleLine
-            const lines = 5 - difference
-            this.scroller.updateOffset(lines * -28.8)
+        else {
+            if (leftOffset - this.lineNumerationWidth > 0) {
+                const caretIndex = this._getCurrentIndexForTopOffset(topOffset, leftOffset)
+                const text = caretIndex.fullText.substring(0, caretIndex.index - 1)
+                const newLeftOffset = calculateWidthForText(this.contentElement, text) + this.lineNumerationWidth
+                this.leftOffset = newLeftOffset
+                caret.style = `top: ${topOffset}px; left: ${newLeftOffset}px;`
+            }
+            else if (leftOffset - this.lineNumerationWidth == 0 && lineId > 0) {
+                console.log("HERE")
+                const newLineId = lineId - 1
+                const previousLine = document.getElementById(String(newLineId))
+                const newLeftOffset = calculateWidthForText(this.contentElement, previousLine.textContent) + this.lineNumerationWidth
+                this.leftOffset = newLeftOffset
+                caret.style = `top: ${previousLine.offsetTop}px; left: ${newLeftOffset}px;`
+            }
+            const firstVisibleLine = this.scroller.linesLoader.firstVisibleLine
+            console.log(lineId, firstVisibleLine)
+            if (lineId - firstVisibleLine <= 5) {
+                const difference = lineId - firstVisibleLine
+                const lines = 5 - difference
+                this.scroller.updateOffset(lines * -28.8)
+            }
         }
     }
 
@@ -96,34 +107,46 @@ export default class CaretMover {
 
     /**
      * @param {HTMLElement} caret
+     * @param {Boolean} isUsingCtrl
      */
-    _moveRight(caret) {
+    _moveRight(caret, isUsingCtrl) {
         const leftOffset = caret.offsetLeft
         const topOffset = caret.offsetTop
         const lineId = Math.round(topOffset / 28.8)
         const oldLineElement = document.getElementById(String(lineId))
         const lineElementWidth = calculateWidthForText(this.contentElement, oldLineElement.textContent)
-        if (leftOffset > 0 && leftOffset - this.lineNumerationWidth < lineElementWidth) {
+        if (isUsingCtrl) {
             const caretIndex = this._getCurrentIndexForTopOffset(topOffset, leftOffset)
-            const newIndex = caretIndex.index + 1
-            const text = caretIndex.fullText.substring(0, newIndex)
-            const newLeftOffset = calculateWidthForText(this.contentElement, text) + this.lineNumerationWidth
+            const text = caretIndex.fullText.substring(caretIndex.index, caretIndex.fullText.length)
+            const firstEmptySpace = text.indexOf(" ")
+            const textTillEmpty = text.substring(0, firstEmptySpace + 1)
+            const newLeftOffset = calculateWidthForText(this.contentElement, textTillEmpty) + leftOffset
             this.leftOffset = newLeftOffset
             caret.style = `top: ${topOffset}px; left: ${newLeftOffset}px;`
         }
-        else if (leftOffset - this.lineNumerationWidth == lineElementWidth && lineId < 2000) {
-            const newLineId = lineId + 1
-            const nextLineElement = document.getElementById(String(newLineId))
-            const newLeftOffset = this.lineNumerationWidth
-            this.leftOffset = newLeftOffset
-            caret.style = `top: ${nextLineElement.offsetTop}px; left: ${newLeftOffset}px;`
-        }
-        const lastVisibleLine = this.scroller.linesLoader.lastVisibleLine - 1
-        console.log(lastVisibleLine, lineId)
-        if (lastVisibleLine - lineId <= 5 && lastVisibleLine - lineId > 0) {
-            const difference = lastVisibleLine - lineId
-            const lines = 5 - difference
-            this.scroller.updateOffset(lines * 28.8)
+        else {
+            if (leftOffset > 0 && leftOffset - this.lineNumerationWidth < lineElementWidth) {
+                const caretIndex = this._getCurrentIndexForTopOffset(topOffset, leftOffset)
+                const newIndex = caretIndex.index + 1
+                const text = caretIndex.fullText.substring(0, newIndex)
+                const newLeftOffset = calculateWidthForText(this.contentElement, text) + this.lineNumerationWidth
+                this.leftOffset = newLeftOffset
+                caret.style = `top: ${topOffset}px; left: ${newLeftOffset}px;`
+            }
+            else if (leftOffset - this.lineNumerationWidth == lineElementWidth && lineId < 2000) {
+                const newLineId = lineId + 1
+                const nextLineElement = document.getElementById(String(newLineId))
+                const newLeftOffset = this.lineNumerationWidth
+                this.leftOffset = newLeftOffset
+                caret.style = `top: ${nextLineElement.offsetTop}px; left: ${newLeftOffset}px;`
+            }
+            const lastVisibleLine = this.scroller.linesLoader.lastVisibleLine - 1
+            console.log(lastVisibleLine, lineId)
+            if (lastVisibleLine - lineId <= 5 && lastVisibleLine - lineId > 0) {
+                const difference = lastVisibleLine - lineId
+                const lines = 5 - difference
+                this.scroller.updateOffset(lines * 28.8)
+            }
         }
     }
 

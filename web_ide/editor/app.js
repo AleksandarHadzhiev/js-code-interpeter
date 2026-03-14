@@ -92,6 +92,7 @@ window.addEventListener('mouseup', (event) => {
     if (isTextSelecting) scrollbarElement.style.pointerEvents = "all"
     isTextSelecting = false
     startingRange = null
+    caretMover.resetLeftOffsetForCaretMover()
 })
 
 lineContentElement.addEventListener('mousedown', (event) => {

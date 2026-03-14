@@ -57,6 +57,13 @@ export default class CaretMover {
             const newLeftOffset = calculateWidthForText(this.contentElement, previousLine.textContent) + this.lineNumerationWidth
             caret.style = `top: ${previousLine.offsetTop}px; left: ${newLeftOffset}px;`
         }
+        const firstVisibleLine = this.scroller.linesLoader.firstVisibleLine
+        console.log(lineId, firstVisibleLine)
+        if (lineId - firstVisibleLine <= 5) {
+            const difference = lineId - firstVisibleLine
+            const lines = 5 - difference
+            this.scroller.updateOffset(lines * -28.8)
+        }
     }
 
     /**
@@ -98,6 +105,13 @@ export default class CaretMover {
             const nextLineElement = document.getElementById(String(newLineId))
             const newLeftOffset = this.lineNumerationWidth
             caret.style = `top: ${nextLineElement.offsetTop}px; left: ${newLeftOffset}px;`
+        }
+        const lastVisibleLine = this.scroller.linesLoader.lastVisibleLine - 1
+        console.log(lastVisibleLine, lineId)
+        if (lastVisibleLine - lineId <= 5 && lastVisibleLine - lineId > 0) {
+            const difference = lastVisibleLine - lineId
+            const lines = 5 - difference
+            this.scroller.updateOffset(lines * 28.8)
         }
     }
 

@@ -47,7 +47,7 @@ const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationEleme
 const textSelectionScrolling = new TextSelectionScrolling(barHandler, loaderHandler, linesLoader)
 const scrollOncaretMovement = new ScrollOnCaretMovement(loaderHandler, barHandler, linesLoader)
 
-const caretMover = new CaretMover(scrollOncaretMovement)
+const caretMover = new CaretMover(scrollOncaretMovement, contentElement, lineNumerationElement)
 
 
 linesLoader.loadLines()

@@ -14,7 +14,7 @@ export default function calculateWidthForText(contentElement, text) {
  * @returns {HTMLElement} the html element.
  */
 function _createSpanElementForText(text) {
-    const element = document.createElement('span')
+    const element = document.createElement('div')
     element.textContent = text
     element.classList.add('line-content-marker')
     return element

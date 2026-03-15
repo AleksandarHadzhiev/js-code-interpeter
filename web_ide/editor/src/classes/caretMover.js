@@ -55,7 +55,7 @@ export default class CaretMover {
         if (isUsingCtrl) {
             const caretIndex = this._getCurrentIndexForTopOffset(topOffset, leftOffset)
             const text = caretIndex.fullText.substring(0, caretIndex.index)
-            const lastIndexOfEmptyString = text.lastIndexOf(" ")
+            const lastIndexOfEmptyString = text.lastIndexOf(" ") + 1 == caretIndex.index ? text.lastIndexOf(" ") : text.lastIndexOf(" ") + 1
             const textTillEmpty = text.substring(0, lastIndexOfEmptyString)
             const newLeftOffset = calculateWidthForText(this.contentElement, textTillEmpty) + this.lineNumerationWidth
             this.leftOffset = newLeftOffset
@@ -117,10 +117,15 @@ export default class CaretMover {
         const lineElementWidth = calculateWidthForText(this.contentElement, oldLineElement.textContent)
         if (isUsingCtrl) {
             const caretIndex = this._getCurrentIndexForTopOffset(topOffset, leftOffset)
-            const text = caretIndex.fullText.substring(caretIndex.index, caretIndex.fullText.length)
-            const firstEmptySpace = text.indexOf(" ")
-            const textTillEmpty = text.substring(0, firstEmptySpace + 1)
-            const newLeftOffset = calculateWidthForText(this.contentElement, textTillEmpty) + leftOffset
+            // console.log(text)
+            // const regex = /[\s . , ; ]/g;
+            // const spots = text.matchAll(regex)
+            // spots.forEach((spot) => {
+            //     console.log(spot)
+            // })
+            const firstEmptySpace = caretIndex.fullText.indexOf(" ", caretIndex.index) == caretIndex.index ? caretIndex.fullText.indexOf(" ", caretIndex.index) : caretIndex.fullText.indexOf(" ", caretIndex.index) - 1
+            const textTillEmpty = caretIndex.fullText.substring(0, firstEmptySpace + 1)
+            const newLeftOffset = calculateWidthForText(this.contentElement, textTillEmpty) + this.lineNumerationWidth
             this.leftOffset = newLeftOffset
             caret.style = `top: ${topOffset}px; left: ${newLeftOffset}px;`
         }

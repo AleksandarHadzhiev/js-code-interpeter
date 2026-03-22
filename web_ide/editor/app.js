@@ -6,6 +6,9 @@ import TextSelection from "./src/classes/selectionMechanisms/textSelection.js"
 import TextSelectionScrolling from "./src/classes/scrollingMechanisms/textSelectionScrolling.js"
 import calculateTotalLeftOffsetOfCaretInTheLine from "./src/classes/calculators/caretLeftOffsetCalculator.js"
 import { CaretLeftOffsetDTO } from "./src/classes/dtos/caretDTOs.js"
+import CaretMover from "./src/classes/caretMover.js"
+import ScrollOnCaretMovement from "./src/classes/scrollingMechanisms/scrollOnCaretMovement.js"
+
 
 const mainContainer = document.getElementById('container')
 const menuContainer = document.getElementById('menu')
@@ -23,7 +26,6 @@ const scrollbarTopOffset = navigationElement.offsetHeight
 const barHeight = barElement.offsetHeight
 
 const contentElementOffsetLeft = menuContainer.offsetWidth + lineNumerationElement.scrollWidth
-
 
 const lines = 2000
 const lineHeightInPixels = 28.8
@@ -43,6 +45,10 @@ const loaderHandler = new LoaderHandler(loaderHeight, scrollbarHeight, loaderEle
 const offsetCalculator = new OffsetCalculator()
 const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement, contentElement)
 const textSelectionScrolling = new TextSelectionScrolling(barHandler, loaderHandler, linesLoader)
+const scrollOncaretMovement = new ScrollOnCaretMovement(loaderHandler, barHandler, linesLoader)
+
+const caretMover = new CaretMover(scrollOncaretMovement, contentElement, lineNumerationElement)
+
 
 linesLoader.loadLines()
 
@@ -86,6 +92,7 @@ window.addEventListener('mouseup', (event) => {
     if (isTextSelecting) scrollbarElement.style.pointerEvents = "all"
     isTextSelecting = false
     startingRange = null
+    caretMover.resetLeftOffsetForCaretMover()
 })
 
 lineContentElement.addEventListener('mousedown', (event) => {
@@ -116,6 +123,7 @@ window.addEventListener('mousemove', (event) => {
             const mousePosition = textSelection.selectTextBetweenRanges(event, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
             textSelectionScrolling.scrollOnMousePosition(mousePosition)
             textSelection.setLoaderOffset(loaderHandler.topOffset)
+            scrollOncaretMovement.updateOffset(loaderHandler.topOffset)
         }
     }
 })
@@ -136,3 +144,24 @@ function removeExistingHighlighter() {
     const markerElement = document.getElementById('marker')
     if (markerElement) markerElement.remove()
 }
+
+window.addEventListener('keydown', (event) => {
+    const caret = document.getElementById('caret')
+    if (caret) {
+        console.log(scrollOncaretMovement)
+        console.log(event.key)
+        caretMover.moveCaretBasedOnKeybordKey(event, caret)
+    }
+})
+
+window.addEventListener('resize', () => {
+    console.log("RESIZED")
+    // caretMover.updateLineNumerationWidth()
+
+    // The caret element is the only element which works with px instead of %...
+    // Cannot navigate its position on resize because of that....
+
+    // it doesn't get properly updated, based on width and height of screen
+    // also important to note is the fact that the caret may not be visible on the screen
+
+})

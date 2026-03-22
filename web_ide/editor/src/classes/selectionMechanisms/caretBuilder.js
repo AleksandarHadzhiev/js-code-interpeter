@@ -3,6 +3,7 @@ import MarkedPoint from "./MarkedPoint.js"
 import { MousePosition } from "./enums.js"
 
 export default class CaretBuilder {
+
     constructor() {
     }
 
@@ -22,7 +23,6 @@ export default class CaretBuilder {
         caretElement.style = `top: ${topOffset}px; left: ${left}px;`
         contentElement.prepend(caretElement)
     }
-
 
     _calculateLeftOffsetOfCaret(contentElement) {
         const lineNumeration = document.getElementById('line-numeration')

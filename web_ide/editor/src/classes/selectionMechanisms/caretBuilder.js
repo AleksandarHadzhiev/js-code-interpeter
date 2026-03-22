@@ -24,7 +24,6 @@ export default class CaretBuilder {
         contentElement.prepend(caretElement)
     }
 
-
     _calculateLeftOffsetOfCaret(contentElement) {
         const lineNumeration = document.getElementById('line-numeration')
         const lineNumerationWidth = lineNumeration.offsetWidth

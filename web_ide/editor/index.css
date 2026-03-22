@@ -101,7 +101,7 @@ html::selection {
 
 #line-numeration {
     position: absolute;
-    width: 5%;
+    width: 75px;
     height: 100%;
     pointer-events: none;
     user-select: none;
@@ -109,7 +109,7 @@ html::selection {
 
 #line-content {
     position: absolute;
-    left: 5%;
+    left: 75px;
     width: 95%;
     height: 100%;
 }
@@ -219,6 +219,6 @@ html::selection {
     height: fit-content;
     background-color: transparent;
     color: transparent;
-    left: 5%;
+    left: 75px;
     z-index: -1;
 }

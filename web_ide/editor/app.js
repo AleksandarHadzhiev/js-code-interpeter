@@ -153,3 +153,15 @@ window.addEventListener('keydown', (event) => {
         caretMover.moveCaretBasedOnKeybordKey(event, caret)
     }
 })
+
+window.addEventListener('resize', () => {
+    console.log("RESIZED")
+    // caretMover.updateLineNumerationWidth()
+
+    // The caret element is the only element which works with px instead of %...
+    // Cannot navigate its position on resize because of that....
+
+    // it doesn't get properly updated, based on width and height of screen
+    // also important to note is the fact that the caret may not be visible on the screen
+
+})

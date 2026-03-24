@@ -26,7 +26,6 @@ const scrollbarTopOffset = navigationElement.offsetHeight
 const barHeight = barElement.offsetHeight
 
 const contentElementOffsetLeft = menuContainer.offsetWidth + lineNumerationElement.scrollWidth
-
 const lines = 2000
 const lineHeightInPixels = 28.8
 const maxVisibleLinesOnScreen = Math.ceil(mainContainer.offsetHeight / lineHeightInPixels)
@@ -36,7 +35,6 @@ loaderElement.style.height = `${loaderHeight}px`
 
 let barIsSelected = false
 let isTextSelecting = false
-
 let startingRange = null
 
 const textSelection = new TextSelection(scrollbarTopOffset, lineNumerationElement.scrollWidth, scrollbarHeight, loaderElement.scrollWidth, contentElement, contentElementOffsetLeft, lines)
@@ -46,9 +44,7 @@ const offsetCalculator = new OffsetCalculator()
 const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement, contentElement)
 const textSelectionScrolling = new TextSelectionScrolling(barHandler, loaderHandler, linesLoader)
 const scrollOncaretMovement = new ScrollOnCaretMovement(loaderHandler, barHandler, linesLoader)
-
 const caretMover = new CaretMover(scrollOncaretMovement, contentElement, lineNumerationElement)
-
 
 linesLoader.loadLines()
 
@@ -156,12 +152,9 @@ window.addEventListener('keydown', (event) => {
 
 window.addEventListener('resize', () => {
     console.log("RESIZED")
-    // caretMover.updateLineNumerationWidth()
-
-    // The caret element is the only element which works with px instead of %...
-    // Cannot navigate its position on resize because of that....
-
-    // it doesn't get properly updated, based on width and height of screen
-    // also important to note is the fact that the caret may not be visible on the screen
-
+    const newMaxVisibleLinesOnScreen = Math.ceil(mainContainer.offsetHeight / lineHeightInPixels)
+    const newLoaderHeight = (lines + newMaxVisibleLinesOnScreen - 1) * lineHeightInPixels
+    loaderElement.style.height = `${newLoaderHeight}px`
+    linesLoader.updateMaxVisibleLinesOnScreen(newMaxVisibleLinesOnScreen)
+    linesLoader.resizeLines()
 })

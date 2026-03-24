@@ -22,7 +22,6 @@ export default class LoaderHandler {
         const newOffset = this.maxTopOffset * (percentage / 100)
         this.topOffset = newOffset > this.maxTopOffset ? this.maxTopOffset : newOffset < this.minTopOffset ? this.minTopOffset : newOffset
         this.loaderElement.style = `height: ${this.height}px; top: -${this.topOffset}px;`
-
     }
 
     updateTopOffsetWithOffset(offset) {

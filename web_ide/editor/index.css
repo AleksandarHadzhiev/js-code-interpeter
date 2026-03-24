@@ -187,7 +187,7 @@ html::selection {
 
 .line-selector {
     position: absolute;
-    left: 5%;
+    left: 75px;
     width: 95%;
     height: 28.8px;
     background-color: transparent;

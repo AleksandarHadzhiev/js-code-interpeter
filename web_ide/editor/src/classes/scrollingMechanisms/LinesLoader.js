@@ -21,6 +21,10 @@ export default class LinesLoader {
         this.contentElement = contentElement
     }
 
+    updateMaxVisibleLinesOnScreen(newMaxVisibleLinesOnScreen) {
+        this.maxVisibleLinesOnScreen = newMaxVisibleLinesOnScreen
+    }
+
     loadLines() {
         for (let index = this.firstVisibleLine; index < this.lastVisibleLine; index++) {
             this._buildLineForIndex(index)
@@ -97,11 +101,46 @@ export default class LinesLoader {
         return lineElement
     }
 
+    resizeLines() {
+        this.lastVisibleLine = this.firstVisibleLine + this.maxVisibleLinesOnScreen
+        this._reloadLinesForResize()
+        this.previousLastVisibleLine = this.lastVisibleLine
+    }
+
+    _reloadLinesForResize() {
+        if (this.lastVisibleLine < this.previousLastVisibleLine) {
+            this._removeAdditionalLines()
+        }
+        else if (this.lastVisibleLine > this.previousLastVisibleLine) {
+            this._buildNeededLines()
+        }
+    }
+
+    _removeAdditionalLines() {
+        for (let index = this.previousLastVisibleLine; index > this.lastVisibleLine; index--) {
+            const lineElement = document.getElementById(String(index));
+            if (lineElement) {
+                const lineNumeration = document.getElementById(`numeration-${index}`)
+                lineElement.remove()
+                lineNumeration.remove()
+            }
+        }
+    }
+
+    _buildNeededLines() {
+        for (let index = this.previousLastVisibleLine; index <= this.lastVisibleLine; index++) {
+            const lineElement = document.getElementById(String(index));
+            if (lineElement == null) {
+                this._buildLineForIndex(index)
+            }
+        }
+    }
+
     reloadLinesForNewTopOffset(offset) {
         this.firstVisibleLine = Math.floor(offset / this.lineHeightInPixels)
-        console.log(this.firstVisibleLine)
         if (this.firstVisibleLine <= this.maxLines) {
             this.lastVisibleLine = this.firstVisibleLine + this.maxVisibleLinesOnScreen
+            console.log(this.lastVisibleLine)
             this.reloadDisplayedLines()
             this.previousLastVisibleLine = this.lastVisibleLine
         }

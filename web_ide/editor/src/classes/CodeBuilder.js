@@ -1,4 +1,4 @@
-import LineBUilder from "./LineBuilder.js";
+import LineBUilder from "./lineBuilder.js";
 
 export default class CodeBuilder {
     constructor(viewBlock) {

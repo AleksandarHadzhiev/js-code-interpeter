@@ -3,7 +3,6 @@ import MarkedPoint from "./MarkedPoint.js"
 import { MousePosition } from "./enums.js"
 
 export default class CaretBuilder {
-
     constructor() {
     }
 

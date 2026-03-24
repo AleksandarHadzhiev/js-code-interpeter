@@ -12,10 +12,20 @@ export default class BarHandler {
         this.maxTopOffset = this._defineMaxTopOffsetForBar()
         this.minTopOffset = 0
         this.bar = bar
+        this.percentageOfScroll = 0
+    }
+
+    updateHeights(scrollbarHeight, barHeight) {
+        this.scrollbarHeight = scrollbarHeight
+        this.barHeight = barHeight
+        this.percentageOfScroll = (this.topOffset / this.maxTopOffset) * 100
+        this.maxTopOffset = this._defineMaxTopOffsetForBar()
+        this.scrollBasedOnPercentage(this.percentageOfScroll)
     }
 
     getPercentageOfScroll() {
-        return (this.topOffset / this.maxTopOffset) * 100
+        this.percentageOfScroll = (this.topOffset / this.maxTopOffset) * 100
+        return this.percentageOfScroll
     }
 
     _defineMaxTopOffsetForBar() {
@@ -28,6 +38,7 @@ export default class BarHandler {
      */
     scrollBasedOnPercentage(percentage) {
         const offset = this._calculateTopOffsetBasedOnPercentage(percentage)
+        console.log(offset)
         this.scrollWithOffset(offset)
     }
 

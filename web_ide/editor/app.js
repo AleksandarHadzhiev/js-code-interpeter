@@ -151,10 +151,12 @@ window.addEventListener('keydown', (event) => {
 })
 
 window.addEventListener('resize', () => {
-    console.log("RESIZED")
     const newMaxVisibleLinesOnScreen = Math.ceil(mainContainer.offsetHeight / lineHeightInPixels)
     const newLoaderHeight = (lines + newMaxVisibleLinesOnScreen - 1) * lineHeightInPixels
     loaderElement.style.height = `${newLoaderHeight}px`
     linesLoader.updateMaxVisibleLinesOnScreen(newMaxVisibleLinesOnScreen)
     linesLoader.resizeLines()
+    const scrollbarHeight = scrollbarElement.offsetHeight
+    loaderHandler.updateHeights(newLoaderHeight, scrollbarHeight)
+    barHandler.updateHeights(scrollbarHeight, barElement.offsetHeight)
 })

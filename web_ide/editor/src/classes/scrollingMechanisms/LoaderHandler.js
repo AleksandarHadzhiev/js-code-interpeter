@@ -13,6 +13,12 @@ export default class LoaderHandler {
         this.loaderElement = loaderElement
     }
 
+    updateHeights(loaderHeight, scrollbarHeight) {
+        this.height = loaderHeight
+        this.scrollbarHeight = scrollbarHeight
+        this.maxTopOffset = this._defineMaxTopOffset()
+    }
+
     scrollWithOffset(offset) {
         this.updateTopOffsetWithOffset(offset)
         this.loaderElement.style = `height: ${this.height}px; top: -${this.topOffset}px;`

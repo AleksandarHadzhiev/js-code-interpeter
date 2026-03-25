@@ -115,11 +115,14 @@ window.addEventListener('mousemove', (event) => {
             textSelection.setStartingPoint(startingRange)
         }
         else {
+            console.log(range)
             textSelection.setEndingRange(range)
             const mousePosition = textSelection.selectTextBetweenRanges(event, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
+            console.log(mousePosition)
             textSelectionScrolling.scrollOnMousePosition(mousePosition)
             textSelection.setLoaderOffset(loaderHandler.topOffset)
-            scrollOncaretMovement.updateOffset(loaderHandler.topOffset)
+            // Invalid code for Y -> it is meant for X
+            // scrollOncaretMovement.updateOffset(loaderHandler.topOffset)
         }
     }
 })

@@ -162,7 +162,8 @@ export default class Highlighter {
         const lineForEndContainer = this.endingRange.endContainer.parentElement.parentElement
         const lineForStartContainer = this.endingRange.startContainer.parentElement.parentElement
         let isSelectable = true
-
+        console.log(lineForEndContainer)
+        console.log(lineForStartContainer)
         if (isNaN(Number(lineForStartContainer.id)) == false && isNaN(Number(lineForEndContainer.id)) == false) {
             isSelectable = true
         }
@@ -171,7 +172,7 @@ export default class Highlighter {
                 isSelectable = false
             }
         }
-
+        console.log(isSelectable)
         if (isSelectable) {
             const endContainerPoint = this._buildPointBasedOnContainerAndOffset(this.endingRange.endContainer, this.endingRange.endOffset)
             const startContainerPoint = this._buildPointBasedOnContainerAndOffset(this.endingRange.startContainer, this.endingRange.startOffset)
@@ -179,6 +180,9 @@ export default class Highlighter {
             const distanceBetweenMouseLineIdAndIdOfStartLine = mouseYPositionBasedOnPage > startContainerPoint.topOffset ? mouseYPositionBasedOnPage - startContainerPoint.topOffset : startContainerPoint.topOffset - mouseYPositionBasedOnPage
             const distanceBetweenMouseXAndStartContainerX = mouseXPosition > startContainerPoint.leftOffset ? mouseXPosition - startContainerPoint.leftOffset : startContainerPoint.leftOffset - mouseXPosition
             const distanceBetweenMouseXAndEndContainerX = mouseXPosition > endContainerPoint.leftOffset ? mouseXPosition - endContainerPoint.leftOffset : endContainerPoint.leftOffset - mouseXPosition
+            console.log(Number(lineForStartContainer.id), Number(lineForEndContainer.id), this.startingPoint.lineId)
+            console.log(distanceBetweenMouseLineIdAndIdOfStartLine, distanceBetweenMouseLineIdAndIdOfEndLine)
+            console.log(distanceBetweenMouseXAndEndContainerX, distanceBetweenMouseXAndStartContainerX)
             if (Number(lineForStartContainer.id) < Number(lineForEndContainer.id) && this.startingPoint.lineId == Number(lineForEndContainer.id)) {
                 endingPoint = startContainerPoint
             }

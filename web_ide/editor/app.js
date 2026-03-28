@@ -20,7 +20,7 @@ const barElement = document.getElementById('bar')
 const lineNumerationElement = document.getElementById('line-numeration')
 const lineContentElement = document.getElementById('line-content')
 const contentElement = document.getElementById('content')
-
+console.log(contentElement.scrollWidth, contentElement.offsetWidth)
 const scrollbarHeight = scrollbarElement.offsetHeight
 const scrollbarTopOffset = navigationElement.offsetHeight
 const barHeight = barElement.offsetHeight

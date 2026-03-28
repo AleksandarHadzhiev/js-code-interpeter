@@ -16,6 +16,7 @@ export default class TextSelection {
      * @param {Number} maxLines 
      */
     constructor(offsetTopOfContentScreen, lineNumerationScrollWidth, contentElementScrollHeight, contentElementScrollWidth, contentElement, contentElementOffsetLeft, maxLines) {
+        console.log(contentElementScrollWidth)
         this.offsetTopOfContentScreen = offsetTopOfContentScreen
         this.totalWidthOfScreen = contentElementScrollWidth + lineNumerationScrollWidth
         this.heightOfElementBasedOnVisibleLinesOnTheScreen = contentElementScrollHeight

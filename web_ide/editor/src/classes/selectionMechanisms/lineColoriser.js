@@ -84,6 +84,7 @@ export default class LineColoriser {
      * @param {Number} lastLine 
      */
     _fullyColoriselinesBetweenTwoLines(firstLine, lastLine) {
+
         for (let index = firstLine; index <= lastLine; index++) {
             const lineElement = document.getElementById(String(index));
             if (lineElement != null) {
@@ -242,10 +243,15 @@ export default class LineColoriser {
      * @returns 
      */
     coloriseLinesForBottomInBetweenFirstAndLastVisibleLines(firstVisibleLine, lastVisibleLine, lastTextLine) {
+        console.log(lastVisibleLine)
+        const line = document.getElementById(String(lastVisibleLine))
+        console.log(line)
+        const content = document.getElementById('line-content')
+        console.log(content.childNodes)
         this.coordinatesToHighlight.clear()
         const lineOfStartingPoint = Number(this.startingPoint.lineId)
         const lineOfEndingPoint = Number(this.endingPoint.lineId)
-        // - starting point is visible on the screentB
+        // - starting point is visible on the screen
         if (lineOfEndingPoint == lastTextLine) {
             this._defineStartingPointMarkerForStartingPointNotVisibleButEarlierThanReleasePoint(lineOfStartingPoint)
             this._coloriseBetweenTwoLines(firstVisibleLine, lastTextLine)
@@ -385,7 +391,6 @@ export default class LineColoriser {
         const width = totalWidth - this.startingPoint.leftOffset
         this.startingMarkedPoint = new MarkedPoint(coordinates.top, coordinates.left, width, lineOfStartingPoint)
         this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, lineOfStartingPoint)
-
     }
 
     _colorsieForRightWhenMouseIsOnearlinerLineThanStartingPoint(lineOfReleasingPoint, lineOfStartingPoint) {
@@ -413,7 +418,6 @@ export default class LineColoriser {
         this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, lineOfReleasingPoint)
     }
 
-
     _coloriseForRightWhenMouseIsLaterThanStartingPointNotVisible(firstVisibleLine, lineOfReleasingPoint, lineOfStartingPoint) {
         this._fullyColoriselinesBetweenTwoLines(firstVisibleLine, lineOfReleasingPoint - 1)
         let coordinates = this._defineCoordinatesForStartingPointWithLeftOffset()
@@ -425,7 +429,6 @@ export default class LineColoriser {
         this.coordinatesToHighlight.set(lineOfReleasingPoint, coordinates)
         this._defineEndingMarkedPointBasedOncoordinatesAndLineId(coordinates, lineOfReleasingPoint)
     }
-
 
     _coloriseForRightWhenMouseIsOnEarlierLineThanStartingPointNotVisible(lineOfReleasingPoint, lastVisibleLine, lineOfStartingPoint) {
         this._fullyColoriselinesBetweenTwoLines(lineOfReleasingPoint + 1, lastVisibleLine)
@@ -441,6 +444,8 @@ export default class LineColoriser {
 
     coloriseForMouseInEditorSection(firstVisibleLine, lastVisibleLine) {
         this.coordinatesToHighlight.clear()
+        console.log(this.startingPoint)
+        console.log(this.endingPoint)
         if (this.startingPoint.lineId >= firstVisibleLine && this.startingPoint.lineId <= lastVisibleLine) {
             this._coloriseForWhenMouseIsInEditorScreenWithStartingPointVisible(this.endingPoint.lineId, this.startingPoint.lineId)
         }

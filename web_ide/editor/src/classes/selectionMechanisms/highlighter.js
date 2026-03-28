@@ -48,6 +48,7 @@ export default class Highlighter {
      * @param {Range} range 
      */
     setEndingRangeBasedOnRange(range) {
+        console.log(range)
         this.endingRange = range
     }
 
@@ -63,13 +64,13 @@ export default class Highlighter {
     }
 
     /**
- * 
- * @param {Number} mouseYPositionBasedOnPage 
- * @param {Number} firstVisibleLine 
- * @param {Number} lastVisibleLine 
- * @param {Number} lastTextLine 
- * @returns {Range}
- */
+     * 
+     * @param {Number} mouseYPositionBasedOnPage 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     * @param {Number} lastTextLine 
+     * @returns {Range}
+     */
     _buildReleasePoint(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine, lastTextLine) {
         let endingPoint = null
         if (lastVisibleLine > lastTextLine) {
@@ -147,9 +148,7 @@ export default class Highlighter {
 
     highlightForMouseInEditorSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine, mouseXPosition) {
         this.endingPoint = this._buildReleasePointForMouseInEditorSection(mouseYPositionBasedOnPage, mouseXPosition)
-        console.log(this.endingPoint)
         if (this.endingPoint != null) {
-            console.log(this.endingPoint)
             this.customMarker.updatePoints(this.startingPoint, this.endingPoint)
             this.customMarker.buildForMouseInEditorSection(firstVisibleLine, lastVisibleLine)
         }
@@ -157,13 +156,11 @@ export default class Highlighter {
 
     _buildReleasePointForMouseInEditorSection(mouseYPositionBasedOnPage, mouseXPosition) {
         let endingPoint = null
-
         const commonContainer = this.endingRange.commonAncestorContainer
         const lineForEndContainer = this.endingRange.endContainer.parentElement.parentElement
         const lineForStartContainer = this.endingRange.startContainer.parentElement.parentElement
         let isSelectable = true
-        console.log(lineForEndContainer)
-        console.log(lineForStartContainer)
+
         if (isNaN(Number(lineForStartContainer.id)) == false && isNaN(Number(lineForEndContainer.id)) == false) {
             isSelectable = true
         }
@@ -172,7 +169,6 @@ export default class Highlighter {
                 isSelectable = false
             }
         }
-        console.log(isSelectable)
         if (isSelectable) {
             const endContainerPoint = this._buildPointBasedOnContainerAndOffset(this.endingRange.endContainer, this.endingRange.endOffset)
             const startContainerPoint = this._buildPointBasedOnContainerAndOffset(this.endingRange.startContainer, this.endingRange.startOffset)
@@ -180,9 +176,6 @@ export default class Highlighter {
             const distanceBetweenMouseLineIdAndIdOfStartLine = mouseYPositionBasedOnPage > startContainerPoint.topOffset ? mouseYPositionBasedOnPage - startContainerPoint.topOffset : startContainerPoint.topOffset - mouseYPositionBasedOnPage
             const distanceBetweenMouseXAndStartContainerX = mouseXPosition > startContainerPoint.leftOffset ? mouseXPosition - startContainerPoint.leftOffset : startContainerPoint.leftOffset - mouseXPosition
             const distanceBetweenMouseXAndEndContainerX = mouseXPosition > endContainerPoint.leftOffset ? mouseXPosition - endContainerPoint.leftOffset : endContainerPoint.leftOffset - mouseXPosition
-            console.log(Number(lineForStartContainer.id), Number(lineForEndContainer.id), this.startingPoint.lineId)
-            console.log(distanceBetweenMouseLineIdAndIdOfStartLine, distanceBetweenMouseLineIdAndIdOfEndLine)
-            console.log(distanceBetweenMouseXAndEndContainerX, distanceBetweenMouseXAndStartContainerX)
             if (Number(lineForStartContainer.id) < Number(lineForEndContainer.id) && this.startingPoint.lineId == Number(lineForEndContainer.id)) {
                 endingPoint = startContainerPoint
             }
@@ -190,13 +183,14 @@ export default class Highlighter {
                 endingPoint = endContainerPoint
             }
             else if (distanceBetweenMouseLineIdAndIdOfEndLine > distanceBetweenMouseLineIdAndIdOfStartLine) {
+                console.log(startContainerPoint)
                 endingPoint = startContainerPoint
             }
             else {
                 if (distanceBetweenMouseXAndEndContainerX < distanceBetweenMouseXAndStartContainerX) {
                     endingPoint = endContainerPoint
                 }
-                else if (distanceBetweenMouseXAndEndContainerX > distanceBetweenMouseXAndStartContainerX) {
+                else {
                     endingPoint = startContainerPoint
                 }
             }
@@ -211,11 +205,17 @@ export default class Highlighter {
      * @returns {StartingPoint}
      */
     _buildPointBasedOnContainerAndOffset(container, offset) {
-        const leftOffsetDTO = new CaretLeftOffsetDTO(container.parentElement, container.parentElement.offsetLeft, offset)
+        let leftOffsetDTO = new CaretLeftOffsetDTO(container.parentElement, container.parentElement.offsetLeft, offset)
+        let id = container.parentElement.parentElement.id
+        let topOffset = container.parentElement.parentElement.offsetTop
+        let fullText = container.parentElement.parentElement.textContent
+        if (isNaN(container.id) == false) {
+            leftOffsetDTO = new CaretLeftOffsetDTO(container, 0, offset)
+            id = container.id
+            topOffset = container.offsetTop
+            fullText = container.textContent
+        }
         const leftOffset = calculateTotalLeftOffsetOfCaretInTheLine(leftOffsetDTO, this.contentElement)
-        const id = container.parentElement.parentElement.id
-        const topOffset = container.parentElement.parentElement.offsetTop
-        const fullText = container.parentElement.parentElement.textContent
         return new StartingPoint(Number(id), topOffset, leftOffset, fullText)
     }
 

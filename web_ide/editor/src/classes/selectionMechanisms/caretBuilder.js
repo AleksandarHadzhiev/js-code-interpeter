@@ -51,6 +51,7 @@ export default class CaretBuilder {
             caretElement.classList.add('caret')
             caretElement.setAttribute('id', 'caret')
         }
+        console.log(point)
         let left = point.left == 0 ? point.width : point.left
         if (mousePosition == MousePosition.TOP) {
             left = point.left == 0 && point.width == 0 ? point.width : point.left

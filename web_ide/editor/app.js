@@ -117,9 +117,11 @@ window.addEventListener('mousemove', (event) => {
         else {
             console.log(range)
             textSelection.setEndingRange(range)
-            const mousePosition = textSelection.selectTextBetweenRanges(event, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
+            const mousePosition = textSelection.defineMousePosition(event)
             console.log(mousePosition)
+
             textSelectionScrolling.scrollOnMousePosition(mousePosition)
+            textSelection.selectText(event, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
             textSelection.setLoaderOffset(loaderHandler.topOffset)
             // Invalid code for Y -> it is meant for X
             // scrollOncaretMovement.updateOffset(loaderHandler.topOffset)

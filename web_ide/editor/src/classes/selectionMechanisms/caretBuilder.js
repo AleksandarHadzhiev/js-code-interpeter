@@ -37,12 +37,12 @@ export default class CaretBuilder {
     }
 
     /**
-     * 
      * @param {HTMLElement} contentElement 
      * @param {MarkedPoint} point 
      * @param {String} mousePosition 
-     */
-    buildCaretForTextSelection(contentElement, point, mousePosition) {
+     * @param {Number} mouseXPosition
+    */
+    buildCaretForTextSelection(contentElement, point, mousePosition, mouseXPosition) {
         const lineNumeration = document.getElementById('line-numeration')
         const lineNumerationWidth = lineNumeration.offsetWidth
         let caretElement = document.getElementById('caret')
@@ -51,13 +51,22 @@ export default class CaretBuilder {
             caretElement.classList.add('caret')
             caretElement.setAttribute('id', 'caret')
         }
-        console.log(point)
         let left = point.left == 0 ? point.width : point.left
-        if (mousePosition == MousePosition.TOP) {
+        if (mousePosition == MousePosition.TOP)
             left = point.left == 0 && point.width == 0 ? point.width : point.left
-        }
-        else if (mousePosition == MousePosition.LEFT) {
+        else if (mousePosition == MousePosition.LEFT)
             left = point.left == 0 && point.width == 0 ? point.width : point.left
+        else if (mousePosition == MousePosition.CENTRE) {
+            const pointLeft = point.left
+            const pointWidth = point.width
+            const distanceBetweenPointLeftAndMousePosition = mouseXPosition > pointLeft ? mouseXPosition - pointLeft : pointLeft - mouseXPosition
+            const distanceBetweenPointWidthAndMousePosition = mouseXPosition > pointWidth ? mouseXPosition - pointWidth : pointWidth - mouseXPosition
+            if (distanceBetweenPointLeftAndMousePosition < distanceBetweenPointWidthAndMousePosition) {
+                left = pointLeft
+            }
+            else if (distanceBetweenPointLeftAndMousePosition > distanceBetweenPointWidthAndMousePosition) {
+                left = pointWidth
+            }
         }
         caretElement.style = `top: ${point.top}px; left: ${left + lineNumerationWidth}px;`
         contentElement.prepend(caretElement)

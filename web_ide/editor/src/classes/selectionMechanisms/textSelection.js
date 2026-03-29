@@ -161,18 +161,18 @@ export default class TextSelection {
             const differenceBetweenStartingPointTopOffsetAndMouseY = mouseYPositionBasedOnPage > startingPoint.top ? mouseYPositionBasedOnPage - startingPoint.top : startingPoint.top - mouseYPositionBasedOnPage
             console.log(differenceBetweenEndingPointTopOffsetAndMouseY, differenceBetweenStartingPointTopOffsetAndMouseY)
             if (differenceBetweenEndingPointTopOffsetAndMouseY < differenceBetweenStartingPointTopOffsetAndMouseY)
-                caretBuilder.buildCaretForTextSelection(this.contentElement, endingPoint, this.mousePosition)
+                caretBuilder.buildCaretForTextSelection(this.contentElement, endingPoint, this.mousePosition, this.xForMouseInEditor)
             else if (differenceBetweenEndingPointTopOffsetAndMouseY > differenceBetweenStartingPointTopOffsetAndMouseY)
-                caretBuilder.buildCaretForTextSelection(this.contentElement, startingPoint, this.mousePosition)
+                caretBuilder.buildCaretForTextSelection(this.contentElement, startingPoint, this.mousePosition, this.xForMouseInEditor)
             else {
                 const differenceBetweenEndingPointLeftOffsetAndMouseX = this.xForMouseInEditor > endingPoint.left ? this.xForMouseInEditor - endingPoint.left : endingPoint.left - this.xForMouseInEditor
                 const differenceBetweenStartingPointLeftOffsetAndMouseX = this.xForMouseInEditor > startingPoint.left ? this.xForMouseInEditor - startingPoint.left : startingPoint.left - this.xForMouseInEditor
                 console.log(differenceBetweenEndingPointLeftOffsetAndMouseX, differenceBetweenStartingPointLeftOffsetAndMouseX)
                 if (differenceBetweenEndingPointLeftOffsetAndMouseX < differenceBetweenStartingPointLeftOffsetAndMouseX) {
-                    caretBuilder.buildCaretForTextSelection(this.contentElement, endingPoint, this.mousePosition)
+                    caretBuilder.buildCaretForTextSelection(this.contentElement, endingPoint, this.mousePosition, this.xForMouseInEditor)
                 }
                 else if (differenceBetweenStartingPointLeftOffsetAndMouseX < differenceBetweenEndingPointLeftOffsetAndMouseX) {
-                    caretBuilder.buildCaretForTextSelection(this.contentElement, startingPoint, this.mousePosition)
+                    caretBuilder.buildCaretForTextSelection(this.contentElement, startingPoint, this.mousePosition, this.xForMouseInEditor)
                 }
             }
         }

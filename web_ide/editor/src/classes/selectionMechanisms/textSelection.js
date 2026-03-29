@@ -109,6 +109,10 @@ export default class TextSelection {
             this.windowSectionScrollig = WindowSection.BOTTOM
             return MousePosition.BOTTOM
         }
+        else if (mouseYPositionBasedOnPage == this.loaderOffset && mouseYPositionBasedOnPage == 0) {
+            this.windowSectionScrollig = WindowSection.TOP
+            return MousePosition.TOP
+        }
         else if (mouseYPositionBasedOnPage < this.loaderOffset && mouseYPositionBasedOnPage != 0) {
             this.windowSectionScrollig = WindowSection.TOP
             return MousePosition.TOP

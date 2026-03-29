@@ -20,7 +20,7 @@ const barElement = document.getElementById('bar')
 const lineNumerationElement = document.getElementById('line-numeration')
 const lineContentElement = document.getElementById('line-content')
 const contentElement = document.getElementById('content')
-
+console.log(contentElement.scrollWidth, contentElement.offsetWidth)
 const scrollbarHeight = scrollbarElement.offsetHeight
 const scrollbarTopOffset = navigationElement.offsetHeight
 const barHeight = barElement.offsetHeight
@@ -115,11 +115,16 @@ window.addEventListener('mousemove', (event) => {
             textSelection.setStartingPoint(startingRange)
         }
         else {
+            console.log(range)
             textSelection.setEndingRange(range)
-            const mousePosition = textSelection.selectTextBetweenRanges(event, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
+            const mousePosition = textSelection.defineMousePosition(event)
+            console.log(mousePosition)
+
             textSelectionScrolling.scrollOnMousePosition(mousePosition)
+            textSelection.selectText(event, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
             textSelection.setLoaderOffset(loaderHandler.topOffset)
-            scrollOncaretMovement.updateOffset(loaderHandler.topOffset)
+            // Invalid code for Y -> it is meant for X
+            // scrollOncaretMovement.updateOffset(loaderHandler.topOffset)
         }
     }
 })

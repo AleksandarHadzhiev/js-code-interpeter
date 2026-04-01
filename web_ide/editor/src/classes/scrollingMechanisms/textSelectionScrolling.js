@@ -26,6 +26,9 @@ export default class TextSelectionScrolling {
         else if (mousePosition == MousePosition.TOP) {
             this._scrollUp()
         }
+        else {
+            console.log("NOT SCROLLING")
+        }
     }
 
     _scrollDown() {

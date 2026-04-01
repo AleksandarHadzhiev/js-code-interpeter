@@ -63,13 +63,13 @@ export default class Highlighter {
     }
 
     /**
- * 
- * @param {Number} mouseYPositionBasedOnPage 
- * @param {Number} firstVisibleLine 
- * @param {Number} lastVisibleLine 
- * @param {Number} lastTextLine 
- * @returns {Range}
- */
+     * 
+     * @param {Number} mouseYPositionBasedOnPage 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     * @param {Number} lastTextLine 
+     * @returns {Range}
+     */
     _buildReleasePoint(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine, lastTextLine) {
         let endingPoint = null
         if (lastVisibleLine > lastTextLine) {
@@ -129,7 +129,6 @@ export default class Highlighter {
      */
     highlightForBottomScreenSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine, lastTextLine) {
         this.endingPoint = this._buildReleasePoint(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine, lastTextLine)
-        console.log(this.endingPoint)
         this.customMarker.updatePoints(this.startingPoint, this.endingPoint)
         this.customMarker.buildForBottomSection(firstVisibleLine, lastVisibleLine, lastTextLine)
     }
@@ -147,9 +146,7 @@ export default class Highlighter {
 
     highlightForMouseInEditorSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine, mouseXPosition) {
         this.endingPoint = this._buildReleasePointForMouseInEditorSection(mouseYPositionBasedOnPage, mouseXPosition)
-        console.log(this.endingPoint)
         if (this.endingPoint != null) {
-            console.log(this.endingPoint)
             this.customMarker.updatePoints(this.startingPoint, this.endingPoint)
             this.customMarker.buildForMouseInEditorSection(firstVisibleLine, lastVisibleLine)
         }
@@ -157,7 +154,6 @@ export default class Highlighter {
 
     _buildReleasePointForMouseInEditorSection(mouseYPositionBasedOnPage, mouseXPosition) {
         let endingPoint = null
-
         const commonContainer = this.endingRange.commonAncestorContainer
         const lineForEndContainer = this.endingRange.endContainer.parentElement.parentElement
         const lineForStartContainer = this.endingRange.startContainer.parentElement.parentElement
@@ -171,7 +167,6 @@ export default class Highlighter {
                 isSelectable = false
             }
         }
-
         if (isSelectable) {
             const endContainerPoint = this._buildPointBasedOnContainerAndOffset(this.endingRange.endContainer, this.endingRange.endOffset)
             const startContainerPoint = this._buildPointBasedOnContainerAndOffset(this.endingRange.startContainer, this.endingRange.startOffset)
@@ -192,7 +187,7 @@ export default class Highlighter {
                 if (distanceBetweenMouseXAndEndContainerX < distanceBetweenMouseXAndStartContainerX) {
                     endingPoint = endContainerPoint
                 }
-                else if (distanceBetweenMouseXAndEndContainerX > distanceBetweenMouseXAndStartContainerX) {
+                else {
                     endingPoint = startContainerPoint
                 }
             }
@@ -207,11 +202,17 @@ export default class Highlighter {
      * @returns {StartingPoint}
      */
     _buildPointBasedOnContainerAndOffset(container, offset) {
-        const leftOffsetDTO = new CaretLeftOffsetDTO(container.parentElement, container.parentElement.offsetLeft, offset)
+        let leftOffsetDTO = new CaretLeftOffsetDTO(container.parentElement, container.parentElement.offsetLeft, offset)
+        let id = container.parentElement.parentElement.id
+        let topOffset = container.parentElement.parentElement.offsetTop
+        let fullText = container.parentElement.parentElement.textContent
+        if (isNaN(container.id) == false) {
+            leftOffsetDTO = new CaretLeftOffsetDTO(container, 0, offset)
+            id = container.id
+            topOffset = container.offsetTop
+            fullText = container.textContent
+        }
         const leftOffset = calculateTotalLeftOffsetOfCaretInTheLine(leftOffsetDTO, this.contentElement)
-        const id = container.parentElement.parentElement.id
-        const topOffset = container.parentElement.parentElement.offsetTop
-        const fullText = container.parentElement.parentElement.textContent
         return new StartingPoint(Number(id), topOffset, leftOffset, fullText)
     }
 

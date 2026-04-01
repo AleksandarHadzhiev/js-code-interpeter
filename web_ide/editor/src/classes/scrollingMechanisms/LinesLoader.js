@@ -140,7 +140,6 @@ export default class LinesLoader {
         this.firstVisibleLine = Math.floor(offset / this.lineHeightInPixels)
         if (this.firstVisibleLine <= this.maxLines) {
             this.lastVisibleLine = this.firstVisibleLine + this.maxVisibleLinesOnScreen
-            console.log(this.lastVisibleLine)
             this.reloadDisplayedLines()
             this.previousLastVisibleLine = this.lastVisibleLine
         }
@@ -189,7 +188,7 @@ export default class LinesLoader {
 
     _emptyLineNumeration(lineElement, newId) {
         lineElement.setAttribute('id', `numeration-${newId}`)
-        lineElement.style = `top:${newId * this.lineHeightInPixels}px;`
+        lineElement.style = `top:${newId * this.lineHeightInPixels}px; pointer-events: none;`
         lineElement.textContent = ""
     }
 
@@ -197,7 +196,7 @@ export default class LinesLoader {
         const lineContent = document.getElementById(`${lineId}`)
         lineContent.innerHTML = ""
         lineContent.setAttribute('id', `${newId}`)
-        lineContent.style = `top:${newId * this.lineHeightInPixels}px;`
+        lineContent.style = `pointer-events: none; top:${newId * this.lineHeightInPixels}px;`
     }
 
     _refreshLinesOnScrollingUp() {

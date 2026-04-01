@@ -38,7 +38,6 @@ export default class BarHandler {
      */
     scrollBasedOnPercentage(percentage) {
         const offset = this._calculateTopOffsetBasedOnPercentage(percentage)
-        console.log(offset)
         this.scrollWithOffset(offset)
     }
 

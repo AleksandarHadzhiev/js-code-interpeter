@@ -48,7 +48,6 @@ export default class Highlighter {
      * @param {Range} range 
      */
     setEndingRangeBasedOnRange(range) {
-        console.log(range)
         this.endingRange = range
     }
 
@@ -130,7 +129,6 @@ export default class Highlighter {
      */
     highlightForBottomScreenSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine, lastTextLine) {
         this.endingPoint = this._buildReleasePoint(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine, lastTextLine)
-        console.log(this.endingPoint)
         this.customMarker.updatePoints(this.startingPoint, this.endingPoint)
         this.customMarker.buildForBottomSection(firstVisibleLine, lastVisibleLine, lastTextLine)
     }
@@ -183,7 +181,6 @@ export default class Highlighter {
                 endingPoint = endContainerPoint
             }
             else if (distanceBetweenMouseLineIdAndIdOfEndLine > distanceBetweenMouseLineIdAndIdOfStartLine) {
-                console.log(startContainerPoint)
                 endingPoint = startContainerPoint
             }
             else {

@@ -140,7 +140,6 @@ export default class LinesLoader {
         this.firstVisibleLine = Math.floor(offset / this.lineHeightInPixels)
         if (this.firstVisibleLine <= this.maxLines) {
             this.lastVisibleLine = this.firstVisibleLine + this.maxVisibleLinesOnScreen
-            console.log(this.lastVisibleLine)
             this.reloadDisplayedLines()
             this.previousLastVisibleLine = this.lastVisibleLine
         }

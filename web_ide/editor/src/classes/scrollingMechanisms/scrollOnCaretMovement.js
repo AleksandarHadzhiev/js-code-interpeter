@@ -19,10 +19,8 @@ export default class ScrollOnCaretMovement {
      * @param {Number} newOffset 
      */
     updateOffset(newOffset) {
-        console.log(newOffset)
         this.loaderHandler.scrollWithOffset(newOffset)
         const percentage = this.loaderHandler.getPercentageOfScroll()
-        console.log(this.loaderHandler.topOffset)
         this.barHandler.scrollBasedOnPercentage(percentage)
         this.linesLoader.reloadLinesForNewTopOffset(this.loaderHandler.topOffset)
     }

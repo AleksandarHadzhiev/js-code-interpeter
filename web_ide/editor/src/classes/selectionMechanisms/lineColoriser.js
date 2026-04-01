@@ -243,11 +243,8 @@ export default class LineColoriser {
      * @returns 
      */
     coloriseLinesForBottomInBetweenFirstAndLastVisibleLines(firstVisibleLine, lastVisibleLine, lastTextLine) {
-        console.log(lastVisibleLine)
         const line = document.getElementById(String(lastVisibleLine))
-        console.log(line)
         const content = document.getElementById('line-content')
-        console.log(content.childNodes)
         this.coordinatesToHighlight.clear()
         const lineOfStartingPoint = Number(this.startingPoint.lineId)
         const lineOfEndingPoint = Number(this.endingPoint.lineId)
@@ -444,8 +441,6 @@ export default class LineColoriser {
 
     coloriseForMouseInEditorSection(firstVisibleLine, lastVisibleLine) {
         this.coordinatesToHighlight.clear()
-        console.log(this.startingPoint)
-        console.log(this.endingPoint)
         if (this.startingPoint.lineId >= firstVisibleLine && this.startingPoint.lineId <= lastVisibleLine) {
             this._coloriseForWhenMouseIsInEditorScreenWithStartingPointVisible(this.endingPoint.lineId, this.startingPoint.lineId)
         }

@@ -31,7 +31,6 @@ export default class LoaderHandler {
     }
 
     updateTopOffsetWithOffset(offset) {
-        console.log(this.topOffset, offset)
         const newOffset = this.topOffset + offset
         this.topOffset = newOffset > this.maxTopOffset ? this.maxTopOffset : newOffset < this.minTopOffset ? this.minTopOffset : newOffset
     }

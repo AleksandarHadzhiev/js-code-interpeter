@@ -8,6 +8,7 @@ import calculateTotalLeftOffsetOfCaretInTheLine from "./src/classes/calculators/
 import { CaretLeftOffsetDTO } from "./src/classes/dtos/caretDTOs.js"
 import CaretMover from "./src/classes/caretMover.js"
 import ScrollOnCaretMovement from "./src/classes/scrollingMechanisms/scrollOnCaretMovement.js"
+import { MousePosition } from "./src/classes/selectionMechanisms/enums.js"
 
 
 const mainContainer = document.getElementById('container')
@@ -20,11 +21,10 @@ const barElement = document.getElementById('bar')
 const lineNumerationElement = document.getElementById('line-numeration')
 const lineContentElement = document.getElementById('line-content')
 const contentElement = document.getElementById('content')
-console.log(contentElement.scrollWidth, contentElement.offsetWidth)
 const scrollbarHeight = scrollbarElement.offsetHeight
 const scrollbarTopOffset = navigationElement.offsetHeight
 const barHeight = barElement.offsetHeight
-
+let intervalId = null
 const contentElementOffsetLeft = menuContainer.offsetWidth + lineNumerationElement.scrollWidth
 const lines = 2000
 const lineHeightInPixels = 28.8
@@ -36,6 +36,7 @@ loaderElement.style.height = `${loaderHeight}px`
 let barIsSelected = false
 let isTextSelecting = false
 let startingRange = null
+
 
 const textSelection = new TextSelection(scrollbarTopOffset, lineNumerationElement.scrollWidth, scrollbarHeight, loaderElement.scrollWidth, contentElement, contentElementOffsetLeft, lines)
 const barHandler = new BarHandler(scrollbarHeight, barHeight, barElement)
@@ -89,6 +90,8 @@ window.addEventListener('mouseup', (event) => {
     isTextSelecting = false
     startingRange = null
     caretMover.resetLeftOffsetForCaretMover()
+    clearInterval(intervalId)
+    intervalId = null
 })
 
 lineContentElement.addEventListener('mousedown', (event) => {
@@ -98,7 +101,6 @@ lineContentElement.addEventListener('mousedown', (event) => {
 
 window.addEventListener('mousemove', (event) => {
     if (isTextSelecting) {
-        buildMarker()
         const range = document.getSelection().getRangeAt(0)
         if (startingRange == null) {
             startingRange = range
@@ -115,19 +117,40 @@ window.addEventListener('mousemove', (event) => {
             textSelection.setStartingPoint(startingRange)
         }
         else {
-            console.log(range)
             textSelection.setEndingRange(range)
             const mousePosition = textSelection.defineMousePosition(event)
-            console.log(mousePosition)
-
-            textSelectionScrolling.scrollOnMousePosition(mousePosition)
-            textSelection.selectText(event, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
-            textSelection.setLoaderOffset(loaderHandler.topOffset)
+            if (mousePosition == MousePosition.BOTTOM || mousePosition == MousePosition.TOP)
+                autoScroll(event, mousePosition)
+            else {
+                buildMarker()
+                scroll(event, mousePosition)
+                clearInterval(intervalId)
+                intervalId = null
+            }
+            // scroll(event, mousePosition)
             // Invalid code for Y -> it is meant for X
             // scrollOncaretMovement.updateOffset(loaderHandler.topOffset)
         }
     }
 })
+
+function autoScroll(event, mousePosition) {
+    if (intervalId) return
+    intervalId = setInterval(() => {
+        buildMarker()
+        scroll(event, mousePosition)
+        if (loaderHandler.topOffset >= loaderHandler.maxTopOffset || loaderHandler.topOffset <= loaderHandler.minTopOffset) {
+            clearInterval(intervalId)
+            intervalId = null
+        }
+    }, 50)
+}
+
+function scroll(event, mousePosition) {
+    textSelectionScrolling.scrollOnMousePosition(mousePosition)
+    textSelection.selectText(event, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
+    textSelection.setLoaderOffset(loaderHandler.topOffset)
+}
 
 function buildMarker() {
     removeExistingHighlighter()
@@ -149,8 +172,6 @@ function removeExistingHighlighter() {
 window.addEventListener('keydown', (event) => {
     const caret = document.getElementById('caret')
     if (caret) {
-        console.log(scrollOncaretMovement)
-        console.log(event.key)
         caretMover.moveCaretBasedOnKeybordKey(event, caret)
     }
 })

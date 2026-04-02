@@ -65,8 +65,8 @@ class CustomEditorContainer extends HTMLElement {
 
     _buildScrollableArea() {
         const scrollablearea = document.createElement('div')
-        scrollablearea.classList.add('scrollable-area')
-        scrollablearea.setAttribute('id', 'scrollable-area')
+        scrollablearea.classList.add('scrollable-area-vertical')
+        scrollablearea.setAttribute('id', 'scrollable-area-vertical')
         const scrollbar = this._buildScrollbar()
         scrollablearea.appendChild(scrollbar)
         return scrollablearea
@@ -74,7 +74,7 @@ class CustomEditorContainer extends HTMLElement {
 
     _buildScrollbar() {
         const scrollbar = document.createElement('div')
-        scrollbar.setAttribute('id', 'scrollbar')
+        scrollbar.setAttribute('id', 'scrollbar-vertical')
         const bar = this._buildBar()
         scrollbar.appendChild(bar)
         return scrollbar
@@ -82,7 +82,7 @@ class CustomEditorContainer extends HTMLElement {
 
     _buildBar() {
         const bar = document.createElement('div')
-        bar.setAttribute('id', 'bar')
+        bar.setAttribute('id', 'bar-vertical')
         return bar
     }
 }

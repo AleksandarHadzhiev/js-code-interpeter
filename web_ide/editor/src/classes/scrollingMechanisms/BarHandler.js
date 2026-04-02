@@ -1,4 +1,4 @@
-export default class BarHandler {
+export class BarVerticalHandler {
     /**
      * 
      * @param {Number} scrollbarHeight 
@@ -58,4 +58,8 @@ export default class BarHandler {
         const offset = this.maxTopOffset * (percentage / 100)
         return offset
     }
+}
+
+export class BarHorizontalHandler {
+
 }

@@ -1,4 +1,4 @@
-import BarHandler from "./src/classes/scrollingMechanisms/BarHandler.js"
+import { BarVerticalHandler, BarHorizontalHandler } from "./src/classes/scrollingMechanisms/BarHandler.js"
 import LoaderHandler from "./src/classes/scrollingMechanisms/LoaderHandler.js"
 import OffsetCalculator from "./src/classes/scrollingMechanisms/OffsetCalculator.js"
 import LinesLoader from "./src/classes/scrollingMechanisms/LinesLoader.js"
@@ -15,15 +15,15 @@ const mainContainer = document.getElementById('container')
 const menuContainer = document.getElementById('menu')
 const navigationElement = document.getElementById('navigation')
 const loaderElement = document.getElementById('loader')
-const scrollbarElement = document.getElementById('scrollbar')
-const scrollbarAreaElement = document.getElementById('scrollable-area')
-const barElement = document.getElementById('bar')
+const scrollbarElementVertical = document.getElementById('scrollbar-vertical')
+const scrollbarAreaElementVertical = document.getElementById('scrollable-area-vertical')
+const barVerticalElement = document.getElementById('bar-vertical')
 const lineNumerationElement = document.getElementById('line-numeration')
 const lineContentElement = document.getElementById('line-content')
 const contentElement = document.getElementById('content')
-const scrollbarHeight = scrollbarElement.offsetHeight
-const scrollbarTopOffset = navigationElement.offsetHeight
-const barHeight = barElement.offsetHeight
+const scrollbarVerticalHeight = scrollbarElementVertical.offsetHeight
+const scrollbarVerticalTopOffset = navigationElement.offsetHeight
+const barVerticalHeight = barVerticalElement.offsetHeight
 let intervalId = null
 const lineNumerationWidth = lineNumerationElement.scrollWidth
 let contentElementOffsetLeft = menuContainer.offsetWidth + lineNumerationWidth
@@ -34,18 +34,18 @@ const maxVisibleLinesOnScreen = Math.ceil(mainContainer.offsetHeight / lineHeigh
 const loaderHeight = (lines + maxVisibleLinesOnScreen - 1) * lineHeightInPixels
 loaderElement.style.height = `${loaderHeight}px`
 
-let barIsSelected = false
+let barVerticalIsSelected = false
 let isTextSelecting = false
 let startingRange = null
 
 
-const textSelection = new TextSelection(scrollbarTopOffset, lineNumerationWidth, scrollbarHeight, loaderElement.offsetWidth, contentElement, contentElementOffsetLeft, lines)
-const barHandler = new BarHandler(scrollbarHeight, barHeight, barElement)
-const loaderHandler = new LoaderHandler(loaderHeight, scrollbarHeight, loaderElement)
+const textSelection = new TextSelection(scrollbarVerticalTopOffset, lineNumerationWidth, scrollbarVerticalHeight, loaderElement.offsetWidth, contentElement, contentElementOffsetLeft, lines)
+const barVerticalHandler = new BarVerticalHandler(scrollbarVerticalHeight, barVerticalHeight, barVerticalElement)
+const loaderHandler = new LoaderHandler(loaderHeight, scrollbarVerticalHeight, loaderElement)
 const offsetCalculator = new OffsetCalculator()
 const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement, contentElement)
-const textSelectionScrolling = new TextSelectionScrolling(barHandler, loaderHandler, linesLoader)
-const scrollOncaretMovement = new ScrollOnCaretMovement(loaderHandler, barHandler, linesLoader)
+const textSelectionScrolling = new TextSelectionScrolling(barVerticalHandler, loaderHandler, linesLoader)
+const scrollOncaretMovement = new ScrollOnCaretMovement(loaderHandler, barVerticalHandler, linesLoader)
 const caretMover = new CaretMover(scrollOncaretMovement, contentElement, lineNumerationElement)
 
 linesLoader.loadLines()
@@ -55,7 +55,7 @@ window.addEventListener('wheel', (event) => {
     const offsetTop = offsetCalculator.calculateOffsetBasedOnDeltaYOfMouseEvent(event.deltaY)
     loaderHandler.scrollWithOffset(offsetTop)
     const percentage = loaderHandler.getPercentageOfScroll()
-    barHandler.scrollBasedOnPercentage(percentage)
+    barVerticalHandler.scrollBasedOnPercentage(percentage)
     linesLoader.reloadLinesForNewTopOffset(loaderHandler.topOffset)
     textSelection.setLoaderOffset(loaderHandler.topOffset)
     displayHighlightIfThereIsSelectedText()
@@ -68,15 +68,15 @@ function displayHighlightIfThereIsSelectedText() {
     }
 }
 
-barElement.addEventListener('mousedown', (event) => {
-    barIsSelected = true
-    scrollbarAreaElement.style.pointerEvents = "all"
+barVerticalElement.addEventListener('mousedown', (event) => {
+    barVerticalIsSelected = true
+    scrollbarAreaElementVertical.style.pointerEvents = "all"
 })
 
-scrollbarAreaElement.addEventListener('mousemove', (event) => {
-    if (barIsSelected) {
-        barHandler.scrollWithOffset(event.clientY - scrollbarTopOffset)
-        const percentage = barHandler.getPercentageOfScroll()
+scrollbarAreaElementVertical.addEventListener('mousemove', (event) => {
+    if (barVerticalIsSelected) {
+        barVerticalHandler.scrollWithOffset(event.clientY - scrollbarVerticalTopOffset)
+        const percentage = barVerticalHandler.getPercentageOfScroll()
         loaderHandler.scrollWithPercentage(percentage)
         linesLoader.reloadLinesForNewTopOffset(loaderHandler.topOffset)
         textSelection.setLoaderOffset(loaderHandler.topOffset)
@@ -85,9 +85,9 @@ scrollbarAreaElement.addEventListener('mousemove', (event) => {
 })
 
 window.addEventListener('mouseup', (event) => {
-    if (barIsSelected) barIsSelected = false
-    scrollbarAreaElement.style.pointerEvents = "none"
-    if (isTextSelecting) scrollbarElement.style.pointerEvents = "all"
+    if (barVerticalIsSelected) barVerticalIsSelected = false
+    scrollbarAreaElementVertical.style.pointerEvents = "none"
+    if (isTextSelecting) scrollbarElementVertical.style.pointerEvents = "all"
     isTextSelecting = false
     startingRange = null
     caretMover.resetLeftOffsetForCaretMover()
@@ -97,7 +97,7 @@ window.addEventListener('mouseup', (event) => {
 
 lineContentElement.addEventListener('mousedown', (event) => {
     isTextSelecting = true
-    scrollbarElement.style.pointerEvents = "none"
+    scrollbarElementVertical.style.pointerEvents = "none"
 })
 
 window.addEventListener('mousemove', (event) => {
@@ -195,11 +195,11 @@ function scrollOnScrollable() {
     const caretTopOffset = caret.offsetTop
     const lineId = Math.round(caretTopOffset / lineHeightInPixels)
     if (lineId < linesLoader.firstVisibleLine || lineId > linesLoader.lastVisibleLine) {
-        scrollForCaretMovementOnLineId(lineId)
+        scrollForCaretMovementOnLineId(lineId, caretTopOffset)
     }
 }
 
-function scrollForCaretMovementOnLineId(lineId) {
+function scrollForCaretMovementOnLineId(lineId, caretTopOffset) {
     if (loaderHandler.topOffset > caretTopOffset) {
         scrollUp(lineId)
     }
@@ -217,14 +217,14 @@ function scrollUp(lineId) {
 
 function scrollDown(lineId) {
     const offsetForLastVisibleLine = (lineId + 5) * lineHeightInPixels
-    const offsetForFirstVisibleLine = offsetForLastVisibleLine - scrollbarHeight
+    const offsetForFirstVisibleLine = offsetForLastVisibleLine - scrollbarVerticalHeight
     const offsetToScroll = offsetForFirstVisibleLine - loaderHandler.topOffset
     loaderHandler.scrollWithOffset(offsetToScroll)
 }
 
 function updateElementsPositionsOnScreen() {
     const percentage = loaderHandler.getPercentageOfScroll()
-    barHandler.scrollBasedOnPercentage(percentage)
+    barVerticalHandler.scrollBasedOnPercentage(percentage)
     linesLoader.reloadLinesForNewTopOffset(loaderHandler.topOffset)
 }
 
@@ -234,9 +234,9 @@ window.addEventListener('resize', () => {
     loaderElement.style.height = `${newLoaderHeight}px`
     linesLoader.updateMaxVisibleLinesOnScreen(newMaxVisibleLinesOnScreen)
     linesLoader.resizeLines()
-    const scrollbarHeight = scrollbarElement.offsetHeight
-    loaderHandler.updateHeights(newLoaderHeight, scrollbarHeight)
-    barHandler.updateHeights(scrollbarHeight, barElement.offsetHeight)
+    const scrollbarVerticalHeight = scrollbarElementVertical.offsetHeight
+    loaderHandler.updateHeights(newLoaderHeight, scrollbarVerticalHeight)
+    barVerticalHandler.updateHeights(scrollbarVerticalHeight, barVerticalElement.offsetHeight)
     const newTotalWidthOfScreen = loaderElement.offsetWidth + lineNumerationWidth
     textSelection.updateWidths(newTotalWidthOfScreen, contentElementOffsetLeft)
 })

@@ -1,4 +1,4 @@
-import BarHandler from "./BarHandler.js";
+import { BarVerticalHandler } from "./BarHandler.js";
 import LoaderHandler from "./LoaderHandler.js";
 import LinesLoader from "./LinesLoader.js";
 import { MousePosition } from "../selectionMechanisms/enums.js";
@@ -6,12 +6,12 @@ import { MousePosition } from "../selectionMechanisms/enums.js";
 export default class TextSelectionScrolling {
     /**
      * 
-     * @param {BarHandler} barHandler 
+     * @param {BarVerticalHandler} barVerticalHandler 
      * @param {LoaderHandler} loaderHandler 
      * @param {LinesLoader} loaderHandler 
      */
-    constructor(barHandler, loaderHandler, linesLoader) {
-        this.barHandler = barHandler
+    constructor(barVerticalHandler, loaderHandler, linesLoader) {
+        this.barVerticalHandler = barVerticalHandler
         this.loaderHandler = loaderHandler
         this.linesLoader = linesLoader
     }
@@ -34,14 +34,14 @@ export default class TextSelectionScrolling {
     _scrollDown() {
         this.loaderHandler.scrollWithOffset(50)
         const percentage = this.loaderHandler.getPercentageOfScroll()
-        this.barHandler.scrollBasedOnPercentage(percentage)
+        this.barVerticalHandler.scrollBasedOnPercentage(percentage)
         this.linesLoader.reloadLinesForNewTopOffset(this.loaderHandler.topOffset)
     }
 
     _scrollUp() {
         this.loaderHandler.scrollWithOffset(-50)
         const percentage = this.loaderHandler.getPercentageOfScroll()
-        this.barHandler.scrollBasedOnPercentage(percentage)
+        this.barVerticalHandler.scrollBasedOnPercentage(percentage)
         this.linesLoader.reloadLinesForNewTopOffset(this.loaderHandler.topOffset)
     }
 }

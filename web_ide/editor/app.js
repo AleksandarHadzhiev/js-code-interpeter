@@ -15,15 +15,27 @@ const mainContainer = document.getElementById('container')
 const menuContainer = document.getElementById('menu')
 const navigationElement = document.getElementById('navigation')
 const loaderElement = document.getElementById('loader')
+
+
 const scrollbarElementVertical = document.getElementById('scrollbar-vertical')
 const scrollbarAreaElementVertical = document.getElementById('scrollable-area-vertical')
 const barVerticalElement = document.getElementById('bar-vertical')
+
+const scrollbarElementHorizontal = document.getElementById('scrollbar-horizontal')
+const scrollbarAreaElementHorizontal = document.getElementById('scrollable-area-horizontal')
+const barHorizontalElement = document.getElementById('bar-horizontal')
+
 const lineNumerationElement = document.getElementById('line-numeration')
 const lineContentElement = document.getElementById('line-content')
 const contentElement = document.getElementById('content')
+
 const scrollbarVerticalHeight = scrollbarElementVertical.offsetHeight
 const scrollbarVerticalTopOffset = navigationElement.offsetHeight
 const barVerticalHeight = barVerticalElement.offsetHeight
+
+// the horizontal scrollbar elements and their sizes - unsure which sizes for now..
+const barHorizontalWidth = barHorizontalElement.offsetWidth
+
 let intervalId = null
 const lineNumerationWidth = lineNumerationElement.scrollWidth
 let contentElementOffsetLeft = menuContainer.offsetWidth + lineNumerationWidth
@@ -35,6 +47,7 @@ const loaderHeight = (lines + maxVisibleLinesOnScreen - 1) * lineHeightInPixels
 loaderElement.style.height = `${loaderHeight}px`
 
 let barVerticalIsSelected = false
+let barHorizontalIsSelected = false
 let isTextSelecting = false
 let startingRange = null
 
@@ -73,6 +86,11 @@ barVerticalElement.addEventListener('mousedown', (event) => {
     scrollbarAreaElementVertical.style.pointerEvents = "all"
 })
 
+barHorizontalElement.addEventListener('mousedown', (event) => {
+    barHorizontalIsSelected = true
+    scrollbarAreaElementHorizontal.style.pointerEvents = "all"
+})
+
 scrollbarAreaElementVertical.addEventListener('mousemove', (event) => {
     if (barVerticalIsSelected) {
         barVerticalHandler.scrollWithOffset(event.clientY - scrollbarVerticalTopOffset)
@@ -84,10 +102,21 @@ scrollbarAreaElementVertical.addEventListener('mousemove', (event) => {
     }
 })
 
+scrollbarAreaElementHorizontal.addEventListener('mousemove', (event) => {
+    if (barHorizontalIsSelected) {
+        console.log(event)
+    }
+})
+
 window.addEventListener('mouseup', (event) => {
     if (barVerticalIsSelected) barVerticalIsSelected = false
+    if (barHorizontalIsSelected) barHorizontalIsSelected = false
     scrollbarAreaElementVertical.style.pointerEvents = "none"
-    if (isTextSelecting) scrollbarElementVertical.style.pointerEvents = "all"
+    scrollbarAreaElementHorizontal.style.pointerEvents = "none"
+    if (isTextSelecting) {
+        scrollbarElementVertical.style.pointerEvents = "all"
+        scrollbarElementHorizontal.style.pointerEvents = "all"
+    }
     isTextSelecting = false
     startingRange = null
     caretMover.resetLeftOffsetForCaretMover()
@@ -98,6 +127,7 @@ window.addEventListener('mouseup', (event) => {
 lineContentElement.addEventListener('mousedown', (event) => {
     isTextSelecting = true
     scrollbarElementVertical.style.pointerEvents = "none"
+    scrollbarElementHorizontal.style.pointerEvents = "none"
 })
 
 window.addEventListener('mousemove', (event) => {

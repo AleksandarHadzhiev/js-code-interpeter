@@ -9,7 +9,7 @@ import { CaretLeftOffsetDTO } from "./src/classes/dtos/caretDTOs.js"
 import CaretMover from "./src/classes/caretMover.js"
 import ScrollOnCaretMovement from "./src/classes/scrollingMechanisms/scrollOnCaretMovement.js"
 import { MousePosition } from "./src/classes/selectionMechanisms/enums.js"
-
+import ContentScrollingHandler from "./src/classes/scrollingMechanisms/ContentScrollingHandler.js"
 
 const mainContainer = document.getElementById('container')
 const menuContainer = document.getElementById('menu')
@@ -42,8 +42,10 @@ let contentElementOffsetLeft = menuWidth + lineNumerationWidth
 
 // the horizontal scrollbar elements and their sizes - unsure which sizes for now..
 const barHorizontalWidth = barHorizontalElement.offsetWidth
+const barVerticalWidth = barVerticalElement.offsetWidth
 const scrollbarHorizontalLeftOffset = menuWidth + lineNumerationWidth
 const scrollbarWidth = scrollbarElementHorizontal.offsetWidth
+const lineContentWidth = lineContentElement.scrollWidth
 
 const lines = 2000
 const lineHeightInPixels = 28.8
@@ -58,6 +60,7 @@ let isTextSelecting = false
 let startingRange = null
 
 
+const contentScrollingHandler = new ContentScrollingHandler(lineContentWidth, scrollbarWidth, lineNumerationWidth, barHorizontalWidth, barVerticalWidth)
 const textSelection = new TextSelection(scrollbarVerticalTopOffset, lineNumerationWidth, scrollbarVerticalHeight, loaderElement.offsetWidth, contentElement, contentElementOffsetLeft, lines)
 const barVerticalHandler = new BarVerticalHandler(scrollbarVerticalHeight, barVerticalHeight, barVerticalElement)
 const barHorizontalHandler = new BarHorizontalHandler(scrollbarWidth, barHorizontalWidth, barHorizontalElement)
@@ -69,7 +72,7 @@ const scrollOncaretMovement = new ScrollOnCaretMovement(loaderHandler, barVertic
 const caretMover = new CaretMover(scrollOncaretMovement, contentElement, lineNumerationElement)
 
 linesLoader.loadLines()
-
+console.log(loaderHandler)
 window.addEventListener('wheel', (event) => {
     event.preventDefault()
     const offsetTop = offsetCalculator.calculateOffsetBasedOnDeltaYOfMouseEvent(event.deltaY)
@@ -112,6 +115,16 @@ scrollbarAreaElementVertical.addEventListener('mousemove', (event) => {
 scrollbarAreaElementHorizontal.addEventListener('mousemove', (event) => {
     if (barHorizontalIsSelected) {
         barHorizontalHandler.scrollWithOffset(event.clientX - scrollbarHorizontalLeftOffset)
+        const percentage = barHorizontalHandler.getPercentageOfScroll()
+        console.log(percentage)
+        contentScrollingHandler.updateMaxLeftOffset(lineContentElement.scrollWidth, scrollbarWidth, barHorizontalWidth, barVerticalWidth)
+        contentScrollingHandler.scrollWithPercentage(percentage, lineContentElement)
+        // const maxLeftScroll = lineContentElement.scrollWidth - scrollbarWidth - barHorizontalWidth
+        // const leftOffset = maxLeftScroll * (percentage / 100)
+        // console.log(contentElement.scrollWidth, scrollbarWidth)
+        // console.log(leftOffset)
+        // // loaderElement.scrollLeft = -(leftOffset)
+        // lineContentElement.style = `left: -${leftOffset}px;`
     }
 })
 

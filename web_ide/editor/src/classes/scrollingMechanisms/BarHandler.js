@@ -121,4 +121,9 @@ export class BarHorizontalHandler {
         this.leftOffset = offset > this.maxLeftOffset ? this.maxLeftOffset : offset < this.minLeftOffset ? this.minLeftOffset : offset
         this.bar.style = `left: ${this.leftOffset}px;`
     }
+
+    getPercentageOfScroll() {
+        this.percentageOfScroll = (this.leftOffset / this.maxLeftOffset) * 100
+        return this.percentageOfScroll
+    }
 }

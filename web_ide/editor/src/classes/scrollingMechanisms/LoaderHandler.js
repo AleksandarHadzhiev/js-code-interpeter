@@ -39,6 +39,7 @@ export default class LoaderHandler {
         return this.height - this.scrollbarHeight
     }
 
+
     getPercentageOfScroll() {
         return (this.topOffset / this.height) * 100
     }

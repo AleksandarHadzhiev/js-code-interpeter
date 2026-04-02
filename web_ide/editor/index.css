@@ -110,6 +110,7 @@ html::selection {
 
 #line-numeration {
     position: absolute;
+    background-color: black;
     width: var(--width-for-menu);
     height: 100%;
     pointer-events: none;

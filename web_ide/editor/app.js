@@ -25,7 +25,8 @@ const scrollbarHeight = scrollbarElement.offsetHeight
 const scrollbarTopOffset = navigationElement.offsetHeight
 const barHeight = barElement.offsetHeight
 let intervalId = null
-const contentElementOffsetLeft = menuContainer.offsetWidth + lineNumerationElement.scrollWidth
+const lineNumerationWidth = lineNumerationElement.scrollWidth
+let contentElementOffsetLeft = menuContainer.offsetWidth + lineNumerationWidth
 const lines = 2000
 const lineHeightInPixels = 28.8
 const maxVisibleLinesOnScreen = Math.ceil(mainContainer.offsetHeight / lineHeightInPixels)
@@ -38,7 +39,7 @@ let isTextSelecting = false
 let startingRange = null
 
 
-const textSelection = new TextSelection(scrollbarTopOffset, lineNumerationElement.scrollWidth, scrollbarHeight, loaderElement.scrollWidth, contentElement, contentElementOffsetLeft, lines)
+const textSelection = new TextSelection(scrollbarTopOffset, lineNumerationWidth, scrollbarHeight, loaderElement.offsetWidth, contentElement, contentElementOffsetLeft, lines)
 const barHandler = new BarHandler(scrollbarHeight, barHeight, barElement)
 const loaderHandler = new LoaderHandler(loaderHeight, scrollbarHeight, loaderElement)
 const offsetCalculator = new OffsetCalculator()
@@ -173,9 +174,8 @@ window.addEventListener('keydown', (event) => {
     const caret = document.getElementById('caret')
     if (caret) {
         const isScrollable = isCaretMovementScrollable(event)
-        if (isScrollable) {
+        if (isScrollable)
             scrollOnScrollable()
-        }
         caretMover.moveCaretBasedOnKeybordKey(event, caret)
     }
 })
@@ -237,4 +237,6 @@ window.addEventListener('resize', () => {
     const scrollbarHeight = scrollbarElement.offsetHeight
     loaderHandler.updateHeights(newLoaderHeight, scrollbarHeight)
     barHandler.updateHeights(scrollbarHeight, barElement.offsetHeight)
+    const newTotalWidthOfScreen = loaderElement.offsetWidth + lineNumerationWidth
+    textSelection.updateWidths(newTotalWidthOfScreen, contentElementOffsetLeft)
 })

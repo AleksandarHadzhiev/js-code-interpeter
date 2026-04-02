@@ -39,6 +39,16 @@ export default class TextSelection {
 
     /**
      * 
+     * @param {Number} newWidthOfScreen 
+     * @param {Number} newContentElementLeftOffset 
+     */
+    updateWidths(newWidthOfScreen, newContentElementLeftOffset) {
+        this.totalWidthOfScreen = newWidthOfScreen
+        this.contentElementOffsetLeft = newContentElementLeftOffset
+    }
+
+    /**
+     * 
      * @param {StartingPoint} startingPoint 
      */
     setStartingPoint(startingPoint) {

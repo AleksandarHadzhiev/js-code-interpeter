@@ -172,9 +172,61 @@ function removeExistingHighlighter() {
 window.addEventListener('keydown', (event) => {
     const caret = document.getElementById('caret')
     if (caret) {
+        const isScrollable = isCaretMovementScrollable(event)
+        if (isScrollable) {
+            scrollOnScrollable()
+        }
         caretMover.moveCaretBasedOnKeybordKey(event, caret)
     }
 })
+
+function isCaretMovementScrollable(event) {
+    if (event.key == "Control") return false
+    const isUsingCtrl = event.ctrlKey
+    const isArrowUp = event.key == "ArrowUp"
+    const isArrowDown = event.key == "ArrowDown"
+    const isCtrlUp = isUsingCtrl && isArrowUp
+    const isCtrlDown = isUsingCtrl && isArrowDown
+    const isScrollable = isCtrlDown == false && isCtrlUp == false
+    return isScrollable
+}
+
+function scrollOnScrollable() {
+    const caretTopOffset = caret.offsetTop
+    const lineId = Math.round(caretTopOffset / lineHeightInPixels)
+    if (lineId < linesLoader.firstVisibleLine || lineId > linesLoader.lastVisibleLine) {
+        scrollForCaretMovementOnLineId(lineId)
+    }
+}
+
+function scrollForCaretMovementOnLineId(lineId) {
+    if (loaderHandler.topOffset > caretTopOffset) {
+        scrollUp(lineId)
+    }
+    else {
+        scrollDown(lineId)
+    }
+    updateElementsPositionsOnScreen()
+}
+
+function scrollUp(lineId) {
+    const offsetForFirstVisibleLine = (lineId - 5) * lineHeightInPixels
+    const offsetToScroll = loaderHandler.topOffset - offsetForFirstVisibleLine
+    loaderHandler.scrollWithOffset(-offsetToScroll)
+}
+
+function scrollDown(lineId) {
+    const offsetForLastVisibleLine = (lineId + 5) * lineHeightInPixels
+    const offsetForFirstVisibleLine = offsetForLastVisibleLine - scrollbarHeight
+    const offsetToScroll = offsetForFirstVisibleLine - loaderHandler.topOffset
+    loaderHandler.scrollWithOffset(offsetToScroll)
+}
+
+function updateElementsPositionsOnScreen() {
+    const percentage = loaderHandler.getPercentageOfScroll()
+    barHandler.scrollBasedOnPercentage(percentage)
+    linesLoader.reloadLinesForNewTopOffset(loaderHandler.topOffset)
+}
 
 window.addEventListener('resize', () => {
     const newMaxVisibleLinesOnScreen = Math.ceil(mainContainer.offsetHeight / lineHeightInPixels)

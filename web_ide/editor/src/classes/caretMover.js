@@ -143,9 +143,9 @@ export default class CaretMover {
         const leftOffset = caret.offsetLeft
         const topOffset = caret.offsetTop
         const lineId = Math.round(topOffset / 28.8)
+        this._scrollDown(lineId, lineId)
         const oldLineElement = document.getElementById(String(lineId))
         const lineElementWidth = calculateWidthForText(this.contentElement, oldLineElement.textContent)
-        this._scrollDown(lineId, lineId)
         if (isUsingCtrl) {
             this._moveCaretRightWhileUsingCtrl(leftOffset, topOffset, lineId, lineElementWidth)
         }

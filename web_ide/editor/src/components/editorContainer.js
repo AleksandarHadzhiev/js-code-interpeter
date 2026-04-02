@@ -1,3 +1,6 @@
+import CustomHorizontalScrollbar from "./scrollbars/horizontal.js"
+import CustomVerticalScrollbar from "./scrollbars/vertical.js"
+
 class CustomEditorContainer extends HTMLElement {
     constructor() {
         super()
@@ -17,8 +20,8 @@ class CustomEditorContainer extends HTMLElement {
         const editorView = document.createElement('div')
         editorView.classList.add('editor-view')
         const interpreterScreen = this._buildInterpeterScreen()
-        const scrollableAreaVertical = this._buildScrollableAreaVertical()
-        const scrollbarAreaHorizontal = this._buildScrollableAreaHorizontal()
+        const scrollableAreaVertical = new CustomVerticalScrollbar().buildScrollableAreaVertical()
+        const scrollbarAreaHorizontal = new CustomHorizontalScrollbar().buildScrollableAreaHorizontal()
         editorView.appendChild(interpreterScreen)
         editorView.appendChild(scrollableAreaVertical)
         editorView.appendChild(scrollbarAreaHorizontal)
@@ -63,52 +66,6 @@ class CustomEditorContainer extends HTMLElement {
         const lineContent = document.createElement('div')
         lineContent.setAttribute('id', 'line-content')
         return lineContent
-    }
-
-    _buildScrollableAreaVertical() {
-        const scrollablearea = document.createElement('div')
-        scrollablearea.classList.add('scrollable-area-vertical')
-        scrollablearea.setAttribute('id', 'scrollable-area-vertical')
-        const scrollbar = this._buildScrollbarVertical()
-        scrollablearea.appendChild(scrollbar)
-        return scrollablearea
-    }
-
-    _buildScrollbarVertical() {
-        const scrollbar = document.createElement('div')
-        scrollbar.setAttribute('id', 'scrollbar-vertical')
-        const bar = this._buildBarVertical()
-        scrollbar.appendChild(bar)
-        return scrollbar
-    }
-
-    _buildBarVertical() {
-        const bar = document.createElement('div')
-        bar.setAttribute('id', 'bar-vertical')
-        return bar
-    }
-
-    _buildScrollableAreaHorizontal() {
-        const scrollablearea = document.createElement('div')
-        scrollablearea.classList.add('scrollable-area-horizontal')
-        scrollablearea.setAttribute('id', 'scrollable-area-horizontal')
-        const scrollbar = this._buildScrollbarHorizontal()
-        scrollablearea.appendChild(scrollbar)
-        return scrollablearea
-    }
-
-    _buildScrollbarHorizontal() {
-        const scrollbar = document.createElement('div')
-        scrollbar.setAttribute('id', 'scrollbar-horizontal')
-        const bar = this._buildBarHorizontal()
-        scrollbar.appendChild(bar)
-        return scrollbar
-    }
-
-    _buildBarHorizontal() {
-        const bar = document.createElement('div')
-        bar.setAttribute('id', 'bar-horizontal')
-        return bar
     }
 }
 

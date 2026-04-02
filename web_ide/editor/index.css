@@ -161,7 +161,7 @@ html::selection {
 
 .scrollable-area-vertical {
     position: sticky;
-    width: 25%;
+    width: 125px;
     height: 100%;
     left: 100%;
     top: 0%;
@@ -172,7 +172,7 @@ html::selection {
 #scrollbar-vertical {
     pointer-events: all;
     position: sticky;
-    width: 10%;
+    width: 25px;
     height: 100%;
     left: 100%;
     top: 0%;

@@ -62,4 +62,63 @@ export class BarVerticalHandler {
 
 export class BarHorizontalHandler {
 
+    /**
+     * 
+     * @param {Number} scrollbarWidth 
+     * @param {Number} barWidth
+     * @param {HTMLElement} bar 
+     */
+    constructor(scrollbarWidth, barWidth, bar) {
+        this.leftOffset = 0
+        this.scrollbarWidth = scrollbarWidth
+        this.barWidth = barWidth
+        this.bar = bar
+        this.minLeftOffset = 0
+        this.percentageOfScroll = 0
+        this.maxLeftOffset = this._defineMaxLeftOffsetForBar()
+    }
+
+    _defineMaxLeftOffsetForBar() {
+        return this.scrollbarWidth - this.barWidth
+    }
+
+    /**
+     * 
+     * @param {Number} scrollbarWidth 
+     * @param {Number} barWidth 
+     */
+    _updateWidths(scrollbarWidth, barWidth) {
+        this.scrollbarWidth = scrollbarWidth
+        this.barWidth = barWidth
+        this.percentageOfScroll = (this.leftOffset / this.maxLeftOffset) * 100
+        this.maxLeftOffset = this._defineMaxLeftOffsetForBar()
+        this.scrollBasedOnPercentage(this.percentageOfScroll)
+    }
+
+    /**
+     * 
+     * @param {Number} percentage 
+     */
+    scrollBasedOnPercentage(percentage) {
+        const offset = this._calculateLeftOffsetBasedOnPercentage(percentage)
+        this.scrollWithOffset(offset)
+    }
+
+    /**
+     * 
+     * @param {Number} percentage 
+     */
+    _calculateLeftOffsetBasedOnPercentage(percentage) {
+        const offset = this.maxLeftOffset * (percentage / 100)
+        return offset
+    }
+
+    /**
+     * 
+     * @param {Number} offset 
+     */
+    scrollWithOffset(offset) {
+        this.leftOffset = offset > this.maxLeftOffset ? this.maxLeftOffset : offset < this.minLeftOffset ? this.minLeftOffset : offset
+        this.bar.style = `left: ${this.leftOffset}px;`
+    }
 }

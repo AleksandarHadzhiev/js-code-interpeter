@@ -33,12 +33,18 @@ const scrollbarVerticalHeight = scrollbarElementVertical.offsetHeight
 const scrollbarVerticalTopOffset = navigationElement.offsetHeight
 const barVerticalHeight = barVerticalElement.offsetHeight
 
-// the horizontal scrollbar elements and their sizes - unsure which sizes for now..
-const barHorizontalWidth = barHorizontalElement.offsetWidth
+
 
 let intervalId = null
 const lineNumerationWidth = lineNumerationElement.scrollWidth
-let contentElementOffsetLeft = menuContainer.offsetWidth + lineNumerationWidth
+const menuWidth = menuContainer.offsetWidth
+let contentElementOffsetLeft = menuWidth + lineNumerationWidth
+
+// the horizontal scrollbar elements and their sizes - unsure which sizes for now..
+const barHorizontalWidth = barHorizontalElement.offsetWidth
+const scrollbarHorizontalLeftOffset = menuWidth + lineNumerationWidth
+const scrollbarWidth = scrollbarElementHorizontal.offsetWidth
+
 const lines = 2000
 const lineHeightInPixels = 28.8
 const maxVisibleLinesOnScreen = Math.ceil(mainContainer.offsetHeight / lineHeightInPixels)
@@ -54,6 +60,7 @@ let startingRange = null
 
 const textSelection = new TextSelection(scrollbarVerticalTopOffset, lineNumerationWidth, scrollbarVerticalHeight, loaderElement.offsetWidth, contentElement, contentElementOffsetLeft, lines)
 const barVerticalHandler = new BarVerticalHandler(scrollbarVerticalHeight, barVerticalHeight, barVerticalElement)
+const barHorizontalHandler = new BarHorizontalHandler(scrollbarWidth, barHorizontalWidth, barHorizontalElement)
 const loaderHandler = new LoaderHandler(loaderHeight, scrollbarVerticalHeight, loaderElement)
 const offsetCalculator = new OffsetCalculator()
 const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement, contentElement)
@@ -104,7 +111,7 @@ scrollbarAreaElementVertical.addEventListener('mousemove', (event) => {
 
 scrollbarAreaElementHorizontal.addEventListener('mousemove', (event) => {
     if (barHorizontalIsSelected) {
-        console.log(event)
+        barHorizontalHandler.scrollWithOffset(event.clientX - scrollbarHorizontalLeftOffset)
     }
 })
 

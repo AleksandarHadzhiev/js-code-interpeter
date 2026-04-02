@@ -3,6 +3,8 @@
     --width-for-menu: 75px;
     --min-line-height: 28.8px;
     --font-size: 24px;
+    --scrollable-area-in-px: 125px;
+    --width-of-vertical-scrollbar: 25px;
 }
 
 * {
@@ -161,7 +163,7 @@ html::selection {
 
 .scrollable-area-vertical {
     position: sticky;
-    width: 125px;
+    width: var(--scrollable-area-in-px);
     height: 100%;
     left: 100%;
     top: 0%;
@@ -172,7 +174,7 @@ html::selection {
 #scrollbar-vertical {
     pointer-events: all;
     position: sticky;
-    width: 25px;
+    width: var(--width-of-vertical-scrollbar);
     height: 100%;
     left: 100%;
     top: 0%;
@@ -195,7 +197,7 @@ html::selection {
 .scrollable-area-horizontal {
     position: sticky;
     width: 100%;
-    height: 125px;
+    height: var(--scrollable-area-in-px);
     left: 0%;
     bottom: 0%;
     background-color: transparent;
@@ -205,24 +207,22 @@ html::selection {
 #scrollbar-horizontal {
     pointer-events: all;
     position: sticky;
-    width: 100%;
+    width: calc(100% - var(--width-for-menu) - var(--width-of-vertical-scrollbar));
     height: 25px;
-    left: 0%;
+    left: var(--width-for-menu);
     top: 100%;
-    border: 1px solid gray;
-    background-color: black;
 }
 
 #bar-horizontal {
     position: absolute;
     width: 10%;
     height: 100%;
+    opacity: 0.5;
     background-color: gray;
 }
 
 #bar-horizontal:hover {
-    opacity: 0.5;
-    background-color: rgb(91, 91, 91);
+    background-color: rgb(215, 215, 215);
 }
 
 .line-selector {

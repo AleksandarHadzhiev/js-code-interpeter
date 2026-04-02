@@ -17,9 +17,11 @@ class CustomEditorContainer extends HTMLElement {
         const editorView = document.createElement('div')
         editorView.classList.add('editor-view')
         const interpreterScreen = this._buildInterpeterScreen()
-        const scrollableArea = this._buildScrollableAreaVertical()
+        const scrollableAreaVertical = this._buildScrollableAreaVertical()
+        const scrollbarAreaHorizontal = this._buildScrollableAreaHorizontal()
         editorView.appendChild(interpreterScreen)
-        editorView.appendChild(scrollableArea)
+        editorView.appendChild(scrollableAreaVertical)
+        editorView.appendChild(scrollbarAreaHorizontal)
         return editorView
     }
 
@@ -83,6 +85,29 @@ class CustomEditorContainer extends HTMLElement {
     _buildBarVertical() {
         const bar = document.createElement('div')
         bar.setAttribute('id', 'bar-vertical')
+        return bar
+    }
+
+    _buildScrollableAreaHorizontal() {
+        const scrollablearea = document.createElement('div')
+        scrollablearea.classList.add('scrollable-area-horizontal')
+        scrollablearea.setAttribute('id', 'scrollable-area-horizontal')
+        const scrollbar = this._buildScrollbarHorizontal()
+        scrollablearea.appendChild(scrollbar)
+        return scrollablearea
+    }
+
+    _buildScrollbarHorizontal() {
+        const scrollbar = document.createElement('div')
+        scrollbar.setAttribute('id', 'scrollbar-horizontal')
+        const bar = this._buildBarHorizontal()
+        scrollbar.appendChild(bar)
+        return scrollbar
+    }
+
+    _buildBarHorizontal() {
+        const bar = document.createElement('div')
+        bar.setAttribute('id', 'bar-horizontal')
         return bar
     }
 }

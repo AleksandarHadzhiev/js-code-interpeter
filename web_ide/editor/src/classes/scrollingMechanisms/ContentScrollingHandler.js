@@ -10,21 +10,19 @@ export default class ContentScrollingHandler {
         this.scrollbarWidth = scrollbarWidth
         this.barHorizontalWidth = barHorizontalWidth
         this.barVerticalWidth = barVerticalWidth
-        this.width = width + 75
+        this.bufferZone = 75
+        this.width = width + this.bufferZone
         this.minLeftOffset = offsetFromLineNumeration
-        this.leftOffset = 0
+        this.leftOffset = this.minLeftOffset
         this.maxLeftOffset = this._defineMaxLeftOffset()
     }
 
     _defineMaxLeftOffset() {
-        console.log(this.width)
-        console.log(this.scrollbarWidth)
-        console.log(this.barHorizontalWidth)
-        return (this.width - this.scrollbarWidth - this.barHorizontalWidth) * -1
+        return (this.width + this.bufferZone - this.scrollbarWidth - this.barHorizontalWidth) * -1
     }
 
     updateMaxLeftOffset(scrollWidth, scrollbarWidth, barWidth) {
-        this.maxLeftOffset = (scrollWidth + 75 - scrollbarWidth - barWidth) * -1
+        this.maxLeftOffset = (scrollWidth + this.bufferZone - scrollbarWidth - barWidth) * -1
     }
 
     /**
@@ -37,5 +35,21 @@ export default class ContentScrollingHandler {
         console.log(this.minLeftOffset, newOffset)
         this.leftOffset = newOffset < this.maxLeftOffset ? this.maxLeftOffset : newOffset > this.minLeftOffset ? this.minLeftOffset : newOffset
         contentElement.style = `left: ${this.leftOffset}px;`
+    }
+
+    scrollWithOffset(offset, lineContentElement) {
+        this.updateLeftOffsetWithOffset(offset)
+        lineContentElement.style = `left: ${this.leftOffset}px;`
+    }
+
+    updateLeftOffsetWithOffset(offset) {
+        const newOffset = this.leftOffset - offset
+        this.leftOffset = newOffset < this.maxLeftOffset ? this.maxLeftOffset : newOffset > this.minLeftOffset ? this.minLeftOffset : newOffset
+    }
+
+    getPerentageOfScroll() {
+        const maxOffset = (this.maxLeftOffset - this.bufferZone) * -1
+        const leftOffset = (this.leftOffset - this.bufferZone) * -1
+        return (leftOffset / maxOffset) * 100
     }
 }

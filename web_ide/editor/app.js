@@ -72,17 +72,28 @@ const scrollOncaretMovement = new ScrollOnCaretMovement(loaderHandler, barVertic
 const caretMover = new CaretMover(scrollOncaretMovement, contentElement, lineNumerationElement)
 
 linesLoader.loadLines()
-console.log(loaderHandler)
 window.addEventListener('wheel', (event) => {
     event.preventDefault()
+    scrollVertical(event)
+    scrollHorizontal(event)
+    displayHighlightIfThereIsSelectedText()
+})
+
+function scrollVertical(event) {
     const offsetTop = offsetCalculator.calculateOffsetBasedOnDeltaYOfMouseEvent(event.deltaY)
     loaderHandler.scrollWithOffset(offsetTop)
     const percentage = loaderHandler.getPercentageOfScroll()
     barVerticalHandler.scrollBasedOnPercentage(percentage)
     linesLoader.reloadLinesForNewTopOffset(loaderHandler.topOffset)
     textSelection.setLoaderOffset(loaderHandler.topOffset)
-    displayHighlightIfThereIsSelectedText()
-})
+}
+
+function scrollHorizontal(event) {
+    contentScrollingHandler.updateMaxLeftOffset(lineContentElement.scrollWidth, scrollbarWidth, barHorizontalWidth, barVerticalWidth)
+    contentScrollingHandler.scrollWithOffset(event.deltaX, lineContentElement)
+    const percentageOfContentScroll = contentScrollingHandler.getPerentageOfScroll()
+    barHorizontalHandler.scrollBasedOnPercentage(percentageOfContentScroll)
+}
 
 function displayHighlightIfThereIsSelectedText() {
     const markerElement = document.getElementById('marker')
@@ -116,15 +127,8 @@ scrollbarAreaElementHorizontal.addEventListener('mousemove', (event) => {
     if (barHorizontalIsSelected) {
         barHorizontalHandler.scrollWithOffset(event.clientX - scrollbarHorizontalLeftOffset)
         const percentage = barHorizontalHandler.getPercentageOfScroll()
-        console.log(percentage)
         contentScrollingHandler.updateMaxLeftOffset(lineContentElement.scrollWidth, scrollbarWidth, barHorizontalWidth, barVerticalWidth)
         contentScrollingHandler.scrollWithPercentage(percentage, lineContentElement)
-        // const maxLeftScroll = lineContentElement.scrollWidth - scrollbarWidth - barHorizontalWidth
-        // const leftOffset = maxLeftScroll * (percentage / 100)
-        // console.log(contentElement.scrollWidth, scrollbarWidth)
-        // console.log(leftOffset)
-        // // loaderElement.scrollLeft = -(leftOffset)
-        // lineContentElement.style = `left: -${leftOffset}px;`
     }
 })
 

@@ -73,7 +73,6 @@ const caretMover = new CaretMover(scrollOncaretMovement, contentElement, lineNum
 
 linesLoader.loadLines()
 window.addEventListener('wheel', (event) => {
-    event.preventDefault()
     scrollVertical(event)
     scrollHorizontal(event)
     displayHighlightIfThereIsSelectedText()

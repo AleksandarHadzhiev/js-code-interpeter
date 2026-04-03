@@ -219,7 +219,7 @@ export default class CaretMover {
         if (leftOffset != this.leftOffset && this.leftOffset == 0)
             this.leftOffset = leftOffset
         if (isUsingCtrl) {
-            this.scroller.updateOffset(-28.8)
+            this.scroller.updateTopOffset(-28.8)
         }
         else {
             this._moveLineUpALine(topOffset)
@@ -244,7 +244,7 @@ export default class CaretMover {
         if (newLineId - firstVisibleLine <= 5) {
             const difference = lineId - firstVisibleLine
             const lines = 5 - difference
-            this.scroller.updateOffset(lines * -28.8)
+            this.scroller.updateTopOffset(lines * -28.8)
         }
     }
 
@@ -276,7 +276,7 @@ export default class CaretMover {
         if (leftOffset != this.leftOffset && this.leftOffset == 0)
             this.leftOffset = leftOffset
         if (isUsingCtrl) {
-            this.scroller.updateOffset(28.8)
+            this.scroller.updateTopOffset(28.8)
         }
         else {
             this._moveCaretDownALine(topOffset)
@@ -300,7 +300,7 @@ export default class CaretMover {
         if (lastVisibleLine - newLineId <= 5 && lastVisibleLine - newLineId > 0) {
             const difference = lastVisibleLine - lineId
             const lines = 5 - difference
-            this.scroller.updateOffset(lines * 28.8)
+            this.scroller.updateTopOffset(lines * 28.8)
         }
     }
 }

@@ -10,6 +10,7 @@ import CaretMover from "./src/classes/caretMover.js"
 import ScrollOnCaretMovement from "./src/classes/scrollingMechanisms/scrollOnCaretMovement.js"
 import { MousePosition } from "./src/classes/selectionMechanisms/enums.js"
 import ContentScrollingHandler from "./src/classes/scrollingMechanisms/ContentScrollingHandler.js"
+import calculateWidthForText from "./src/classes/calculators/widthOfTextCalculator.js"
 
 const mainContainer = document.getElementById('container')
 const menuContainer = document.getElementById('menu')
@@ -47,13 +48,15 @@ const scrollbarHorizontalLeftOffset = menuWidth + lineNumerationWidth
 const scrollbarWidth = scrollbarElementHorizontal.offsetWidth
 const lineContentWidth = lineContentElement.scrollWidth
 
-const lines = 2000
+const longestLinesInText = "This is a long line to be displayed, and for that reason it will have a lot of text inside it." // will be a data coming from the backend
+const lines = 2000 // will be a data coming from the backend.
 const lineHeightInPixels = 28.8
 const maxVisibleLinesOnScreen = Math.ceil(mainContainer.offsetHeight / lineHeightInPixels)
+const widthOfLongestLine = calculateWidthForText(contentElement, longestLinesInText)
 
 const loaderHeight = (lines + maxVisibleLinesOnScreen - 1) * lineHeightInPixels
 loaderElement.style.height = `${loaderHeight}px`
-
+lineContentElement.style = `width: ${widthOfLongestLine}px;`
 let barVerticalIsSelected = false
 let barHorizontalIsSelected = false
 let isTextSelecting = false
@@ -81,8 +84,7 @@ function displayVerticalScrollbar() {
 }
 
 function displayHorizontalScrollbar() {
-    console.log(lineContentElement.offsetWidth, lineContentElement.scrollWidth)
-    if (lineContentElement.offsetWidth < lineContentElement.scrollWidth) {
+    if (contentElement.offsetWidth < contentElement.scrollWidth) {
         scrollbarAreaElementHorizontal.classList.remove('hidden')
     }
     else {

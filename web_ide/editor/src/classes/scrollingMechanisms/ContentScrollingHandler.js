@@ -1,28 +1,26 @@
 export default class ContentScrollingHandler {
     /**
-     * @param {Number} width
-     * @param {Number} scrollbarWidth
+     * @param {Number} lineContentWidth
+     * @param {Number} scrollbarHorizontalLeftOffset
      * @param {Number} offsetFromLineNumeration
-     * @param {Number} barHorizontalWidth 
      * @param {Number} barVerticalWidth 
      */
-    constructor(width, scrollbarWidth, offsetFromLineNumeration, barHorizontalWidth, barVerticalWidth) {
-        this.scrollbarWidth = scrollbarWidth
-        this.barHorizontalWidth = barHorizontalWidth
+    constructor(lineContentWidth, scrollbarHorizontalLeftOffset, offsetFromLineNumeration, barVerticalWidth) {
+        this.scrollbarLeftOffset = scrollbarHorizontalLeftOffset
         this.barVerticalWidth = barVerticalWidth
         this.bufferZone = 75
-        this.width = width + this.bufferZone
+        this.width = lineContentWidth + this.bufferZone
         this.minLeftOffset = offsetFromLineNumeration
         this.leftOffset = this.minLeftOffset
         this.maxLeftOffset = this._defineMaxLeftOffset()
     }
 
     _defineMaxLeftOffset() {
-        return (this.width + this.bufferZone - this.scrollbarWidth - this.barHorizontalWidth) * -1
+        return (this.width - this.scrollbarLeftOffset - this.barVerticalWidth) * -1
     }
 
-    updateMaxLeftOffset(scrollWidth, scrollbarWidth, barWidth) {
-        this.maxLeftOffset = (scrollWidth + this.bufferZone - scrollbarWidth - barWidth) * -1
+    updateMaxLeftOffset(scrollWidth, scrollBarLeftOffset, barWidth) {
+        this.maxLeftOffset = (scrollWidth + this.bufferZone - scrollBarLeftOffset - barWidth) * -1
     }
 
     /**
@@ -31,8 +29,9 @@ export default class ContentScrollingHandler {
      * @param {HTMLElement} contentElement 
      */
     scrollWithPercentage(percentage, contentElement) {
+        console.log(this.width)
         const newOffset = (this.maxLeftOffset * (percentage / 100)) + this.minLeftOffset
-        console.log(this.minLeftOffset, newOffset)
+        console.log(this.minLeftOffset, this.maxLeftOffset, newOffset)
         this.leftOffset = newOffset < this.maxLeftOffset ? this.maxLeftOffset : newOffset > this.minLeftOffset ? this.minLeftOffset : newOffset
         contentElement.style = `left: ${this.leftOffset}px;`
     }

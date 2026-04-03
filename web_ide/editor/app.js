@@ -60,7 +60,7 @@ let isTextSelecting = false
 let startingRange = null
 
 
-const contentScrollingHandler = new ContentScrollingHandler(lineContentWidth, scrollbarWidth, lineNumerationWidth, barHorizontalWidth, barVerticalWidth)
+const contentScrollingHandler = new ContentScrollingHandler(lineContentWidth, scrollbarHorizontalLeftOffset, lineNumerationWidth, barVerticalWidth)
 const textSelection = new TextSelection(scrollbarVerticalTopOffset, lineNumerationWidth, scrollbarVerticalHeight, loaderElement.offsetWidth, contentElement, contentElementOffsetLeft, lines)
 const barVerticalHandler = new BarVerticalHandler(scrollbarVerticalHeight, barVerticalHeight, barVerticalElement)
 const barHorizontalHandler = new BarHorizontalHandler(scrollbarWidth, barHorizontalWidth, barHorizontalElement)
@@ -88,7 +88,7 @@ function scrollVertical(event) {
 }
 
 function scrollHorizontal(event) {
-    contentScrollingHandler.updateMaxLeftOffset(lineContentElement.scrollWidth, scrollbarWidth, barHorizontalWidth, barVerticalWidth)
+    contentScrollingHandler.updateMaxLeftOffset(lineContentElement.scrollWidth, scrollbarHorizontalLeftOffset, barHorizontalWidth)
     contentScrollingHandler.scrollWithOffset(event.deltaX, lineContentElement)
     const percentageOfContentScroll = contentScrollingHandler.getPerentageOfScroll()
     barHorizontalHandler.scrollBasedOnPercentage(percentageOfContentScroll)
@@ -126,7 +126,8 @@ scrollbarAreaElementHorizontal.addEventListener('mousemove', (event) => {
     if (barHorizontalIsSelected) {
         barHorizontalHandler.scrollWithOffset(event.clientX - scrollbarHorizontalLeftOffset)
         const percentage = barHorizontalHandler.getPercentageOfScroll()
-        contentScrollingHandler.updateMaxLeftOffset(lineContentElement.scrollWidth, scrollbarWidth, barHorizontalWidth, barVerticalWidth)
+        console.log(percentage)
+        contentScrollingHandler.updateMaxLeftOffset(lineContentElement.scrollWidth, scrollbarHorizontalLeftOffset, barHorizontalWidth)
         contentScrollingHandler.scrollWithPercentage(percentage, lineContentElement)
     }
 })

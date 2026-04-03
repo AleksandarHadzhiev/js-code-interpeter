@@ -87,7 +87,7 @@ export class BarHorizontalHandler {
      * @param {Number} scrollbarWidth 
      * @param {Number} barWidth 
      */
-    _updateWidths(scrollbarWidth, barWidth) {
+    updateWidths(scrollbarWidth, barWidth) {
         this.scrollbarWidth = scrollbarWidth
         this.barWidth = barWidth
         this.percentageOfScroll = (this.leftOffset / this.maxLeftOffset) * 100

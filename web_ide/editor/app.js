@@ -291,6 +291,8 @@ window.addEventListener('resize', () => {
     const scrollbarVerticalHeight = scrollbarElementVertical.offsetHeight
     loaderHandler.updateHeights(newLoaderHeight, scrollbarVerticalHeight)
     barVerticalHandler.updateHeights(scrollbarVerticalHeight, barVerticalElement.offsetHeight)
+    barHorizontalHandler.updateWidths(scrollbarElementHorizontal.offsetWidth, barHorizontalElement.offsetWidth)
+    contentScrollingHandler.updateMaxLeftOffset(lineContentElement.scrollWidth, scrollbarHorizontalLeftOffset, barHorizontalWidth)
     const newTotalWidthOfScreen = loaderElement.offsetWidth + lineNumerationWidth
     textSelection.updateWidths(newTotalWidthOfScreen, contentElementOffsetLeft)
 })

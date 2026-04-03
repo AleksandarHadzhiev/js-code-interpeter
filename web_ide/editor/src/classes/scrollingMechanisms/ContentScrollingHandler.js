@@ -13,6 +13,7 @@ export default class ContentScrollingHandler {
         this.minLeftOffset = offsetFromLineNumeration
         this.leftOffset = this.minLeftOffset
         this.maxLeftOffset = this._defineMaxLeftOffset()
+        this.caretPlacer = document.getElementById('caret-placer')
     }
 
     _defineMaxLeftOffset() {
@@ -34,11 +35,13 @@ export default class ContentScrollingHandler {
         console.log(this.minLeftOffset, this.maxLeftOffset, newOffset)
         this.leftOffset = newOffset < this.maxLeftOffset ? this.maxLeftOffset : newOffset > this.minLeftOffset ? this.minLeftOffset : newOffset
         contentElement.style = `left: ${this.leftOffset}px;`
+        this.caretPlacer.style = `left: ${this.leftOffset}px;`
     }
 
     scrollWithOffset(offset, lineContentElement) {
         this.updateLeftOffsetWithOffset(offset)
         lineContentElement.style = `left: ${this.leftOffset}px;`
+        this.caretPlacer.style = `left: ${this.leftOffset}px;`
     }
 
     updateLeftOffsetWithOffset(offset) {

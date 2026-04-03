@@ -267,3 +267,8 @@ html::selection {
 .hidden {
     display: none;
 }
+
+#caret-placer {
+    position: absolute;
+    left: var(--width-for-menu);
+}

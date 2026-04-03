@@ -4,6 +4,7 @@ import { MousePosition } from "./enums.js"
 
 export default class CaretBuilder {
     constructor() {
+        this.caretPlacer = document.getElementById('caret-placer')
     }
 
     /**
@@ -12,27 +13,20 @@ export default class CaretBuilder {
      * @param {Number} topOffset 
      */
     buildCaretForLineSelection(contentElement, topOffset) {
-        let caretElement = document.getElementById('caret')
-        if (caretElement == null) {
-            caretElement = document.createElement('div')
-            caretElement.classList.add('caret')
-            caretElement.setAttribute('id', 'caret')
-        }
+        const caretElement = this._buildCaret()
         const left = this._calculateLeftOffsetOfCaret(contentElement)
         caretElement.style = `top: ${topOffset}px; left: ${left}px;`
-        contentElement.prepend(caretElement)
+        this.caretPlacer.prepend(caretElement)
     }
 
     _calculateLeftOffsetOfCaret(contentElement) {
-        const lineNumeration = document.getElementById('line-numeration')
-        const lineNumerationWidth = lineNumeration.offsetWidth
         const range = document.getSelection().getRangeAt(0)
         const selectedElement = range.endContainer.parentElement
         const textOfSelectedElement = selectedElement.textContent
         const selectedText = textOfSelectedElement.substring(0, range.endOffset)
         const widthofSelectedText = calculateWidthForText(contentElement, selectedText)
         const offsetOfSelectedElement = selectedElement.offsetLeft
-        const totalWidth = widthofSelectedText + offsetOfSelectedElement + lineNumerationWidth
+        const totalWidth = widthofSelectedText + offsetOfSelectedElement
         return totalWidth;
     }
 
@@ -43,14 +37,7 @@ export default class CaretBuilder {
      * @param {Number} mouseXPosition
     */
     buildCaretForTextSelection(contentElement, point, mousePosition, mouseXPosition) {
-        const lineNumeration = document.getElementById('line-numeration')
-        const lineNumerationWidth = lineNumeration.offsetWidth
-        let caretElement = document.getElementById('caret')
-        if (caretElement == null) {
-            caretElement = document.createElement('div')
-            caretElement.classList.add('caret')
-            caretElement.setAttribute('id', 'caret')
-        }
+        const caretElement = this._buildCaret()
         let left = point.left == 0 ? point.width : point.left
         if (mousePosition == MousePosition.TOP)
             left = point.left == 0 && point.width == 0 ? point.width : point.left
@@ -68,7 +55,17 @@ export default class CaretBuilder {
                 left = pointWidth
             }
         }
-        caretElement.style = `top: ${point.top}px; left: ${left + lineNumerationWidth}px;`
-        contentElement.prepend(caretElement)
+        caretElement.style = `top: ${point.top}px; left: ${left}px;`
+        this.caretPlacer.prepend(caretElement)
+    }
+
+    _buildCaret() {
+        let caretElement = document.getElementById('caret')
+        if (caretElement == null) {
+            caretElement = document.createElement('div')
+            caretElement.classList.add('caret')
+            caretElement.setAttribute('id', 'caret')
+        }
+        return caretElement
     }
 }

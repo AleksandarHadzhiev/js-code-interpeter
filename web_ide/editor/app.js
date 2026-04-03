@@ -71,6 +71,28 @@ const textSelectionScrolling = new TextSelectionScrolling(barVerticalHandler, lo
 const scrollOncaretMovement = new ScrollOnCaretMovement(loaderHandler, barVerticalHandler, linesLoader)
 const caretMover = new CaretMover(scrollOncaretMovement, contentElement, lineNumerationElement)
 
+function displayVerticalScrollbar() {
+    if (loaderHeight > mainContainer.offsetHeight) {
+        scrollbarAreaElementVertical.classList.remove('hidden')
+    }
+    else {
+        scrollbarAreaElementVertical.classList.add('hidden')
+    }
+}
+
+function displayHorizontalScrollbar() {
+    console.log(lineContentElement.offsetWidth, lineContentElement.scrollWidth)
+    if (lineContentElement.offsetWidth < lineContentElement.scrollWidth) {
+        scrollbarAreaElementHorizontal.classList.remove('hidden')
+    }
+    else {
+        scrollbarAreaElementHorizontal.classList.add('hidden')
+    }
+}
+
+displayVerticalScrollbar()
+displayHorizontalScrollbar()
+
 linesLoader.loadLines()
 window.addEventListener('wheel', (event) => {
     scrollVertical(event)
@@ -283,6 +305,8 @@ function updateElementsPositionsOnScreen() {
 }
 
 window.addEventListener('resize', () => {
+    displayVerticalScrollbar()
+    displayHorizontalScrollbar()
     const newMaxVisibleLinesOnScreen = Math.ceil(mainContainer.offsetHeight / lineHeightInPixels)
     const newLoaderHeight = (lines + newMaxVisibleLinesOnScreen - 1) * lineHeightInPixels
     loaderElement.style.height = `${newLoaderHeight}px`

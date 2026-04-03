@@ -263,3 +263,7 @@ html::selection {
     left: var(--width-for-menu);
     z-index: -1;
 }
+
+.hidden {
+    display: none;
+}

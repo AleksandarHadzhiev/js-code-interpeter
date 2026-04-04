@@ -38,6 +38,7 @@ const barVerticalHeight = barVerticalElement.offsetHeight
 
 
 let intervalId = null
+let intervalHorizontalId = null
 const lineNumerationWidth = lineNumerationElement.scrollWidth
 const menuWidth = menuContainer.offsetWidth
 let contentElementOffsetLeft = menuWidth + lineNumerationWidth
@@ -178,7 +179,9 @@ window.addEventListener('mouseup', (event) => {
     startingRange = null
     caretMover.resetLeftOffsetForCaretMover()
     clearInterval(intervalId)
+    clearInterval(intervalHorizontalId)
     intervalId = null
+    intervalHorizontalId = null
 })
 
 lineContentElement.addEventListener('mousedown', (event) => {
@@ -188,6 +191,8 @@ lineContentElement.addEventListener('mousedown', (event) => {
 })
 
 window.addEventListener('mousemove', (event) => {
+    console.log(intervalId)
+    console.log(intervalHorizontalId)
     if (isTextSelecting) {
         const range = document.getSelection().getRangeAt(0)
         if (startingRange == null) {
@@ -209,11 +214,16 @@ window.addEventListener('mousemove', (event) => {
             const mousePosition = textSelection.defineMousePosition(event)
             if (mousePosition == MousePosition.BOTTOM || mousePosition == MousePosition.TOP)
                 autoScroll(event, mousePosition)
+            else if (mousePosition == MousePosition.LEFT || mousePosition == MousePosition.RIGHT)
+                autoScrollHorizontallyOnTextSelection(event, mousePosition)
             else {
+                console.log("HERE")
                 buildMarker()
                 scroll(event, mousePosition)
                 clearInterval(intervalId)
                 intervalId = null
+                clearInterval(intervalHorizontalId)
+                intervalHorizontalId = null
             }
             // scroll(event, mousePosition)
             // Invalid code for Y -> it is meant for X
@@ -222,7 +232,38 @@ window.addEventListener('mousemove', (event) => {
     }
 })
 
+function autoScrollHorizontallyOnTextSelection(event, mousePosition) {
+    clearInterval(intervalId)
+    intervalId = null
+    if (intervalHorizontalId) return
+    intervalHorizontalId = setInterval(() => {
+        scrollHorizontallyOnTextSelection(event, mousePosition)
+        if (contentScrollingHandler.leftOffset <= contentScrollingHandler.maxLeftOffset || contentScrollingHandler.leftOffset >= contentScrollingHandler.minLeftOffset) {
+            clearInterval(intervalHorizontalId)
+            intervalHorizontalId = null
+        }
+    }, 50)
+}
+
+function scrollHorizontallyOnTextSelection(event, mousePosition) {
+    console.log(mousePosition)
+    if (mousePosition == MousePosition.LEFT) {
+        contentScrollingHandler.scrollWithOffset(-25)
+        const percentage = contentScrollingHandler.getPerentageOfScroll()
+        barHorizontalHandler.scrollBasedOnPercentage(percentage)
+    }
+    else if (mousePosition == MousePosition.RIGHT) {
+        contentScrollingHandler.scrollWithOffset(25)
+        const percentage = contentScrollingHandler.getPerentageOfScroll()
+        barHorizontalHandler.scrollBasedOnPercentage(percentage)
+    }
+    textSelection.selectText(event, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
+}
+
 function autoScroll(event, mousePosition) {
+    clearInterval(intervalHorizontalId)
+    intervalHorizontalId = null
+    console.log("AUTO SCROLL")
     if (intervalId) return
     intervalId = setInterval(() => {
         buildMarker()

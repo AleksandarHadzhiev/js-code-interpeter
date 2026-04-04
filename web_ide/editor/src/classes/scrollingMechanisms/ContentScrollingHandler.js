@@ -31,9 +31,7 @@ export default class ContentScrollingHandler {
      * @param {Number} percentage 
      */
     scrollWithPercentage(percentage) {
-        console.log(this.width)
         const newOffset = (this.maxLeftOffset * (percentage / 100)) + this.minLeftOffset
-        console.log(this.minLeftOffset, this.maxLeftOffset, newOffset)
         this.leftOffset = newOffset < this.maxLeftOffset ? this.maxLeftOffset : newOffset > this.minLeftOffset ? this.minLeftOffset : newOffset
         this.lineContentElement.style = `left: ${this.leftOffset}px;`
         this.caretPlacer.style = `left: ${this.leftOffset}px;`

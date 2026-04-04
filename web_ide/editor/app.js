@@ -159,7 +159,6 @@ scrollbarAreaElementHorizontal.addEventListener('mousemove', (event) => {
     if (barHorizontalIsSelected) {
         barHorizontalHandler.scrollWithOffset(event.clientX - scrollbarHorizontalLeftOffset)
         const percentage = barHorizontalHandler.getPercentageOfScroll()
-        console.log(percentage)
         contentScrollingHandler.updateMaxLeftOffset(lineContentElement.scrollWidth, scrollbarHorizontalLeftOffset, barHorizontalWidth)
         contentScrollingHandler.scrollWithPercentage(percentage)
         caretMover.updateScreenWidth()

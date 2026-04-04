@@ -3,7 +3,6 @@
  * @returns {Number} the width of the provided text 
  */
 export default function calculateWidthForText(contentElement, text) {
-    console.log(contentElement)
     const spanElement = _createSpanElementForText(text)
     const width = _getiWidthOfSpanElement(contentElement, spanElement)
     spanElement.remove()

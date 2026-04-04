@@ -5,38 +5,37 @@ import { MousePosition } from "./enums.js"
 export default class CaretBuilder {
     constructor() {
         this.caretPlacer = document.getElementById('caret-placer')
+        this.lineContentElement = document.getElementById('line-content')
     }
 
     /**
-     * 
-     * @param {HTMLElement} contentElement 
+     *  
      * @param {Number} topOffset 
      */
-    buildCaretForLineSelection(contentElement, topOffset) {
+    buildCaretForLineSelection(topOffset) {
         const caretElement = this._buildCaret()
-        const left = this._calculateLeftOffsetOfCaret(contentElement)
+        const left = this._calculateLeftOffsetOfCaret()
         caretElement.style = `top: ${topOffset}px; left: ${left}px;`
         this.caretPlacer.prepend(caretElement)
     }
 
-    _calculateLeftOffsetOfCaret(contentElement) {
+    _calculateLeftOffsetOfCaret() {
         const range = document.getSelection().getRangeAt(0)
         const selectedElement = range.endContainer.parentElement
         const textOfSelectedElement = selectedElement.textContent
         const selectedText = textOfSelectedElement.substring(0, range.endOffset)
-        const widthofSelectedText = calculateWidthForText(contentElement, selectedText)
+        const widthofSelectedText = calculateWidthForText(this.lineContentElement, selectedText)
         const offsetOfSelectedElement = selectedElement.offsetLeft
         const totalWidth = widthofSelectedText + offsetOfSelectedElement
         return totalWidth;
     }
 
-    /**
-     * @param {HTMLElement} contentElement 
+    /** 
      * @param {MarkedPoint} point 
      * @param {String} mousePosition 
      * @param {Number} mouseXPosition
     */
-    buildCaretForTextSelection(contentElement, point, mousePosition, mouseXPosition) {
+    buildCaretForTextSelection(point, mousePosition, mouseXPosition) {
         const caretElement = this._buildCaret()
         let left = point.left == 0 ? point.width : point.left
         if (mousePosition == MousePosition.TOP)

@@ -73,7 +73,7 @@ const offsetCalculator = new OffsetCalculator()
 const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement, contentElement)
 const textSelectionScrolling = new TextSelectionScrolling(barVerticalHandler, loaderHandler, linesLoader)
 const scrollOncaretMovement = new ScrollOnCaretMovement(loaderHandler, barVerticalHandler, linesLoader, contentScrollingHandler, barHorizontalHandler)
-const caretMover = new CaretMover(scrollOncaretMovement, contentElement, lineNumerationElement)
+const caretMover = new CaretMover(scrollOncaretMovement, lineContentElement)
 
 function displayVerticalScrollbar() {
     if (loaderHeight > mainContainer.offsetHeight) {

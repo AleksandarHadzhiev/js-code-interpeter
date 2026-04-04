@@ -12,10 +12,17 @@ export default class CaretMover {
     constructor(scroller, lineContentElement) {
         this.leftOffset = 0
         this.scroller = scroller
+        this.bufferZone = 75
         this.lineContentElement = lineContentElement
+        this.startingOffset = this.lineContentElement.offsetLeft - this.bufferZone
+        this.screenWidth = this.startingOffset + this.lineContentElement.parentElement.offsetWidth - this.bufferZone
         this.regex = /\s +| | ;|,|\.|"|\(|\)/g;
     }
 
+    updateScreenWidth() {
+        this.startingOffset = this.lineContentElement.offsetLeft - this.bufferZone
+        this.screenWidth = this.startingOffset + this.lineContentElement.parentElement.offsetWidth - this.bufferZone
+    }
 
     resetLeftOffsetForCaretMover() {
         this.leftOffset = 0
@@ -75,6 +82,22 @@ export default class CaretMover {
         const newLeftOffset = calculateWidthForText(this.lineContentElement, previousLine.textContent)
         this.leftOffset = newLeftOffset
         caret.style = `top: ${previousLine.offsetTop}px; left: ${newLeftOffset}px;`
+        this._scrollHorizontally()
+    }
+
+    _scrollHorizontally() {
+        if (this.leftOffset > this.screenWidth) {
+            // scroll right
+            const scrollDistance = this.leftOffset - this.screenWidth
+            console.log(scrollDistance)
+            this.scroller.updateLeftOffset(scrollDistance)
+        }
+        else if (this.leftOffset < this.startingOffset) {
+            // scroll left
+            const scrollDistance = this.startingOffset - this.leftOffset
+            console.log(scrollDistance)
+            this.scroller.updateLeftOffset(-scrollDistance)
+        }
     }
 
     _moveCaretToTheLeft(topOffset, leftOffset) {

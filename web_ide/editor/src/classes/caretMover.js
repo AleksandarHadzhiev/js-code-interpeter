@@ -82,27 +82,18 @@ export default class CaretMover {
         const newLeftOffset = calculateWidthForText(this.lineContentElement, previousLine.textContent)
         this.leftOffset = newLeftOffset
         caret.style = `top: ${previousLine.offsetTop}px; left: ${newLeftOffset}px;`
-        this._scrollHorizontally()
+        this._scrollHorizontally(newLeftOffset)
     }
 
-    _scrollHorizontally() {
-        // this.startingOffset = this.lineContentElement.offsetLeft - this.bufferZone
-        console.log(this.leftOffset, this.screenWidth, this.startingOffset)
-        if (this.leftOffset > this.screenWidth) {
-            // scroll right
-            let scrollDistance = this.leftOffset - this.screenWidth + this.bufferZone
-            console.log(scrollDistance)
+    _scrollHorizontally(leftOffset) {
+        console.log(leftOffset, this.screenWidth, this.startingOffset)
+        if (leftOffset > this.screenWidth) {
+            let scrollDistance = leftOffset - this.screenWidth + this.bufferZone
             this.scroller.updateLeftOffset(scrollDistance)
-            // this.screenWidth += scrollDistance
-            // this.startingOffset += scrollDistance
         }
-        else if (this.leftOffset < this.startingOffset) {
-            // scroll left
-            let scrollDistance = this.startingOffset - this.leftOffset + this.bufferZone
+        else if (leftOffset < this.startingOffset) {
+            let scrollDistance = this.startingOffset - leftOffset + this.bufferZone
             this.scroller.updateLeftOffset(-scrollDistance)
-            // this.updateScreenWidth()
-            // this.screenWidth -= scrollDistance
-            // this.startingOffset -= scrollDistance
         }
     }
 
@@ -120,7 +111,7 @@ export default class CaretMover {
         const newLeftOffset = calculateWidthForText(this.lineContentElement, textTillEmpty)
         this.leftOffset = newLeftOffset
         caret.style = `top: ${topOffset}px; left: ${newLeftOffset}px;`
-        this._scrollHorizontally()
+        this._scrollHorizontally(newLeftOffset)
     }
 
     _moveLeftWithoutCtrl(leftOffset, topOffset, lineId) {
@@ -141,7 +132,7 @@ export default class CaretMover {
         let newLeftOffset = calculateWidthForText(this.lineContentElement, text)
         this.leftOffset = newLeftOffset
         caret.style = `top: ${topOffset}px; left: ${newLeftOffset}px;`
-        this._scrollHorizontally()
+        this._scrollHorizontally(newLeftOffset)
     }
 
     /**
@@ -199,7 +190,7 @@ export default class CaretMover {
         const newLeftOffset = 0
         this.leftOffset = newLeftOffset
         caret.style = `top: ${nextLineElement.offsetTop}px; left: ${newLeftOffset}px;`
-        this.scroller.updateLeftOffset(0)
+        this._scrollHorizontally(newLeftOffset)
     }
 
     _moveRightOnSameLine(topOffset, leftOffset) {
@@ -220,7 +211,7 @@ export default class CaretMover {
         const newLeftOffset = calculateWidthForText(this.lineContentElement, textTillEmpty)
         this.leftOffset = newLeftOffset
         caret.style = `top: ${topOffset}px; left: ${newLeftOffset}px;`
-        this._scrollHorizontally()
+        this._scrollHorizontally(newLeftOffset)
     }
 
     _moveCaretLineWithoutCtrl(leftOffset, topOffset, lineElementWidth, lineId) {
@@ -239,7 +230,7 @@ export default class CaretMover {
         const newLeftOffset = calculateWidthForText(this.lineContentElement, text)
         this.leftOffset = newLeftOffset
         caret.style = `top: ${topOffset}px; left: ${newLeftOffset}px;`
-        this._scrollHorizontally()
+        this._scrollHorizontally(newLeftOffset)
     }
 
     /**
@@ -269,7 +260,7 @@ export default class CaretMover {
             const newOffset = lineElement.offsetTop
             caret.style = `top: ${newOffset}px; left: ${newLeftOffset}px;`
             this._scrollUp(newLineId, lineId)
-            this._scrollHorizontally()
+            this._scrollHorizontally(newLeftOffset)
         }
     }
 
@@ -326,7 +317,7 @@ export default class CaretMover {
             const newOffset = lineElement.offsetTop
             caret.style = `top: ${newOffset}px; left: ${newLeftOffset}px;`
             this._scrollDown(newLineId, lineId)
-            this._scrollHorizontally()
+            this._scrollHorizontally(newLeftOffset)
         }
     }
 

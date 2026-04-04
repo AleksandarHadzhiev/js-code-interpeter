@@ -4,8 +4,9 @@ export default class ContentScrollingHandler {
      * @param {Number} scrollbarHorizontalLeftOffset
      * @param {Number} offsetFromLineNumeration
      * @param {Number} barVerticalWidth 
+     * @param {HTMLElement} lineContentElement 
      */
-    constructor(lineContentWidth, scrollbarHorizontalLeftOffset, offsetFromLineNumeration, barVerticalWidth) {
+    constructor(lineContentWidth, scrollbarHorizontalLeftOffset, offsetFromLineNumeration, barVerticalWidth, lineContentElement) {
         this.scrollbarLeftOffset = scrollbarHorizontalLeftOffset
         this.barVerticalWidth = barVerticalWidth
         this.bufferZone = 75
@@ -14,6 +15,7 @@ export default class ContentScrollingHandler {
         this.leftOffset = this.minLeftOffset
         this.maxLeftOffset = this._defineMaxLeftOffset()
         this.caretPlacer = document.getElementById('caret-placer')
+        this.lineContentElement = lineContentElement
     }
 
     _defineMaxLeftOffset() {
@@ -27,20 +29,19 @@ export default class ContentScrollingHandler {
     /**
      * 
      * @param {Number} percentage 
-     * @param {HTMLElement} contentElement 
      */
-    scrollWithPercentage(percentage, contentElement) {
+    scrollWithPercentage(percentage) {
         console.log(this.width)
         const newOffset = (this.maxLeftOffset * (percentage / 100)) + this.minLeftOffset
         console.log(this.minLeftOffset, this.maxLeftOffset, newOffset)
         this.leftOffset = newOffset < this.maxLeftOffset ? this.maxLeftOffset : newOffset > this.minLeftOffset ? this.minLeftOffset : newOffset
-        contentElement.style = `left: ${this.leftOffset}px;`
+        this.lineContentElement.style = `left: ${this.leftOffset}px;`
         this.caretPlacer.style = `left: ${this.leftOffset}px;`
     }
 
-    scrollWithOffset(offset, lineContentElement) {
+    scrollWithOffset(offset) {
         this.updateLeftOffsetWithOffset(offset)
-        lineContentElement.style = `left: ${this.leftOffset}px;`
+        this.lineContentElement.style = `left: ${this.leftOffset}px;`
         this.caretPlacer.style = `left: ${this.leftOffset}px;`
     }
 

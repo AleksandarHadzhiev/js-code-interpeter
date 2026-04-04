@@ -1,3 +1,6 @@
+import CustomHorizontalScrollbar from "./scrollbars/horizontal.js"
+import CustomVerticalScrollbar from "./scrollbars/vertical.js"
+
 class CustomEditorContainer extends HTMLElement {
     constructor() {
         super()
@@ -17,9 +20,11 @@ class CustomEditorContainer extends HTMLElement {
         const editorView = document.createElement('div')
         editorView.classList.add('editor-view')
         const interpreterScreen = this._buildInterpeterScreen()
-        const scrollableArea = this._buildScrollableArea()
+        const scrollableAreaVertical = new CustomVerticalScrollbar().buildScrollableAreaVertical()
+        const scrollbarAreaHorizontal = new CustomHorizontalScrollbar().buildScrollableAreaHorizontal()
         editorView.appendChild(interpreterScreen)
-        editorView.appendChild(scrollableArea)
+        editorView.appendChild(scrollableAreaVertical)
+        editorView.appendChild(scrollbarAreaHorizontal)
         return editorView
     }
 
@@ -46,9 +51,17 @@ class CustomEditorContainer extends HTMLElement {
         contentElemet.setAttribute('id', 'content')
         const lineNumeration = this._buildLineNumeration()
         const lineContent = this._buildLineContent()
-        contentElemet.appendChild(lineNumeration)
+        const caretPlacer = this._buildCaretPlacer()
+        contentElemet.appendChild(caretPlacer)
         contentElemet.appendChild(lineContent)
+        contentElemet.appendChild(lineNumeration)
         return contentElemet
+    }
+
+    _buildCaretPlacer() {
+        const caretPlacer = document.createElement('div')
+        caretPlacer.setAttribute('id', 'caret-placer')
+        return caretPlacer
     }
 
     _buildLineNumeration() {
@@ -61,29 +74,6 @@ class CustomEditorContainer extends HTMLElement {
         const lineContent = document.createElement('div')
         lineContent.setAttribute('id', 'line-content')
         return lineContent
-    }
-
-    _buildScrollableArea() {
-        const scrollablearea = document.createElement('div')
-        scrollablearea.classList.add('scrollable-area')
-        scrollablearea.setAttribute('id', 'scrollable-area')
-        const scrollbar = this._buildScrollbar()
-        scrollablearea.appendChild(scrollbar)
-        return scrollablearea
-    }
-
-    _buildScrollbar() {
-        const scrollbar = document.createElement('div')
-        scrollbar.setAttribute('id', 'scrollbar')
-        const bar = this._buildBar()
-        scrollbar.appendChild(bar)
-        return scrollbar
-    }
-
-    _buildBar() {
-        const bar = document.createElement('div')
-        bar.setAttribute('id', 'bar')
-        return bar
     }
 }
 

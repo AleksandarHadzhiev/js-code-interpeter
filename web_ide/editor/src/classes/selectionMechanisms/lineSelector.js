@@ -16,7 +16,7 @@ export default class LineSelector {
         const selector = this._buildSelector()
         this._positionSelectorBasedonTarget(selector, topOffset)
         const caretBuilder = new CaretBuilder()
-        caretBuilder.buildCaretForLineSelection(this.contentElement, topOffset)
+        caretBuilder.buildCaretForLineSelection(topOffset)
         this.contentElement.prepend(selector)
     }
 

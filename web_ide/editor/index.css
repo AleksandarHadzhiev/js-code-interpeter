@@ -1,3 +1,12 @@
+:root {
+    --height-for-navigation: 35px;
+    --width-for-menu: 75px;
+    --min-line-height: 28.8px;
+    --font-size: 24px;
+    --scrollable-area-in-px: 125px;
+    --width-of-vertical-scrollbar: 25px;
+}
+
 * {
     height: 100%;
     padding: 0;
@@ -26,16 +35,16 @@ html::selection {
     top: 0%;
     left: 0%;
     width: 100%;
-    height: 5%;
+    height: var(--height-for-navigation);
     background-color: rgb(82, 82, 82);
 }
 
 .container {
     pointer-events: all;
     position: absolute;
-    top: 5%;
+    top: var(--height-for-navigation);
     left: 0%;
-    height: 95%;
+    height: calc(100% - var(--height-for-navigation));
     width: 100%;
 }
 
@@ -50,7 +59,7 @@ html::selection {
     position: absolute;
     top: 0%;
     left: 0%;
-    width: 5%;
+    width: var(--width-for-menu);
     height: 100%;
     background-color: rgb(55, 55, 55);
 }
@@ -58,9 +67,9 @@ html::selection {
 .editor {
     display: block;
     position: absolute;
-    left: 5%;
+    left: var(--width-for-menu);
     top: 0%;
-    width: 95%;
+    width: calc(100% - var(--width-for-menu));
     height: 100%;
     background-color: black;
 }
@@ -101,7 +110,8 @@ html::selection {
 
 #line-numeration {
     position: absolute;
-    width: 75px;
+    background-color: black;
+    width: var(--width-for-menu);
     height: 100%;
     pointer-events: none;
     user-select: none;
@@ -109,8 +119,8 @@ html::selection {
 
 #line-content {
     position: absolute;
-    left: 75px;
-    width: 95%;
+    left: var(--width-for-menu);
+    width: calc(100% - var(--width-for-menu));
     height: 100%;
 }
 
@@ -119,10 +129,10 @@ html::selection {
     color: white;
     text-align: center;
     width: 100%;
-    height: 28.8px;
+    height: var(--min-line-height);
     padding: 0%;
     margin: 0%;
-    font-size: 24px;
+    font-size: var(--font-size);
     font-family: 'Courier New', Courier, monospace;
 }
 
@@ -132,10 +142,10 @@ html::selection {
     width: 100%;
     height: fit-content;
     white-space: pre;
-    height: 28.8px;
+    height: var(--min-line-height);
     padding: 0%;
     margin: 0%;
-    font-size: 24px;
+    font-size: var(--font-size);
     font-family: 'Courier New', Courier, monospace;
 }
 
@@ -145,16 +155,16 @@ html::selection {
     width: fit-content;
     height: fit-content;
     white-space: pre;
-    height: 28.8px;
+    height: var(--min-line-height);
     padding: 0%;
     margin: 0%;
-    font-size: 24px;
+    font-size: var(--font-size);
     font-family: 'Courier New', Courier, monospace;
 }
 
-.scrollable-area {
+.scrollable-area-vertical {
     position: sticky;
-    width: 25%;
+    width: var(--scrollable-area-in-px);
     height: 100%;
     left: 100%;
     top: 0%;
@@ -162,10 +172,10 @@ html::selection {
     pointer-events: none;
 }
 
-#scrollbar {
+#scrollbar-vertical {
     pointer-events: all;
     position: sticky;
-    width: 10%;
+    width: var(--width-of-vertical-scrollbar);
     height: 100%;
     left: 100%;
     top: 0%;
@@ -173,23 +183,54 @@ html::selection {
     background-color: black;
 }
 
-#bar {
+#bar-vertical {
     position: absolute;
     width: 100%;
     height: 10%;
     background-color: gray;
 }
 
-#bar:hover {
+#bar-vertical:hover {
     opacity: 0.5;
     background-color: rgb(91, 91, 91);
 }
 
+.scrollable-area-horizontal {
+    position: sticky;
+    width: 100%;
+    height: var(--scrollable-area-in-px);
+    left: 0%;
+    bottom: 0%;
+    background-color: transparent;
+    pointer-events: none;
+}
+
+#scrollbar-horizontal {
+    pointer-events: all;
+    position: sticky;
+    width: calc(100% - var(--width-for-menu) - var(--width-of-vertical-scrollbar));
+    height: 25px;
+    left: var(--width-for-menu);
+    top: 100%;
+}
+
+#bar-horizontal {
+    position: absolute;
+    width: 10%;
+    height: 100%;
+    opacity: 0.5;
+    background-color: gray;
+}
+
+#bar-horizontal:hover {
+    background-color: rgb(215, 215, 215);
+}
+
 .line-selector {
     position: absolute;
-    left: 75px;
-    width: 95%;
-    height: 28.8px;
+    left: var(--width-for-menu);
+    width: calc(100% - var(--width-for-menu));
+    height: var(--min-line-height);
     background-color: transparent;
     border: solid 1px gray;
 }
@@ -198,7 +239,7 @@ html::selection {
     position: absolute;
     width: 3px;
     background-color: orange;
-    height: 28.8px;
+    height: var(--min-line-height);
     animation: blink 1s linear infinite;
     z-index: 0;
 }
@@ -219,6 +260,14 @@ html::selection {
     height: fit-content;
     background-color: transparent;
     color: transparent;
-    left: 75px;
     z-index: -1;
+}
+
+.hidden {
+    display: none;
+}
+
+#caret-placer {
+    position: absolute;
+    left: var(--width-for-menu);
 }

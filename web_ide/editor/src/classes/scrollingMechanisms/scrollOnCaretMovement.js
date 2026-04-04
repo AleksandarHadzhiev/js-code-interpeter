@@ -31,8 +31,19 @@ export default class ScrollOnCaretMovement {
     }
 
     updateLeftOffset(newOffset) {
+        console.log(this.barHorizontalHandler.maxLeftOffset, this.barHorizontalHandler.leftOffset, newOffset)
         this.barHorizontalHandler.scrollWithOffset(newOffset)
         const percentage = this.barHorizontalHandler.getPercentageOfScroll()
+        console.log(percentage)
+        this.contentScrollingHandler.scrollWithPercentage(percentage)
+    }
+
+    /**
+     * 
+     * @param {Number} percentage 
+     */
+    updateLeftOffsetWithPercentage(percentage) {
+        this.barHorizontalHandler.scrollBasedOnPercentage(percentage)
         this.contentScrollingHandler.scrollWithPercentage(percentage)
     }
 }

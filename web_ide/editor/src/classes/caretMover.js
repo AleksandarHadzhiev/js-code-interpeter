@@ -11,16 +11,18 @@ export default class CaretMover {
      */
     constructor(scroller, lineContentElement) {
         this.leftOffset = 0
+        this.content = document.getElementById('content')
         this.scroller = scroller
         this.bufferZone = 75
         this.lineContentElement = lineContentElement
-        this.startingOffset = this.lineContentElement.offsetLeft - this.bufferZone
+        this.widthLongestContent = lineContentElement.offsetWidth
+        this.startingOffset = (this.lineContentElement.offsetLeft * -1) + this.bufferZone
         this.screenWidth = this.startingOffset + this.lineContentElement.parentElement.offsetWidth - this.bufferZone - 25
         this.regex = /\s +| | ;|,|\.|"|\(|\)/g;
     }
 
     updateScreenWidth() {
-        this.startingOffset = this.lineContentElement.offsetLeft - this.bufferZone
+        this.startingOffset = (this.lineContentElement.offsetLeft * -1) + this.bufferZone
         this.screenWidth = this.startingOffset + this.lineContentElement.parentElement.offsetWidth - this.bufferZone - 25
     }
 
@@ -86,14 +88,20 @@ export default class CaretMover {
     }
 
     _scrollHorizontally(leftOffset) {
-        console.log(leftOffset, this.screenWidth, this.startingOffset)
-        if (leftOffset > this.screenWidth) {
-            let scrollDistance = leftOffset - this.screenWidth + this.bufferZone
-            this.scroller.updateLeftOffset(scrollDistance)
+        const parentLeftOffset = (this.lineContentElement.offsetLeft * -1) + 75
+        const widthOfScreen = parentLeftOffset + this.lineContentElement.parentElement.offsetWidth - this.bufferZone - 25
+        const parentWidth = this.widthLongestContent
+        console.log(leftOffset, parentWidth)
+        if (leftOffset < parentLeftOffset) {
+            const percentage = ((leftOffset - 50) / parentWidth) * 100
+            console.log(percentage)
+            this.scroller.updateLeftOffsetWithPercentage(percentage)
         }
-        else if (leftOffset < this.startingOffset) {
-            let scrollDistance = this.startingOffset - leftOffset + this.bufferZone
-            this.scroller.updateLeftOffset(-scrollDistance)
+        else if (leftOffset >= widthOfScreen) {
+            console.log(widthOfScreen)
+            const percentage = ((widthOfScreen + 50) / parentWidth) * 100
+            console.log(percentage)
+            this.scroller.updateLeftOffsetWithPercentage(percentage)
         }
     }
 

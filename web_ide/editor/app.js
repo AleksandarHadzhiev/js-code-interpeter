@@ -124,6 +124,7 @@ function scrollHorizontal(event) {
     contentScrollingHandler.scrollWithOffset(event.deltaX)
     const percentageOfContentScroll = contentScrollingHandler.getPerentageOfScroll()
     barHorizontalHandler.scrollBasedOnPercentage(percentageOfContentScroll)
+    caretMover.updateScreenWidth()
 }
 
 function displayHighlightIfThereIsSelectedText() {
@@ -161,6 +162,7 @@ scrollbarAreaElementHorizontal.addEventListener('mousemove', (event) => {
         console.log(percentage)
         contentScrollingHandler.updateMaxLeftOffset(lineContentElement.scrollWidth, scrollbarHorizontalLeftOffset, barHorizontalWidth)
         contentScrollingHandler.scrollWithPercentage(percentage)
+        caretMover.updateScreenWidth()
     }
 })
 
@@ -322,6 +324,7 @@ window.addEventListener('resize', () => {
     loaderElement.style.height = `${newLoaderHeight}px`
     linesLoader.updateMaxVisibleLinesOnScreen(newMaxVisibleLinesOnScreen)
     linesLoader.resizeLines()
+    caretMover.updateScreenWidth()
     const scrollbarVerticalHeight = scrollbarElementVertical.offsetHeight
     loaderHandler.updateHeights(newLoaderHeight, scrollbarVerticalHeight)
     barVerticalHandler.updateHeights(scrollbarVerticalHeight, barVerticalElement.offsetHeight)

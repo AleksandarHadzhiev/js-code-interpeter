@@ -93,10 +93,17 @@ function displayHorizontalScrollbar() {
     }
 }
 
+
+linesLoader.loadLines(updateWidths)
+
+function updateWidths() {
+    barHorizontalHandler.updateWidths(scrollbarElementHorizontal.offsetWidth, barHorizontalElement.offsetWidth)
+    contentScrollingHandler.updateMaxLeftOffset(lineContentElement.scrollWidth, scrollbarHorizontalLeftOffset, barHorizontalWidth)
+}
+
 displayVerticalScrollbar()
 displayHorizontalScrollbar()
 
-linesLoader.loadLines()
 window.addEventListener('wheel', (event) => {
     scrollVertical(event)
     scrollHorizontal(event)

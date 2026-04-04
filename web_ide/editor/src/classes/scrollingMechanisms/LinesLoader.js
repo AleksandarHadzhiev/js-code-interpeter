@@ -25,10 +25,14 @@ export default class LinesLoader {
         this.maxVisibleLinesOnScreen = newMaxVisibleLinesOnScreen
     }
 
-    loadLines() {
+    /**
+     * @param {Function} updateWidths 
+     */
+    loadLines(updateWidths) {
         for (let index = this.firstVisibleLine; index < this.lastVisibleLine; index++) {
             this._buildLineForIndex(index)
         }
+        updateWidths()
     }
 
     /**

@@ -84,12 +84,12 @@ export default class TextSelection {
 
     /**
      * 
-     * @param {MouseEvent} event 
+     * @param {Number} pageYMousePosition 
      * @param {Number} firstVisibleLine 
      * @param {Number} lastVisibleLine 
      */
-    selectText(event, firstVisibleLine, lastVisibleLine) {
-        const mouseYPositionBasedOnPage = event.pageY + this.loaderOffset - this.offsetTopOfContentScreen
+    selectText(pageYMousePosition, firstVisibleLine, lastVisibleLine) {
+        const mouseYPositionBasedOnPage = pageYMousePosition + this.loaderOffset - this.offsetTopOfContentScreen
         this._highlightTextBasedOnMousePosition(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
         this._buildCaretForTextSelection(mouseYPositionBasedOnPage)
     }
@@ -144,6 +144,7 @@ export default class TextSelection {
      * @param {Number} lastVisibleLine 
      */
     _highlightTextBasedOnMousePosition(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
+        console.log(this.mousePosition)
         if (this.mousePosition == MousePosition.RIGHT) {
             this.highlighter.highlightForRightScreenSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
         }

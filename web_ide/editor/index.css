@@ -260,7 +260,6 @@ html::selection {
     height: fit-content;
     background-color: transparent;
     color: transparent;
-    left: var(--width-for-menu);
     z-index: -1;
 }
 

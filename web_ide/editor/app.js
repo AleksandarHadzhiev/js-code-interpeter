@@ -21,6 +21,7 @@ const loaderElement = document.getElementById('loader')
 const scrollbarElementVertical = document.getElementById('scrollbar-vertical')
 const scrollbarAreaElementVertical = document.getElementById('scrollable-area-vertical')
 const barVerticalElement = document.getElementById('bar-vertical')
+const placer = document.getElementById('caret-placer')
 
 const scrollbarElementHorizontal = document.getElementById('scrollbar-horizontal')
 const scrollbarAreaElementHorizontal = document.getElementById('scrollable-area-horizontal')
@@ -236,7 +237,7 @@ function buildMarker() {
     const newMarker = document.createElement('div')
     newMarker.classList.add('marker')
     newMarker.setAttribute('id', 'marker')
-    contentElement.prepend(newMarker)
+    placer.prepend(newMarker)
 }
 
 mainContainer.addEventListener('mousedown', (event) => {

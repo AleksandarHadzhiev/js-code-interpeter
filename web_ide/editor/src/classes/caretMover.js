@@ -168,7 +168,7 @@ export default class CaretMover {
         const newLeftOffset = 0
         this.leftOffset = newLeftOffset
         caret.style = `top: ${nextLineElement.offsetTop}px; left: ${newLeftOffset}px;`
-        // this.scroller.updateLeftOffset(75)
+        this.scroller.updateLeftOffset(0)
     }
 
     _moveRightOnSameLine(topOffset, leftOffset) {

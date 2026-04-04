@@ -63,7 +63,7 @@ let barVerticalIsSelected = false
 let barHorizontalIsSelected = false
 let isTextSelecting = false
 let startingRange = null
-
+let pageYMousePosition = 0
 
 const contentScrollingHandler = new ContentScrollingHandler(lineContentWidth, scrollbarHorizontalLeftOffset, lineNumerationWidth, barVerticalWidth, lineContentElement)
 const textSelection = new TextSelection(scrollbarVerticalTopOffset, lineNumerationWidth, scrollbarVerticalHeight, loaderElement.offsetWidth, contentElement, contentElementOffsetLeft, lines)
@@ -191,9 +191,8 @@ lineContentElement.addEventListener('mousedown', (event) => {
 })
 
 window.addEventListener('mousemove', (event) => {
-    console.log(intervalId)
-    console.log(intervalHorizontalId)
     if (isTextSelecting) {
+        pageYMousePosition = event.pageY
         const range = document.getSelection().getRangeAt(0)
         if (startingRange == null) {
             startingRange = range
@@ -213,11 +212,10 @@ window.addEventListener('mousemove', (event) => {
             textSelection.setEndingRange(range)
             const mousePosition = textSelection.defineMousePosition(event)
             if (mousePosition == MousePosition.BOTTOM || mousePosition == MousePosition.TOP)
-                autoScroll(event, mousePosition)
+                autoScroll(mousePosition)
             else if (mousePosition == MousePosition.LEFT || mousePosition == MousePosition.RIGHT)
-                autoScrollHorizontallyOnTextSelection(event, mousePosition)
+                autoScrollHorizontallyOnTextSelection(mousePosition)
             else {
-                console.log("HERE")
                 buildMarker()
                 scroll(event, mousePosition)
                 clearInterval(intervalId)
@@ -232,12 +230,12 @@ window.addEventListener('mousemove', (event) => {
     }
 })
 
-function autoScrollHorizontallyOnTextSelection(event, mousePosition) {
+function autoScrollHorizontallyOnTextSelection(mousePosition) {
     clearInterval(intervalId)
     intervalId = null
     if (intervalHorizontalId) return
     intervalHorizontalId = setInterval(() => {
-        scrollHorizontallyOnTextSelection(event, mousePosition)
+        scrollHorizontallyOnTextSelection(mousePosition)
         if (contentScrollingHandler.leftOffset <= contentScrollingHandler.maxLeftOffset || contentScrollingHandler.leftOffset >= contentScrollingHandler.minLeftOffset) {
             clearInterval(intervalHorizontalId)
             intervalHorizontalId = null
@@ -245,8 +243,7 @@ function autoScrollHorizontallyOnTextSelection(event, mousePosition) {
     }, 50)
 }
 
-function scrollHorizontallyOnTextSelection(event, mousePosition) {
-    console.log(mousePosition)
+function scrollHorizontallyOnTextSelection(mousePosition) {
     if (mousePosition == MousePosition.LEFT) {
         contentScrollingHandler.scrollWithOffset(-25)
         const percentage = contentScrollingHandler.getPerentageOfScroll()
@@ -257,17 +254,18 @@ function scrollHorizontallyOnTextSelection(event, mousePosition) {
         const percentage = contentScrollingHandler.getPerentageOfScroll()
         barHorizontalHandler.scrollBasedOnPercentage(percentage)
     }
-    textSelection.selectText(event, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
+    buildMarker()
+    textSelection.selectText(pageYMousePosition, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
 }
 
-function autoScroll(event, mousePosition) {
+function autoScroll(mousePosition) {
     clearInterval(intervalHorizontalId)
     intervalHorizontalId = null
     console.log("AUTO SCROLL")
     if (intervalId) return
     intervalId = setInterval(() => {
         buildMarker()
-        scroll(event, mousePosition)
+        scroll(mousePosition)
         if (loaderHandler.topOffset >= loaderHandler.maxTopOffset || loaderHandler.topOffset <= loaderHandler.minTopOffset) {
             clearInterval(intervalId)
             intervalId = null
@@ -275,9 +273,9 @@ function autoScroll(event, mousePosition) {
     }, 50)
 }
 
-function scroll(event, mousePosition) {
+function scroll(mousePosition) {
     textSelectionScrolling.scrollOnMousePosition(mousePosition)
-    textSelection.selectText(event, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
+    textSelection.selectText(pageYMousePosition, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
     textSelection.setLoaderOffset(loaderHandler.topOffset)
 }
 

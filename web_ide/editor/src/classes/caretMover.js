@@ -91,15 +91,18 @@ export default class CaretMover {
         const parentLeftOffset = (this.lineContentElement.offsetLeft * -1) + 75
         const widthOfScreen = parentLeftOffset + this.lineContentElement.parentElement.offsetWidth - this.bufferZone - 25
         const parentWidth = this.widthLongestContent
-        console.log(leftOffset, parentWidth)
-        if (leftOffset < parentLeftOffset) {
-            const percentage = ((leftOffset - 50) / parentWidth) * 100
+        console.log(leftOffset, parentLeftOffset, parentWidth)
+        if (leftOffset <= parentLeftOffset + 50) {
+            const distance = leftOffset - 50
+            const percentage = (distance / parentWidth) * 100
             console.log(percentage)
             this.scroller.updateLeftOffsetWithPercentage(percentage)
         }
-        else if (leftOffset >= widthOfScreen) {
+        else if (leftOffset + 50 >= widthOfScreen) {
             console.log(widthOfScreen)
-            const percentage = ((widthOfScreen + 50) / parentWidth) * 100
+            const distance = leftOffset + 150 - this.screenWidth
+            console.log(distance)
+            const percentage = ((distance) / parentWidth) * 100
             console.log(percentage)
             this.scroller.updateLeftOffsetWithPercentage(percentage)
         }

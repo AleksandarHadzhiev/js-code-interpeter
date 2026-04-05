@@ -217,7 +217,7 @@ window.addEventListener('mousemove', (event) => {
                 autoScrollHorizontallyOnTextSelection(mousePosition)
             else {
                 buildMarker()
-                scroll(event, mousePosition)
+                scroll(mousePosition)
                 clearInterval(intervalId)
                 intervalId = null
                 clearInterval(intervalHorizontalId)

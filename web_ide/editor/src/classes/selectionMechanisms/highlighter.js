@@ -158,7 +158,9 @@ export default class Highlighter {
         const lineForEndContainer = this.endingRange.endContainer.parentElement.parentElement
         const lineForStartContainer = this.endingRange.startContainer.parentElement.parentElement
         let isSelectable = true
-
+        if (this._isSpecialcCase(commonContainer, lineForEndContainer)) {
+            return this._buildPointBasedOnContainerAndOffset(this.endingRange.endContainer, this.endingRange.endOffset)
+        }
         if (isNaN(Number(lineForStartContainer.id)) == false && isNaN(Number(lineForEndContainer.id)) == false) {
             isSelectable = true
         }
@@ -193,6 +195,22 @@ export default class Highlighter {
             }
         }
         return endingPoint
+    }
+
+    /**
+     * 
+     * @param {HTMLElement} commonContainer 
+     * @param {HTMLElement} endingLine 
+     */
+    _isSpecialcCase(commonContainer, endingLine) {
+        if (commonContainer.id == 'content' && this.endingRange.startContainer.id == 'line-selector' && isNaN(Number(endingLine.id)) == false) {
+            return true
+        }
+        return false
+    }
+
+    _handleSpecialCase() {
+        return null
     }
 
     /**

@@ -186,6 +186,8 @@ export default class TextSelection {
                     let point = new MarkedPoint(lineId * 28.8, endingPoint.left, endingPoint.width, lineId)
                     if (this.mousePosition == MousePosition.LEFT)
                         point = new MarkedPoint(lineId * 28.8, startingPoint.left, startingPoint.width, lineId)
+                    else if (this.mousePosition == MousePosition.RIGHT)
+                        point = new MarkedPoint(lineId * 28.8, endingPoint.left + endingPoint.width, 0, lineId)
                     caretBuilder.buildCaretForTextSelection(point, this.mousePosition, this.xForMouseInEditor)
                 }
             }

@@ -181,14 +181,16 @@ export default class TextSelection {
         const lineId = Math.floor(mouseYPositionBasedOnPage / 28.8)
         const startingPoint = this.highlighter.customMarker.algorithm.startingMarkedPoint
         const endingPoint = this.highlighter.customMarker.algorithm.endingMarkedPoint
+
         if (lineId == endingPoint.lineId && endingPoint.lineId == startingPoint.lineId)
             this._handleCaretPositioningWhenCaretIsOnSameLineAsStartingAndEndingPoints(caretBuilder, startingPoint, endingPoint, lineId)
         else if (lineId == endingPoint.lineId)
             caretBuilder.buildCaretForTextSelection(endingPoint, this.mousePosition, this.xForMouseInEditor)
         else if (lineId == startingPoint.lineId)
             caretBuilder.buildCaretForTextSelection(startingPoint, this.mousePosition, this.xForMouseInEditor)
-        else
-            this._handleCaretPositioniningForOutsideTheScreenOnY(caretBuilder, startingPoint, endingPoint)
+        else {
+            this._handleCaretForWhenOnDifferentLines(caretBuilder, endingPoint, startingPoint, mouseYPositionBasedOnPage)
+        }
     }
 
     /**
@@ -222,6 +224,26 @@ export default class TextSelection {
         else if (this.mousePosition == MousePosition.RIGHT)
             point = new MarkedPoint(lineId * 28.8, endingPoint.left + endingPoint.width, 0, lineId)
         caretBuilder.buildCaretForTextSelection(point, this.mousePosition, this.xForMouseInEditor)
+    }
+
+    /**
+     * 
+     * @param {CaretBuilder} caretBuilder 
+     * @param {MarkedPoint} endingPoint 
+     * @param {MarkedPoint} startingPoint 
+     * @param {MarkedPoint} mouseYPositionBasedOnPage 
+     */
+    _handleCaretForWhenOnDifferentLines(caretBuilder, endingPoint, startingPoint, mouseYPositionBasedOnPage) {
+        const differenceBetweenEndingPointTopAndMouseYPositon = mouseYPositionBasedOnPage > endingPoint.top ? mouseYPositionBasedOnPage - endingPoint.top : endingPoint.top - mouseYPositionBasedOnPage
+        const differenceBetweenStartingPointTopAndMouseYPositon = mouseYPositionBasedOnPage > startingPoint.top ? mouseYPositionBasedOnPage - startingPoint.top : startingPoint.top - mouseYPositionBasedOnPage
+
+        if (differenceBetweenEndingPointTopAndMouseYPositon > differenceBetweenStartingPointTopAndMouseYPositon)
+            caretBuilder.buildCaretForTextSelection(startingPoint, this.mousePosition, this.xForMouseInEditor)
+        else if (differenceBetweenEndingPointTopAndMouseYPositon < differenceBetweenStartingPointTopAndMouseYPositon)
+            caretBuilder.buildCaretForTextSelection(endingPoint, this.mousePosition, this.xForMouseInEditor)
+        else if (this.mousePosition == MousePosition.LEFT || this.mousePosition == MousePosition.RIGHT)
+            this._handleCaretPositioniningForOutsideTheScreenOnY(caretBuilder, startingPoint, endingPoint)
+
     }
 
     /**

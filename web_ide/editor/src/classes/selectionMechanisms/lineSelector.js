@@ -30,6 +30,19 @@ export default class LineSelector {
         return selector
     }
 
+
+    /**
+     * @param {Number} lineId
+     * @param {HTMLElement} contentElement
+     */
+    selectLineForClickOnEmptySpace(lineId, contentElement) {
+        const caretBuilder = new CaretBuilder()
+        const selector = this._buildSelector()
+        this._positionSelectorBasedonTarget(selector, lineId * 28.8)
+        caretBuilder.buildCaretForLineSelectionOnClickingEmptySpace(lineId, contentElement)
+        this.contentElement.prepend(selector)
+    }
+
     /**
      * @param {HTMLElement} selector 
      * @param {Number} topOffset

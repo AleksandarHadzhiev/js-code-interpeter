@@ -364,6 +364,7 @@ function updateElementsPositionsOnScreen() {
 }
 
 window.addEventListener('resize', () => {
+    removeExistingHighlighter()
     displayVerticalScrollbar()
     displayHorizontalScrollbar()
     const newMaxVisibleLinesOnScreen = Math.ceil(mainContainer.offsetHeight / lineHeightInPixels)

@@ -9,6 +9,18 @@ export default class CaretBuilder {
     }
 
     /**
+     * @param {Number} lineId
+     * @param {HTMLElement} contentElement
+     */
+    buildCaretForLineSelectionOnClickingEmptySpace(lineId, contentElement) {
+        const caretElement = this._buildCaret()
+        const lineElement = document.getElementById(String(lineId))
+        const left = calculateWidthForText(contentElement, lineElement.textContent)
+        caretElement.style = `top: ${lineId * 28.8}px; left: ${left}px;`
+        this.caretPlacer.prepend(caretElement)
+    }
+
+    /**
      *  
      * @param {Number} topOffset 
      */

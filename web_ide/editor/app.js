@@ -11,6 +11,7 @@ import ScrollOnCaretMovement from "./src/classes/scrollingMechanisms/scrollOnCar
 import { MousePosition } from "./src/classes/selectionMechanisms/enums.js"
 import ContentScrollingHandler from "./src/classes/scrollingMechanisms/ContentScrollingHandler.js"
 import calculateWidthForText from "./src/classes/calculators/widthOfTextCalculator.js"
+import LineSelector from "./src/classes/selectionMechanisms/lineSelector.js"
 
 const mainContainer = document.getElementById('container')
 const menuContainer = document.getElementById('menu')
@@ -190,15 +191,44 @@ lineContentElement.addEventListener('mousedown', (event) => {
     scrollbarElementHorizontal.style.pointerEvents = "none"
 })
 
+contentElement.addEventListener('mousedown', (event) => {
+    const mouseYPosition = loaderHandler.topOffset + (event.pageY - navigationElement.offsetHeight)
+    const lineId = Math.floor(mouseYPosition / lineHeightInPixels)
+    isTextSelecting = true
+    const lineSelector = new LineSelector(event, contentElement)
+    lineSelector.selectLineForClickOnEmptySpace(lineId, contentElement)
+    buildStartingPoint(lineId)
+})
+
+/**
+ * 
+ * @param {Number} lineId 
+ */
+function buildStartingPoint(lineId) {
+    const lineElement = document.getElementById(String(lineId))
+    const widthOfLine = calculateWidthForText(contentElement, lineElement.textContent)
+    startingRange = {
+        lineId: Number(lineId),
+        topOffset: lineElement.offsetTop,
+        leftOffset: widthOfLine,
+        fullText: lineElement.textContent
+    }
+    textSelection.setStartingPoint(startingRange)
+
+}
+
 window.addEventListener('mousemove', (event) => {
     if (isTextSelecting) {
         pageYMousePosition = event.pageY
         const range = document.getSelection().getRangeAt(0)
         if (startingRange == null) {
+            console.log(range)
             buildStartingRange(range)
         }
         else {
-            selectText(range)
+            console.log(startingRange)
+            console.log(range)
+            selectText(range, event)
         }
     }
 })
@@ -218,7 +248,12 @@ function buildStartingRange(range) {
     textSelection.setStartingPoint(startingRange)
 }
 
-function selectText(range) {
+/**
+ * 
+ * @param {Range} range 
+ * @param {Event} event 
+ */
+function selectText(range, event) {
     textSelection.setEndingRange(range)
     const mousePosition = textSelection.defineMousePosition(event)
     if (mousePosition == MousePosition.BOTTOM || mousePosition == MousePosition.TOP)

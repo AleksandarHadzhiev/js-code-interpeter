@@ -192,27 +192,43 @@ lineContentElement.addEventListener('mousedown', (event) => {
 })
 
 contentElement.addEventListener('mousedown', (event) => {
-    console.log("CLICKED")
     const mouseYPosition = loaderHandler.topOffset + (event.pageY - navigationElement.offsetHeight)
-    console.log(mouseYPosition)
     const lineId = Math.floor(mouseYPosition / lineHeightInPixels)
-    console.log(`LINE_ID: ${lineId}`)
     isTextSelecting = true
     const lineSelector = new LineSelector(event, contentElement)
     lineSelector.selectLineForClickOnEmptySpace(lineId, contentElement)
+    buildStartingPoint(lineId)
 })
 
+/**
+ * 
+ * @param {Number} lineId 
+ */
+function buildStartingPoint(lineId) {
+    const lineElement = document.getElementById(String(lineId))
+    const widthOfLine = calculateWidthForText(contentElement, lineElement.textContent)
+    startingRange = {
+        lineId: Number(lineId),
+        topOffset: lineElement.offsetTop,
+        leftOffset: widthOfLine,
+        fullText: lineElement.textContent
+    }
+    textSelection.setStartingPoint(startingRange)
+
+}
+
 window.addEventListener('mousemove', (event) => {
-    console.log(`is text selecting`)
-    console.log(isTextSelecting)
     if (isTextSelecting) {
         pageYMousePosition = event.pageY
         const range = document.getSelection().getRangeAt(0)
         if (startingRange == null) {
+            console.log(range)
             buildStartingRange(range)
         }
         else {
-            selectText(range)
+            console.log(startingRange)
+            console.log(range)
+            selectText(range, event)
         }
     }
 })
@@ -232,7 +248,12 @@ function buildStartingRange(range) {
     textSelection.setStartingPoint(startingRange)
 }
 
-function selectText(range) {
+/**
+ * 
+ * @param {Range} range 
+ * @param {Event} event 
+ */
+function selectText(range, event) {
     textSelection.setEndingRange(range)
     const mousePosition = textSelection.defineMousePosition(event)
     if (mousePosition == MousePosition.BOTTOM || mousePosition == MousePosition.TOP)

@@ -2,6 +2,7 @@ import Highlighter from "./highlighter.js"
 import { MousePosition, WindowSection } from "./enums.js"
 import { StartingPoint } from "../dtos/caretDTOs.js"
 import CaretBuilder from "./caretBuilder.js"
+import MarkedPoint from "./MarkedPoint.js"
 
 
 export default class TextSelection {
@@ -169,15 +170,10 @@ export default class TextSelection {
     _buildCaretForTextSelection(mouseYPositionBasedOnPage) {
         const caretBuilder = new CaretBuilder()
         if (this.highlighter.endingPoint != null) {
+            const lineId = Math.floor(mouseYPositionBasedOnPage / 28.8)
             const startingPoint = this.highlighter.customMarker.algorithm.startingMarkedPoint
             const endingPoint = this.highlighter.customMarker.algorithm.endingMarkedPoint
-            const differenceBetweenEndingPointTopOffsetAndMouseY = mouseYPositionBasedOnPage > endingPoint.top ? mouseYPositionBasedOnPage - endingPoint.top : endingPoint.top - mouseYPositionBasedOnPage
-            const differenceBetweenStartingPointTopOffsetAndMouseY = mouseYPositionBasedOnPage > startingPoint.top ? mouseYPositionBasedOnPage - startingPoint.top : startingPoint.top - mouseYPositionBasedOnPage
-            if (differenceBetweenEndingPointTopOffsetAndMouseY < differenceBetweenStartingPointTopOffsetAndMouseY)
-                caretBuilder.buildCaretForTextSelection(endingPoint, this.mousePosition, this.xForMouseInEditor)
-            else if (differenceBetweenEndingPointTopOffsetAndMouseY > differenceBetweenStartingPointTopOffsetAndMouseY)
-                caretBuilder.buildCaretForTextSelection(startingPoint, this.mousePosition, this.xForMouseInEditor)
-            else {
+            if (lineId == endingPoint.lineId && endingPoint.lineId == startingPoint.lineId) {
                 const differenceBetweenEndingPointLeftOffsetAndMouseX = this.xForMouseInEditor > endingPoint.left ? this.xForMouseInEditor - endingPoint.left : endingPoint.left - this.xForMouseInEditor
                 const differenceBetweenStartingPointLeftOffsetAndMouseX = this.xForMouseInEditor > startingPoint.left ? this.xForMouseInEditor - startingPoint.left : startingPoint.left - this.xForMouseInEditor
                 if (differenceBetweenEndingPointLeftOffsetAndMouseX < differenceBetweenStartingPointLeftOffsetAndMouseX) {
@@ -186,7 +182,18 @@ export default class TextSelection {
                 else if (differenceBetweenStartingPointLeftOffsetAndMouseX < differenceBetweenEndingPointLeftOffsetAndMouseX) {
                     caretBuilder.buildCaretForTextSelection(startingPoint, this.mousePosition, this.xForMouseInEditor)
                 }
+                else {
+                    let point = new MarkedPoint(lineId * 28.8, endingPoint.left, endingPoint.width, lineId)
+                    if (this.mousePosition == MousePosition.LEFT)
+                        point = new MarkedPoint(lineId * 28.8, startingPoint.left, startingPoint.width, lineId)
+                    caretBuilder.buildCaretForTextSelection(point, this.mousePosition, this.xForMouseInEditor)
+                }
             }
+            else if (lineId == endingPoint.lineId)
+                caretBuilder.buildCaretForTextSelection(endingPoint, this.mousePosition, this.xForMouseInEditor)
+            else if (lineId == startingPoint.lineId)
+                caretBuilder.buildCaretForTextSelection(startingPoint, this.mousePosition, this.xForMouseInEditor)
+
         }
     }
 

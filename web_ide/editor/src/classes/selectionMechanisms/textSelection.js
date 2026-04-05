@@ -2,6 +2,7 @@ import Highlighter from "./highlighter.js"
 import { MousePosition, WindowSection } from "./enums.js"
 import { StartingPoint } from "../dtos/caretDTOs.js"
 import CaretBuilder from "./caretBuilder.js"
+import MarkedPoint from "./MarkedPoint.js"
 
 
 export default class TextSelection {
@@ -180,6 +181,12 @@ export default class TextSelection {
                 }
                 else if (differenceBetweenStartingPointLeftOffsetAndMouseX < differenceBetweenEndingPointLeftOffsetAndMouseX) {
                     caretBuilder.buildCaretForTextSelection(startingPoint, this.mousePosition, this.xForMouseInEditor)
+                }
+                else {
+                    let point = new MarkedPoint(lineId * 28.8, endingPoint.left, endingPoint.width, lineId)
+                    if (this.mousePosition == MousePosition.LEFT)
+                        point = new MarkedPoint(lineId * 28.8, startingPoint.left, startingPoint.width, lineId)
+                    caretBuilder.buildCaretForTextSelection(point, this.mousePosition, this.xForMouseInEditor)
                 }
             }
             else if (lineId == endingPoint.lineId)

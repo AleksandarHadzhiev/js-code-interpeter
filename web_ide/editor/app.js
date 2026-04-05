@@ -195,40 +195,61 @@ window.addEventListener('mousemove', (event) => {
         pageYMousePosition = event.pageY
         const range = document.getSelection().getRangeAt(0)
         if (startingRange == null) {
-            startingRange = range
-            const leftOffsetDTO = new CaretLeftOffsetDTO(range.endContainer.parentElement, range.endContainer.parentElement.offsetLeft, range.endOffset)
-            const offset = calculateTotalLeftOffsetOfCaretInTheLine(leftOffsetDTO, contentElement)
-            const id = range.startContainer.parentElement.parentElement.id
-            const topOffset = range.startContainer.parentElement.parentElement.offsetTop
-            startingRange = {
-                lineId: Number(id),
-                topOffset: topOffset,
-                leftOffset: offset,
-                fullText: range.startContainer.parentElement.parentElement.textContent
-            }
-            textSelection.setStartingPoint(startingRange)
+            buildStartingRange(range)
         }
         else {
-            textSelection.setEndingRange(range)
-            const mousePosition = textSelection.defineMousePosition(event)
-            if (mousePosition == MousePosition.BOTTOM || mousePosition == MousePosition.TOP)
-                autoScroll(mousePosition)
-            else if (mousePosition == MousePosition.LEFT || mousePosition == MousePosition.RIGHT)
-                autoScrollHorizontallyOnTextSelection(mousePosition)
-            else {
-                buildMarker()
-                scroll(mousePosition)
-                clearInterval(intervalId)
-                intervalId = null
-                clearInterval(intervalHorizontalId)
-                intervalHorizontalId = null
-            }
-            // scroll(event, mousePosition)
-            // Invalid code for Y -> it is meant for X
-            // scrollOncaretMovement.updateOffset(loaderHandler.topOffset)
+            selectText(range)
         }
     }
 })
+
+function buildStartingRange(range) {
+    startingRange = range
+    const leftOffsetDTO = new CaretLeftOffsetDTO(range.endContainer.parentElement, range.endContainer.parentElement.offsetLeft, range.endOffset)
+    const offset = calculateTotalLeftOffsetOfCaretInTheLine(leftOffsetDTO, contentElement)
+    const id = range.startContainer.parentElement.parentElement.id
+    const topOffset = range.startContainer.parentElement.parentElement.offsetTop
+    startingRange = {
+        lineId: Number(id),
+        topOffset: topOffset,
+        leftOffset: offset,
+        fullText: range.startContainer.parentElement.parentElement.textContent
+    }
+    textSelection.setStartingPoint(startingRange)
+}
+
+function selectText(range) {
+    textSelection.setEndingRange(range)
+    const mousePosition = textSelection.defineMousePosition(event)
+    if (mousePosition == MousePosition.BOTTOM || mousePosition == MousePosition.TOP)
+        autoScroll(mousePosition)
+    else if (mousePosition == MousePosition.LEFT || mousePosition == MousePosition.RIGHT)
+        autoScrollHorizontallyOnTextSelection(mousePosition)
+    else {
+        selectTextInCentreSection(mousePosition)
+    }
+}
+
+function autoScroll(mousePosition) {
+    clearInterval(intervalHorizontalId)
+    intervalHorizontalId = null
+    console.log("AUTO SCROLL")
+    if (intervalId) return
+    intervalId = setInterval(() => {
+        buildMarker()
+        scroll(mousePosition)
+        if (loaderHandler.topOffset >= loaderHandler.maxTopOffset || loaderHandler.topOffset <= loaderHandler.minTopOffset) {
+            clearInterval(intervalId)
+            intervalId = null
+        }
+    }, 50)
+}
+
+function scroll(mousePosition) {
+    textSelectionScrolling.scrollOnMousePosition(mousePosition)
+    textSelection.selectText(pageYMousePosition, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
+    textSelection.setLoaderOffset(loaderHandler.topOffset)
+}
 
 function autoScrollHorizontallyOnTextSelection(mousePosition) {
     clearInterval(intervalId)
@@ -258,25 +279,13 @@ function scrollHorizontallyOnTextSelection(mousePosition) {
     textSelection.selectText(pageYMousePosition, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
 }
 
-function autoScroll(mousePosition) {
+function selectTextInCentreSection(mousePosition) {
+    buildMarker()
+    scroll(mousePosition)
+    clearInterval(intervalId)
+    intervalId = null
     clearInterval(intervalHorizontalId)
     intervalHorizontalId = null
-    console.log("AUTO SCROLL")
-    if (intervalId) return
-    intervalId = setInterval(() => {
-        buildMarker()
-        scroll(mousePosition)
-        if (loaderHandler.topOffset >= loaderHandler.maxTopOffset || loaderHandler.topOffset <= loaderHandler.minTopOffset) {
-            clearInterval(intervalId)
-            intervalId = null
-        }
-    }, 50)
-}
-
-function scroll(mousePosition) {
-    textSelectionScrolling.scrollOnMousePosition(mousePosition)
-    textSelection.selectText(pageYMousePosition, linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
-    textSelection.setLoaderOffset(loaderHandler.topOffset)
 }
 
 function buildMarker() {

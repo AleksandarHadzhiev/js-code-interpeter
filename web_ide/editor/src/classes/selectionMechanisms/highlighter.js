@@ -57,7 +57,6 @@ export default class Highlighter {
      * @param {Number} lastVisibleLine 
      */
     highlightForLeftScreenSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine) {
-        console.log(mouseYPositionBasedOnPage)
         this.endingPoint = this._buildReleasePoint(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
         this.customMarker.updatePoints(this.startingPoint, this.endingPoint)
         this.customMarker.buildForLeftSection(firstVisibleLine, lastVisibleLine)

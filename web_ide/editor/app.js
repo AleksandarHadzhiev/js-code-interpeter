@@ -168,8 +168,8 @@ scrollbarAreaElementHorizontal.addEventListener('mousemove', (event) => {
 })
 
 window.addEventListener('mouseup', (event) => {
-    if (barVerticalIsSelected) barVerticalIsSelected = false
-    if (barHorizontalIsSelected) barHorizontalIsSelected = false
+    barVerticalIsSelected = false
+    barHorizontalIsSelected = false
     scrollbarAreaElementVertical.style.pointerEvents = "none"
     scrollbarAreaElementHorizontal.style.pointerEvents = "none"
     if (isTextSelecting) {
@@ -225,12 +225,9 @@ window.addEventListener('mousemove', (event) => {
         pageYMousePosition = event.pageY
         const range = document.getSelection().getRangeAt(0)
         if (startingRange == null) {
-            console.log(range)
             buildStartingRange(range)
         }
         else {
-            console.log(startingRange)
-            console.log(range)
             selectText(range, event)
         }
     }
@@ -271,7 +268,6 @@ function selectText(range, event) {
 function autoScroll(mousePosition) {
     clearInterval(intervalHorizontalId)
     intervalHorizontalId = null
-    console.log("AUTO SCROLL")
     if (intervalId) return
     intervalId = setInterval(() => {
         buildMarker()

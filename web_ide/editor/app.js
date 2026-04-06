@@ -148,14 +148,22 @@ barHorizontalElement.addEventListener('mousedown', (event) => {
 
 scrollbarAreaElementVertical.addEventListener('mousemove', (event) => {
     if (barVerticalIsSelected) {
-        barVerticalHandler.scrollWithOffset(event.clientY - scrollbarVerticalTopOffset)
-        const percentage = barVerticalHandler.getPercentageOfScroll()
-        loaderHandler.scrollWithPercentage(percentage)
-        linesLoader.reloadLinesForNewTopOffset(loaderHandler.topOffset)
-        textSelection.setLoaderOffset(loaderHandler.topOffset)
-        displayHighlightIfThereIsSelectedText()
+        verticalScrolling(event)
     }
 })
+
+/**
+ * 
+ * @param {MouseEvent} event 
+ */
+function verticalScrolling(event) {
+    barVerticalHandler.scrollWithOffset(event.clientY - scrollbarVerticalTopOffset)
+    const percentage = barVerticalHandler.getPercentageOfScroll()
+    loaderHandler.scrollWithPercentage(percentage)
+    linesLoader.reloadLinesForNewTopOffset(loaderHandler.topOffset)
+    textSelection.setLoaderOffset(loaderHandler.topOffset)
+    displayHighlightIfThereIsSelectedText()
+}
 
 scrollbarAreaElementHorizontal.addEventListener('mousemove', (event) => {
     if (barHorizontalIsSelected) {
@@ -221,6 +229,9 @@ function buildStartingPoint(lineId) {
 }
 
 window.addEventListener('mousemove', (event) => {
+    if (barVerticalIsSelected) {
+        verticalScrollingOnWindowMouseMove(event)
+    }
     if (isTextSelecting) {
         pageYMousePosition = event.pageY
         const range = document.getSelection().getRangeAt(0)
@@ -232,6 +243,23 @@ window.addEventListener('mousemove', (event) => {
         }
     }
 })
+
+/**
+ * 
+ * @param {MouseEvent} event 
+ */
+function verticalScrollingOnWindowMouseMove(event) {
+    const widthOfScreen = mainContainer.offsetWidth
+    const xPosition = event.pageX
+    if (widthOfScreen < xPosition) {
+        const widthOfAreaAllowedToScrollOutsideOfScreen = scrollbarAreaElementVertical.offsetWidth
+        const mouseOutsideOfScreenInPx = xPosition - widthOfScreen
+        const isAllowedToScroll = mouseOutsideOfScreenInPx <= widthOfAreaAllowedToScrollOutsideOfScreen
+        if (isAllowedToScroll) {
+            verticalScrolling(event)
+        }
+    }
+}
 
 function buildStartingRange(range) {
     startingRange = range

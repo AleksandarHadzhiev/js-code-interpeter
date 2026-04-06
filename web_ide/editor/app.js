@@ -167,13 +167,21 @@ function verticalScrolling(event) {
 
 scrollbarAreaElementHorizontal.addEventListener('mousemove', (event) => {
     if (barHorizontalIsSelected) {
-        barHorizontalHandler.scrollWithOffset(event.clientX - scrollbarHorizontalLeftOffset)
-        const percentage = barHorizontalHandler.getPercentageOfScroll()
-        contentScrollingHandler.updateMaxLeftOffset(lineContentElement.scrollWidth, scrollbarHorizontalLeftOffset, barHorizontalWidth)
-        contentScrollingHandler.scrollWithPercentage(percentage)
-        caretMover.updateScreenWidth()
+        horizontalScrolling(event)
     }
 })
+
+/**
+ * 
+ * @param {MouseEvent} event 
+ */
+function horizontalScrolling(event) {
+    barHorizontalHandler.scrollWithOffset(event.clientX - scrollbarHorizontalLeftOffset)
+    const percentage = barHorizontalHandler.getPercentageOfScroll()
+    contentScrollingHandler.updateMaxLeftOffset(lineContentElement.scrollWidth, scrollbarHorizontalLeftOffset, barHorizontalWidth)
+    contentScrollingHandler.scrollWithPercentage(percentage)
+    caretMover.updateScreenWidth()
+}
 
 window.addEventListener('mouseup', (event) => {
     barVerticalIsSelected = false
@@ -232,7 +240,10 @@ window.addEventListener('mousemove', (event) => {
     if (barVerticalIsSelected) {
         verticalScrollingOnWindowMouseMove(event)
     }
-    if (isTextSelecting) {
+    else if (barHorizontalIsSelected) {
+        horizontalScrollingOnWindowMouseMove(event)
+    }
+    else if (isTextSelecting) {
         pageYMousePosition = event.pageY
         const range = document.getSelection().getRangeAt(0)
         if (startingRange == null) {
@@ -257,6 +268,23 @@ function verticalScrollingOnWindowMouseMove(event) {
         const isAllowedToScroll = mouseOutsideOfScreenInPx <= widthOfAreaAllowedToScrollOutsideOfScreen
         if (isAllowedToScroll) {
             verticalScrolling(event)
+        }
+    }
+}
+
+/**
+ * 
+ * @param {MouseEvent} event 
+ */
+function horizontalScrollingOnWindowMouseMove(event) {
+    const heightOfScreen = mainContainer.offsetHeight
+    const yPosition = event.pageY
+    if (heightOfScreen < yPosition) {
+        const heightOfAreaAllowedToScrollOutsideOfScreen = scrollbarAreaElementHorizontal.offsetHeight
+        const mouseOutsideOfScreenInPx = yPosition - heightOfScreen
+        const isAllowedToScroll = mouseOutsideOfScreenInPx <= heightOfAreaAllowedToScrollOutsideOfScreen
+        if (isAllowedToScroll) {
+            horizontalScrolling(event)
         }
     }
 }

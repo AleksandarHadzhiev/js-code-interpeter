@@ -1,6 +1,6 @@
 export default class SearchHandler {
     constructor() {
-        this.search = document.getElementById('text-search')
+        this.search = document.getElementById('search-container')
         this.class = 'hidden'
     }
 

@@ -277,7 +277,33 @@ html::selection {
     top: calc(5% + var(--height-for-navigation));
     right: calc(5% + var(--width-of-vertical-scrollbar));
     width: 400px;
-    height: 35px;
+    height: 40px;
     background-color: rgb(48, 48, 48);
     border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.input-field {
+    background-color: rgb(66, 66, 66);
+    color: gray;
+    height: fit-content;
+    width: 50%;
+    min-height: var(--min-line-height);
+    font-size: var(--font-size);
+    font-family: 'Courier New', Courier, monospace;
+    border: black 1px solid;
+    border-radius: 2px;
+    padding-left: 5px;
+    text-decoration: none;
+}
+
+.input-field::selection {
+    background-color: rgb(44, 44, 254);
+    color: white;
+}
+
+.input-field:focus {
+    outline: none;
 }

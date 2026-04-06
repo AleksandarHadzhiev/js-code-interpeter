@@ -271,3 +271,13 @@ html::selection {
     position: absolute;
     left: var(--width-for-menu);
 }
+
+.search-container {
+    position: absolute;
+    top: calc(5% + var(--height-for-navigation));
+    right: calc(5% + var(--width-of-vertical-scrollbar));
+    width: 400px;
+    height: 35px;
+    background-color: rgb(48, 48, 48);
+    border-radius: 5px;
+}

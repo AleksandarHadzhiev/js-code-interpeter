@@ -8,6 +8,7 @@ class CustomSearchContainer extends HTMLElement {
     _buildSearchContainer() {
         const searchContainer = document.createElement('div')
         searchContainer.classList.add('hidden')
+        searchContainer.setAttribute('id', 'text-search')
         return searchContainer
     }
 }

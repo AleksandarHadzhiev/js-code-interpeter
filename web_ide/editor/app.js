@@ -396,6 +396,19 @@ function removeExistingHighlighter() {
 }
 
 window.addEventListener('keydown', (event) => {
+    const isClickingF = event.key == "f" || event.key == "F"
+    if (event.ctrlKey && isClickingF) {
+        event.preventDefault()
+        console.log('open search')
+    }
+    else handleCaretMovement(event)
+})
+
+/**
+ * 
+ * @param {MouseEvent} event 
+ */
+function handleCaretMovement(event) {
     const caret = document.getElementById('caret')
     if (caret) {
         const isScrollable = isCaretMovementScrollable(event)
@@ -403,7 +416,7 @@ window.addEventListener('keydown', (event) => {
             scrollOnScrollable()
         caretMover.moveCaretBasedOnKeybordKey(event, caret)
     }
-})
+}
 
 function isCaretMovementScrollable(event) {
     if (event.key == "Control") return false

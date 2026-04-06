@@ -160,8 +160,11 @@ export default class Highlighter {
         const lineForEndContainer = this.endingRange.endContainer.parentElement.parentElement
         const lineForStartContainer = this.endingRange.startContainer.parentElement.parentElement
         let isSelectable = true
-        if (this._isSpecialcCase(commonContainer)) {
-            return this._handleSpecialCase(lineForEndContainer, mouseYPositionBasedOnPage)
+        if (this._isSpecialcCaseStartingFromEmptySpace(commonContainer)) {
+            return this._handleSpecialCaseStartingFromEmptySpace(lineForEndContainer, mouseYPositionBasedOnPage)
+        }
+        else if (this._isSpecialCaseFromContentToEmptySpace(commonContainer)) {
+            return this._handleEmptySpacePointCreation(mouseYPositionBasedOnPage)
         }
         if (isNaN(Number(lineForStartContainer.id)) == false && isNaN(Number(lineForEndContainer.id)) == false) {
             isSelectable = true
@@ -204,7 +207,7 @@ export default class Highlighter {
      * @param {HTMLElement} commonContainer 
      * @returns {Boolean} true if special case and false if not
      */
-    _isSpecialcCase(commonContainer) {
+    _isSpecialcCaseStartingFromEmptySpace(commonContainer) {
         if (commonContainer.id == 'content' && this.endingRange.startContainer.id == 'line-selector')
             return true
         else if (commonContainer.id == 'line-selector')
@@ -220,11 +223,11 @@ export default class Highlighter {
      * @param {Number} mouseYPositionBasedOnPage
      * @returns 
      */
-    _handleSpecialCase(endingLine, mouseYPositionBasedOnPage) {
+    _handleSpecialCaseStartingFromEmptySpace(endingLine, mouseYPositionBasedOnPage) {
         if (endingLine != null && isNaN(Number(endingLine.id)) == false)
             return this._buildPointBasedOnContainerAndOffset(this.endingRange.endContainer, this.endingRange.endOffset)
         else {
-            return this._handleSpecialCaseWhenNotOnLine(mouseYPositionBasedOnPage)
+            return this._handleEmptySpacePointCreation(mouseYPositionBasedOnPage)
         }
     }
 
@@ -232,7 +235,7 @@ export default class Highlighter {
      * 
      * @param {Number} mouseYPositionBasedOnPage 
      */
-    _handleSpecialCaseWhenNotOnLine(mouseYPositionBasedOnPage) {
+    _handleEmptySpacePointCreation(mouseYPositionBasedOnPage) {
         const lineId = Math.floor(mouseYPositionBasedOnPage / this.lineHeight)
         const line = document.getElementById(String(lineId))
         const topOffset = line.offsetTop
@@ -240,6 +243,19 @@ export default class Highlighter {
         return new StartingPoint(
             lineId, topOffset, width, line.textContent
         )
+    }
+
+    /**
+     * 
+     * @param {HTMLElement} commonContainer 
+     * @returns {Boolean} true if special case and false if not
+     */
+    _isSpecialCaseFromContentToEmptySpace(commonContainer) {
+        if (commonContainer.id == "content" && this.endingRange.startContainer.id == "caret")
+            return true
+        else if (commonContainer.id == "content" && this.endingRange.startContainer.id == "caret-placer")
+            return true
+        return false
     }
 
     /**

@@ -3,6 +3,7 @@ import { MousePosition, WindowSection } from "./enums.js"
 import { StartingPoint } from "../dtos/caretDTOs.js"
 import CaretBuilder from "./caretBuilder.js"
 import MarkedPoint from "./MarkedPoint.js"
+import ContentScrollingHandler from "../scrollingMechanisms/ContentScrollingHandler.js"
 
 
 export default class TextSelection {
@@ -15,8 +16,9 @@ export default class TextSelection {
      * @param {HTMLElement} contentElement 
      * @param {Number} contentElementOffsetLeft 
      * @param {Number} maxLines 
+     * @param {ContentScrollingHandler} contentScrollHandler
      */
-    constructor(offsetTopOfContentScreen, lineNumerationScrollWidth, contentElementScrollHeight, contentElementScrollWidth, contentElement, contentElementOffsetLeft, maxLines) {
+    constructor(offsetTopOfContentScreen, lineNumerationScrollWidth, contentElementScrollHeight, contentElementScrollWidth, contentElement, contentElementOffsetLeft, maxLines, contentScrollHandler) {
         this.offsetTopOfContentScreen = offsetTopOfContentScreen
         this.totalWidthOfScreen = contentElementScrollWidth + lineNumerationScrollWidth
         this.heightOfElementBasedOnVisibleLinesOnTheScreen = contentElementScrollHeight
@@ -28,6 +30,7 @@ export default class TextSelection {
         this.mouseXPosition = 0
         this.contentElementOffsetLeft = contentElementOffsetLeft
         this.lastTextLine = maxLines
+        this.scrollHandler = contentScrollHandler
     }
 
     /**
@@ -104,7 +107,8 @@ export default class TextSelection {
     _defineSectionOfTextSelection(event, mouseYPositionBasedOnPage) {
         this.mouseXPosition = event.pageX
         const maxTopOffsetForSelection = this.lastTextLine * 28.8
-        this.xForMouseInEditor = this.mouseXPosition - this.contentElementOffsetLeft
+        const horizontalScroll = (this.scrollHandler.leftOffset - 75) * -1
+        this.xForMouseInEditor = this.mouseXPosition - this.contentElementOffsetLeft + horizontalScroll
         const pointWhenBottomBegins = this.heightOfElementBasedOnVisibleLinesOnTheScreen + this.loaderOffset
         if (mouseYPositionBasedOnPage > maxTopOffsetForSelection) {
             return MousePosition.BOTTOM

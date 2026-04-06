@@ -307,3 +307,13 @@ html::selection {
 .input-field:focus {
     outline: none;
 }
+
+.info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: fit-content;
+    color: gray;
+    background-color: transparent;
+}

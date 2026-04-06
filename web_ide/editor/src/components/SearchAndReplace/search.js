@@ -10,7 +10,9 @@ class CustomSearchContainer extends HTMLElement {
         searchContainer.classList.add('hidden')
         searchContainer.setAttribute('id', 'search-container')
         const searchField = this._buildSearchTextField()
+        const info = this._buildInfo()
         searchContainer.appendChild(searchField)
+        searchContainer.appendChild(info)
         return searchContainer
     }
 
@@ -20,6 +22,14 @@ class CustomSearchContainer extends HTMLElement {
         searchField.setAttribute('id', 'search-field')
         searchField.setAttribute('placeholder', "Find")
         return searchField
+    }
+
+    _buildInfo() {
+        const info = document.createElement('p')
+        info.classList.add('info')
+        info.setAttribute('id', 'info-highlighted-lines')
+        info.textContent = "No results"
+        return info
     }
 }
 

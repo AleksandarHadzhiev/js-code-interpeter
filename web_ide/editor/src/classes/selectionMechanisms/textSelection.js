@@ -236,14 +236,14 @@ export default class TextSelection {
     _handleCaretForWhenOnDifferentLines(caretBuilder, endingPoint, startingPoint, mouseYPositionBasedOnPage) {
         const differenceBetweenEndingPointTopAndMouseYPositon = mouseYPositionBasedOnPage > endingPoint.top ? mouseYPositionBasedOnPage - endingPoint.top : endingPoint.top - mouseYPositionBasedOnPage
         const differenceBetweenStartingPointTopAndMouseYPositon = mouseYPositionBasedOnPage > startingPoint.top ? mouseYPositionBasedOnPage - startingPoint.top : startingPoint.top - mouseYPositionBasedOnPage
-
         if (differenceBetweenEndingPointTopAndMouseYPositon > differenceBetweenStartingPointTopAndMouseYPositon)
             caretBuilder.buildCaretForTextSelection(startingPoint, this.mousePosition, this.xForMouseInEditor)
         else if (differenceBetweenEndingPointTopAndMouseYPositon < differenceBetweenStartingPointTopAndMouseYPositon)
             caretBuilder.buildCaretForTextSelection(endingPoint, this.mousePosition, this.xForMouseInEditor)
         else if (this.mousePosition == MousePosition.LEFT || this.mousePosition == MousePosition.RIGHT)
             this._handleCaretPositioniningForOutsideTheScreenOnY(caretBuilder, startingPoint, endingPoint)
-
+        else if (this.mousePosition == MousePosition.TOP)
+            caretBuilder.buildCaretForTextSelection(startingPoint, this.mousePosition, this.xForMouseInEditor)
     }
 
     /**

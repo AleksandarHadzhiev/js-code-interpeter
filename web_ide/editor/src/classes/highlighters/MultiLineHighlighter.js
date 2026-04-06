@@ -1,8 +1,14 @@
 import HighlightLineBuilder from "./HighlightLineBuilder.js"
 
 export default class MultiLineHighlighter {
-    constructor(contentToSearchFor) {
+    /**
+     * 
+     * @param {String} contentToSearchFor 
+     * @param {String} wholeText 
+     */
+    constructor(contentToSearchFor, wholeText) {
         this.lowered = contentToSearchFor
+        this.wholeText = wholeText.toLowerCase()
         this.loweredAsLines = this.lowered.split('\n')
         this.highlighter = document.getElementById('highlighter')
         this.highlightedLines = []
@@ -18,8 +24,7 @@ export default class MultiLineHighlighter {
     highlight() {
         this.indexOf = 0
         this.index = 0
-        const wholeText = document.getElementById('writer').value.toLowerCase()
-        this._revisit(wholeText)
+        this._revisit(this.wholeText)
     }
 
     _revisit(wholeText) {

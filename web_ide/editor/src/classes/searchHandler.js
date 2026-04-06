@@ -1,4 +1,5 @@
 import { textToWokWith } from "../../textToWorkWith.js";
+import HighlightProvider from "./highlighters/HighlightProvider.js";
 
 export default class SearchHandler {
     constructor() {
@@ -8,9 +9,7 @@ export default class SearchHandler {
         this.textToWokWith = textToWokWith
 
         this.searchField.addEventListener('input', (event) => {
-            const textToSearchFor = this.searchField.value
-            // how to properly search for the text?
-            console.log(textToSearchFor)
+            this._searchForText()
         })
     }
 
@@ -18,5 +17,12 @@ export default class SearchHandler {
         console.log(this.textToWokWith)
         this.class = this.class == "hidden" ? "search-container" : "hidden"
         this.search.className = this.class
+    }
+
+    _searchForText() {
+        const textToSearchFor = this.searchField.value
+        const highlightProvider = new HighlightProvider(textToSearchFor, this.textToWokWith)
+        const highlights = highlightProvider.getHighlightedElementsAfterHighlightingThem()
+        console.log(highlights)
     }
 }

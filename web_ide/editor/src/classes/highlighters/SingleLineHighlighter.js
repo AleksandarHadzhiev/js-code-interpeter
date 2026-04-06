@@ -1,5 +1,11 @@
 export default class SingleLineHighlighter {
-    constructor(content) {
+    /**
+     * 
+     * @param {String} content 
+     * @param {String} wholeText 
+     */
+    constructor(content, wholeText) {
+        this.wholeText = wholeText.toLowerCase()
         this.contentToSearchFor = String(content)
         this.highlighter = document.getElementById('highlighter')
         this.highlightedLines = []
@@ -15,9 +21,9 @@ export default class SingleLineHighlighter {
         console.info('Handled at the lines level FOR REAL COLORIzATION')
         const startTime = performance.now()
 
-        const wholeText = String(document.getElementById('writer').value).toLowerCase()
+        // const wholeText = String(document.getElementById('writer').value).toLowerCase()
         this._refresh()
-        this._revisit(wholeText)
+        this._revisit(this.wholeText)
 
         const endTime = performance.now()
 

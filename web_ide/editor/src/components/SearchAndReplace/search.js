@@ -17,7 +17,7 @@ class CustomSearchContainer extends HTMLElement {
     }
 
     _buildSearchTextField() {
-        const searchField = document.createElement('input')
+        const searchField = document.createElement('textarea')
         searchField.classList.add('input-field')
         searchField.setAttribute('id', 'search-field')
         searchField.setAttribute('placeholder', "Find")

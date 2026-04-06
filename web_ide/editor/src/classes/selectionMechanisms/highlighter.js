@@ -2,6 +2,7 @@ import CustomContentMarker from "./custonContentMarker.js"
 import { StartingPoint } from "../dtos/caretDTOs.js"
 import { CaretLeftOffsetDTO } from "../dtos/caretDTOs.js"
 import calculateTotalLeftOffsetOfCaretInTheLine from "../calculators/caretLeftOffsetCalculator.js"
+import calculateWidthForText from "../calculators/widthOfTextCalculator.js"
 
 const Operation = {
     ADD: "+",
@@ -25,6 +26,7 @@ export default class Highlighter {
         this.endingPoint = null
         this.customMarker = new CustomContentMarker(contentElement)
         this.contentElement = contentElement
+        this.lineHeight = 28.8
     }
 
 
@@ -95,7 +97,7 @@ export default class Highlighter {
 
     _buildLineForMousePositionOnY(mouseYPositionBasedOnPage, lastVisibleLine, firstVisibleLine) {
         const y = mouseYPositionBasedOnPage
-        let rowBasedOnMouseYPosition = Math.floor(y / 28.8)
+        let rowBasedOnMouseYPosition = Math.floor(y / this.lineHeight)
         let lineElementBasedOnMouuse = document.getElementById(String(rowBasedOnMouseYPosition))
         while (lineElementBasedOnMouuse == null) {
             if (rowBasedOnMouseYPosition >= lastVisibleLine) {
@@ -158,7 +160,12 @@ export default class Highlighter {
         const lineForEndContainer = this.endingRange.endContainer.parentElement.parentElement
         const lineForStartContainer = this.endingRange.startContainer.parentElement.parentElement
         let isSelectable = true
-
+        if (this._isSpecialcCaseStartingFromEmptySpace(commonContainer)) {
+            return this._handleSpecialCaseStartingFromEmptySpace(lineForEndContainer, mouseYPositionBasedOnPage)
+        }
+        else if (this._isSpecialCaseFromContentToEmptySpace(commonContainer)) {
+            return this._handleEmptySpacePointCreation(mouseYPositionBasedOnPage)
+        }
         if (isNaN(Number(lineForStartContainer.id)) == false && isNaN(Number(lineForEndContainer.id)) == false) {
             isSelectable = true
         }
@@ -193,6 +200,62 @@ export default class Highlighter {
             }
         }
         return endingPoint
+    }
+
+    /**
+     * 
+     * @param {HTMLElement} commonContainer 
+     * @returns {Boolean} true if special case and false if not
+     */
+    _isSpecialcCaseStartingFromEmptySpace(commonContainer) {
+        if (commonContainer.id == 'content' && this.endingRange.startContainer.id == 'line-selector')
+            return true
+        else if (commonContainer.id == 'line-selector')
+            return true
+        else if (commonContainer.id == 'content' && this.endingRange.startContainer.id == 'container' && this.endingRange.endContainer.id == 'container')
+            return true
+        return false
+    }
+
+    /**
+     * 
+     * @param {HTMLElement} endingLine 
+     * @param {Number} mouseYPositionBasedOnPage
+     * @returns 
+     */
+    _handleSpecialCaseStartingFromEmptySpace(endingLine, mouseYPositionBasedOnPage) {
+        if (endingLine != null && isNaN(Number(endingLine.id)) == false)
+            return this._buildPointBasedOnContainerAndOffset(this.endingRange.endContainer, this.endingRange.endOffset)
+        else {
+            return this._handleEmptySpacePointCreation(mouseYPositionBasedOnPage)
+        }
+    }
+
+    /**
+     * 
+     * @param {Number} mouseYPositionBasedOnPage 
+     */
+    _handleEmptySpacePointCreation(mouseYPositionBasedOnPage) {
+        const lineId = Math.floor(mouseYPositionBasedOnPage / this.lineHeight)
+        const line = document.getElementById(String(lineId))
+        const topOffset = line.offsetTop
+        const width = calculateWidthForText(this.contentElement, line.textContent)
+        return new StartingPoint(
+            lineId, topOffset, width, line.textContent
+        )
+    }
+
+    /**
+     * 
+     * @param {HTMLElement} commonContainer 
+     * @returns {Boolean} true if special case and false if not
+     */
+    _isSpecialCaseFromContentToEmptySpace(commonContainer) {
+        if (commonContainer.id == "content" && this.endingRange.startContainer.id == "caret")
+            return true
+        else if (commonContainer.id == "content" && this.endingRange.startContainer.id == "caret-placer")
+            return true
+        return false
     }
 
     /**

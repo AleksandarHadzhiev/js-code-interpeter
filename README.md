@@ -1,6 +1,7 @@
 # Table of Contents
 1. [About me](#about-me)
 2. [What's new](#whats-new)
+   - 2.1 [Version 1.1.5](#version-115)
    - 2.1 [Version 1.1.4](#version-114)
    - 2.1 [Version 1.1.3](#version-113)
    - 2.2 [Version 1.1.2](#version-112)
@@ -15,10 +16,10 @@
 
 ## About me
 
-This project is an online JS interpeter. 
+This project is an online IDE which aims to support reading and writing HTML/CSS/JS code in both local (browser with the data stored on the machine) and online (browser with codebase being stored in the DB in cloud).
 
 **Main Features**:
- - Read and write JavaScript code. (Version 1.*)
+ - Read and write HTML/CSS/JS code. (Version 1.*)
  - Terminal integration, allowing commands based on the OS of the user. (Version 2.*)
  - Create and load proejcts on your local machine. (Version 3.*)
  - GitHub/GitLab SSO. (Version 4.*)
@@ -30,7 +31,9 @@ Order of versions - from newest to oldest. For the full explanation behind the v
 
 ### Version 1.1.5
 
-- change the approach for text search and replace in the content
+- allow to search for text in file
+- allow to replace the found text in file
+- select text on ctrl + f command
 
 
 ### Version 1.1.4

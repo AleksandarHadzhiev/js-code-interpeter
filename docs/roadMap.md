@@ -4,7 +4,7 @@ Each version will have its own smaller roadmap and will be the goals and tasks t
 The patches or x.x.[patch] are not real goals of the project, but small bug fixes or ideas for improvement of the codebase.
 The actual plans are x.[plan].x - with specific goals for this version. 
 
-The version aim to resemble iterations with one or more big goals which are the aim of the iteration. The Roadmap will be updated per major version.
+The version aim to resemble iterations with one or more big goals which are the aim of the iteration. The Roadmap will be updated per change in the goals for a version or a new major version added to the codebase.
 
 ### Version 0.0.0
 The goal is to figure out how to build the code reader in such a way, that will allow the user to provide the content (codebase) and the reader will
@@ -44,3 +44,7 @@ generate the code colorised (VSCode colorisation as example of color composition
 - Redirect between files (when it is code redirection)
 - Pop up which shows some of the code to which you are redirecting.
 - Open two or more files in seperate screens.
+
+### 1.4.x
+- Add support for HTML code
+- Add support for CSS code

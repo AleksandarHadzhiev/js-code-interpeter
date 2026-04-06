@@ -192,12 +192,15 @@ lineContentElement.addEventListener('mousedown', (event) => {
 })
 
 contentElement.addEventListener('mousedown', (event) => {
-    const mouseYPosition = loaderHandler.topOffset + (event.pageY - navigationElement.offsetHeight)
-    const lineId = Math.floor(mouseYPosition / lineHeightInPixels)
-    isTextSelecting = true
-    const lineSelector = new LineSelector(event, contentElement)
-    lineSelector.selectLineForClickOnEmptySpace(lineId, contentElement)
-    buildStartingPoint(lineId)
+    const targetId = event.target.id
+    if (targetId == "content" || targetId == "line-selector") {
+        const mouseYPosition = loaderHandler.topOffset + (event.pageY - navigationElement.offsetHeight)
+        const lineId = Math.floor(mouseYPosition / lineHeightInPixels)
+        isTextSelecting = true
+        const lineSelector = new LineSelector(event, contentElement)
+        lineSelector.selectLineForClickOnEmptySpace(lineId, contentElement)
+        buildStartingPoint(lineId)
+    }
 })
 
 /**

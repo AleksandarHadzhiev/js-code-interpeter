@@ -28,6 +28,11 @@ This project is an online JS interpeter.
 
 Order of versions - from newest to oldest. For the full explanation behind the versions and their goals visit the [Roadmap](./docs/roadMap.md)
 
+### Version 1.1.5
+
+- change the approach for text search and replace in the content
+
+
 ### Version 1.1.4
 
 Build prototypes to understand how to have fast and stable content loading on the screen, so that there is no black screen when scrolling up/down:
@@ -36,7 +41,6 @@ Build prototypes to understand how to have fast and stable content loading on th
 
 Build prototypes for: text selection and search/replace functionalities with the new content loading approach:
 - custom text selection algorithm
-- change the approach for text search and replace in the content
 - custom caret element
 
 Integrate the learnings from the prototypes in the main project

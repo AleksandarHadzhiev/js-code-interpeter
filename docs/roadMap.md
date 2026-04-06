@@ -27,6 +27,20 @@ generate the code colorised (VSCode colorisation as example of color composition
 - Text Selection
 
 #### 1.2.x
+- CRUD operations on text
+   - basic text manipulation operations:
+      - Add new text
+      - Remove text
+      - Save text
+      - Replace text
+   - all of the basic text operations should work with the marked points
+   - basic operations such as: ctrl + c/ ctrl +v/ ctrl + x - should be supported
 - Redirect between code in file
    - When the user clicks on a variable, function, class, object name - he should be redirected to the initialization of it.
-    
+
+### 1.3.x
+- Previews screen
+- File explorer (part of the menu screen)
+- Redirect between files (when it is code redirection)
+- Pop up which shows some of the code to which you are redirecting.
+- Open two or more files in seperate screens.

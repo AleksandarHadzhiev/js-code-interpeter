@@ -32,22 +32,30 @@ export default class SearchHandler {
     }
 
     _higlightTextDifferentThanEmpty(textToSearchFor) {
-        // const highlightProvider = new HighlightProvider(textToSearchFor, this.textToWokWith)
-        // const highlights = highlightProvider.getHighlightedElementsAfterHighlightingThem()
-        const length = this._singleLineHighlight(textToSearchFor)
-        this.amountOfAppearences = `0 of ${length}`
-        this.infoForAmountOfAppearencesOfText.textContent = this.amountOfAppearences
+        this._singleLineHighlight(textToSearchFor).then((numberOfAppearences) => {
+            this._updateInfo(numberOfAppearences)
+        })
 
     }
 
     _singleLineHighlight(textToSearchFor) {
-        let amountOfAppearences = 0
-        const matches = this.textToWokWith.matchAll(textToSearchFor)
-        // console.log(matches)
-        matches.forEach((match, index) => {
-            amountOfAppearences += 1
-            // console.log(match)
+        return new Promise(function (resolve, reject) {
+            let amountOfAppearences = 0
+            try {
+                const matches = textToWokWith.matchAll(textToSearchFor)
+                matches.forEach((match, index) => {
+                    amountOfAppearences += 1
+                })
+                resolve(amountOfAppearences)
+            }
+            catch (error) {
+                reject(error)
+            }
         })
-        return amountOfAppearences
+    }
+
+    _updateInfo(numberOfAppearences) {
+        this.amountOfAppearences = `0 of ${numberOfAppearences}`
+        this.infoForAmountOfAppearencesOfText.textContent = this.amountOfAppearences
     }
 }

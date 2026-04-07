@@ -319,3 +319,12 @@ html::selection {
     color: gray;
     background-color: transparent;
 }
+
+#highlighter {
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    background-color: transparent;
+    color: transparent;
+    z-index: -1;
+}

@@ -6,10 +6,12 @@ export default class SearchHandler {
         this.search = document.getElementById('search-container')
         this.searchField = document.getElementById('search-field')
         this.lineContent = document.getElementById('line-content')
+        this.placer = document.getElementById('caret-placer')
         this.infoForAmountOfAppearencesOfText = document.getElementById(`info-highlighted-lines`)
         this.class = 'hidden'
         this.amountOfAppearences = "No results"
         this.textToWokWith = textToWokWith
+        this.highlighter = null
 
         this.searchField.addEventListener('input', (event) => {
             this._searchForText()
@@ -22,6 +24,7 @@ export default class SearchHandler {
     }
 
     _searchForText() {
+        this._buildAHighlighter()
         const textToSearchFor = String(this.searchField.value).toLowerCase()
         if (textToSearchFor.trim() !== "") {
             this._higlightTextDifferentThanEmpty(textToSearchFor)
@@ -30,6 +33,19 @@ export default class SearchHandler {
             this.amountOfAppearences = `No results`
             this.infoForAmountOfAppearencesOfText.textContent = this.amountOfAppearences
         }
+    }
+
+    _buildAHighlighter() {
+        let highlighter = document.getElementById('highlighter')
+        if (highlighter == null) {
+            highlighter = document.createElement('div')
+            highlighter.setAttribute('id', 'highlighter')
+            this.placer.appendChild(highlighter)
+        }
+        else {
+            highlighter.replaceChildren()
+        }
+        this.highlighter = highlighter
     }
 
     _higlightTextDifferentThanEmpty(textToSearchFor) {
@@ -79,7 +95,7 @@ export default class SearchHandler {
             try {
                 lines.forEach((lineELement) => {
                     const parent = lineELement.parentElement
-                    const lineText = lineELement.textContent
+                    const lineText = lineELement.textContent.toLowerCase()
                     const topOffset = lineELement.id * 28.8
                     const matchesOnLine = lineText.matchAll(textToSearchFor)
                     matchesOnLine.forEach((match, index) => {
@@ -104,5 +120,29 @@ export default class SearchHandler {
      */
     _buildHighlighters(highlighters) {
         console.log(highlighters)
+        highlighters.forEach((highlighter) => {
+            const higlight = this._buildHighlight(highlighter)
+            this.highlighter.appendChild(higlight)
+        })
+
+    }
+
+    /**
+     * 
+     * @param {*} highlighter 
+     * @returns 
+     */
+    _buildHighlight(highlighter) {
+        const highlight = document.createElement('span')
+        highlight.style =
+            `
+            position: absolute;
+            background-color: orange;
+            width: ${highlighter.width}px;
+            height: 28.8px;
+            left: ${highlighter.left}px;
+            top: ${highlighter.top}px;
+        `
+        return highlight
     }
 }

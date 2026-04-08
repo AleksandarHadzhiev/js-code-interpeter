@@ -45,19 +45,44 @@ export default class TextSelection {
         const lineForStartingPoint = this.highlighter.startingPoint.lineId
         let text = ""
         if (lineForStartingPoint == lineForEndingPoint) {
-            console.log("ONE LINE TEXT SELECTION")
-            const fullText = this.highlighter.startingPoint.fullText
-            const fullTextWidth = calculateWidthForText(this.contentElement, fullText)
-            const startingIndex = turnWidthToIndexForText(this.highlighter.startingPoint.leftOffset, fullTextWidth, fullText.length)
-            const endingIndex = turnWidthToIndexForText(this.highlighter.endingPoint.leftOffset, fullTextWidth, fullText.length)
-            text = fullText.substring(startingIndex, endingIndex)
-            console.log(text)
+            text = this._singleLineTextSelection()
         }
         else {
-            console.log("MULTILINE TEXT SELECTION")
+            this._multilineTextSelection(lines)
         }
         this.selectedText = text
         return this.selectedText
+    }
+
+    _singleLineTextSelection() {
+        const fullText = this.highlighter.startingPoint.fullText
+        const fullTextWidth = calculateWidthForText(this.contentElement, fullText)
+        const startingIndex = turnWidthToIndexForText(this.highlighter.startingPoint.leftOffset, fullTextWidth, fullText.length)
+        const endingIndex = turnWidthToIndexForText(this.highlighter.endingPoint.leftOffset, fullTextWidth, fullText.length)
+        return fullText.substring(startingIndex, endingIndex)
+    }
+
+    /**
+     * 
+     * @param {Array} lines 
+     */
+    _multilineTextSelection(lines) {
+        const lineForEndingPoint = this.highlighter.endingPoint.lineId
+        const lineForStartingPoint = this.highlighter.startingPoint.lineId
+        if (lineForEndingPoint > lineForStartingPoint) {
+            this._startingLineFirst()
+        }
+        else {
+            this._endingLineFirst()
+        }
+    }
+
+    _endingLineFirst() {
+
+    }
+
+    _startingLineFirst() {
+
     }
 
     /**

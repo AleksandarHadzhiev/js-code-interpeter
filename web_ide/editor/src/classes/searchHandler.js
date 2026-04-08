@@ -74,7 +74,7 @@ export default class SearchHandler {
 
     _searchForText() {
         this._buildAHighlighter()
-        const textToSearchFor = this.selectedText
+        const textToSearchFor = this.selectedText.toLowerCase()
         if (textToSearchFor.trim() !== "") {
             this._higlightTextDifferentThanEmpty(textToSearchFor)
         }

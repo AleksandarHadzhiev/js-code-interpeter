@@ -48,8 +48,9 @@ export default class TextSelection {
             text = this._singleLineTextSelection()
         }
         else {
-            this._multilineTextSelection(lines)
+            text = this._multilineTextSelection(lines)
         }
+        console.log(text)
         this.selectedText = text
         return this.selectedText
     }
@@ -70,20 +71,46 @@ export default class TextSelection {
         const lineForEndingPoint = this.highlighter.endingPoint.lineId
         const lineForStartingPoint = this.highlighter.startingPoint.lineId
         if (lineForEndingPoint > lineForStartingPoint) {
-            this._startingLineFirst()
+            return this._startingLineFirst()
         }
         else {
-            this._endingLineFirst()
+            return this._endingLineFirst()
         }
-    }
-
-    _endingLineFirst() {
-
     }
 
     _startingLineFirst() {
-
+        const selectedTextLines = []
+        const textOfFirstLine = this._getTextForFirstSelectedLine(this.highlighter.startingPoint)
+        const textOfEndingLine = this._getOfLastLine(this.highlighter.endingPoint)
+        selectedTextLines.push(textOfFirstLine)
+        selectedTextLines.push(textOfEndingLine)
+        return selectedTextLines.join('\n')
     }
+    _getTextForFirstSelectedLine(point) {
+        const fullText = point.fullText
+        const fullTextWidth = calculateWidthForText(this.contentElement, fullText)
+        const startingIndex = turnWidthToIndexForText(point.leftOffset, fullTextWidth, fullText.length)
+        return fullText.substring(startingIndex, fullText.length - 1)
+    }
+
+    _getOfLastLine(point) {
+        const fullText = point.fullText
+        const fullTextWidth = calculateWidthForText(this.contentElement, fullText)
+        const startingIndex = 0
+        const endingIndex = turnWidthToIndexForText(point.leftOffset, fullTextWidth, fullText.length)
+        return fullText.substring(startingIndex, endingIndex)
+    }
+
+    _endingLineFirst() {
+        const selectedTextLines = []
+        const textOfFirstLine = this._getTextForFirstSelectedLine(this.highlighter.endingPoint)
+        const textOfEndingLine = this._getOfLastLine(this.highlighter.startingPoint)
+        selectedTextLines.push(textOfFirstLine)
+        selectedTextLines.push(textOfEndingLine)
+        return selectedTextLines.join('\n')
+    }
+
+
 
     /**
      * 

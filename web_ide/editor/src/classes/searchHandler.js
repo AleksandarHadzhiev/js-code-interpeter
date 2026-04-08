@@ -73,8 +73,24 @@ export default class SearchHandler {
         this.highlighter = highlighter
     }
 
+    /**
+     * 
+     * @param {String} textToSearchFor 
+     */
     _higlightTextDifferentThanEmpty(textToSearchFor) {
-        this._singleLineHighlighter(textToSearchFor)
+        const lines = textToSearchFor.split('\n')
+        if (lines.length > 1)
+            this._multilineHighlighter(lines)
+        else
+            this._singleLineHighlighter(textToSearchFor)
+    }
+
+    /**
+     * 
+     * @param {Array} lines 
+     */
+    _multilineHighlighter(lines) {
+        console.log(lines)
     }
 
     /**

@@ -85,45 +85,29 @@ export default class SearchHandler {
      * @param {String} textToSearchFor 
      */
     _higlightTextDifferentThanEmpty(textToSearchFor) {
+        this.widthOfTextToHighlight = calculateWidthForText(this.lineContent, textToSearchFor)
+        console.log(this.widthOfTextToHighlight,)
         const lines = textToSearchFor.split('\n')
         if (lines.length > 1)
-            this._multilineHighlighter(lines, textToSearchFor)
+            this._multilineHighlighter(textToSearchFor, lines)
         else
             this._singleLineHighlighter(textToSearchFor)
     }
 
     /**
      * 
-     * @param {Array} lines 
      * @param {String} textToSearchFor 
+     * @param {Array} lines 
      */
-    _multilineHighlighter(lines, textToSearchFor) {
+    _multilineHighlighter(textToSearchFor, lines) {
         const text = textToSearchFor.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace('\n', '[\\n]');
         this.textToSearchFor = textToSearchFor
         this.textToSearchForWithEscapedRegex = text
-        console.log(text)
-        const regex = /getName\(age\) \{ console.log\("MEOW"\); \}[\n]T/g
         this.textToSearchForLength = textToSearchFor.length
         this._catchAllAppearancesInFullText(text).then((numberOfAppearences) => {
             this._updateInfo(numberOfAppearences)
         })
-        console.log(lines)
-    }
-
-    /**
-     * 
-     * @param {String} textToSearchFor 
-     */
-    _singleLineHighlighter(textToSearchFor) {
-        const text = textToSearchFor.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        this.textToSearchFor = textToSearchFor
-        this.textToSearchForWithEscapedRegex = text
-        this.textToSearchForLength = textToSearchFor.length
-        this.widthOfTextToHighlight = calculateWidthForText(this.lineContent, this.textToSearchFor)
-        this._catchAllAppearancesInFullText(text).then((numberOfAppearences) => {
-            this._updateInfo(numberOfAppearences)
-        })
-        this._highlightTextVisibleOnScreen(text)
+        this._highlightMultilineSearchOnScreen(text, lines)
     }
 
     _catchAllAppearancesInFullText(textToSearchFor) {
@@ -145,6 +129,70 @@ export default class SearchHandler {
     _updateInfo(numberOfAppearences) {
         this.amountOfAppearences = `0 of ${numberOfAppearences}`
         this.infoForAmountOfAppearencesOfText.textContent = this.amountOfAppearences
+    }
+
+    /**
+     * 
+     * @param {String} textToSearchFor 
+     * @param {Array} lines 
+     */
+    _highlightMultilineSearchOnScreen(textToSearchFor, lines) {
+        const text = this.lineContent.textContent.toLowerCase()
+        const initialTopOffset = this.firstVisibleLine * 28.8
+        try {
+            const matches = text.matchAll(textToSearchFor)
+
+            matches.forEach((match) => {
+                const textBefore = text.substring(0, match.index)
+                const lineId = textBefore.split('\n').length - 1
+                const topOffset = initialTopOffset + (lineId * 28.8)
+                const lineHighlighter = this._buildLineHighlighter(lineId, topOffset)
+                const lineElement = document.getElementById(String(lineId))
+                lineElement.offsetWidth
+                const widths = this._buildWidths(lines)
+                const widthForFirstLine = calculateWidthForText(this.lineContent, lineElement.textContent)
+                const leftOffset = widthForFirstLine - widths[0]
+                widths.forEach((width, index) => {
+                    let coordinates = new Coordinates(width, leftOffset, index * 28.8)
+                    if (index != 0) coordinates.left = 0
+                    console.log(coordinates)
+                    const higlight = this._buildHighlight(coordinates, lineHighlighter)
+                    lineHighlighter.appendChild(higlight)
+                })
+                this.highlighter.appendChild(lineHighlighter)
+            })
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
+
+    /**
+     * 
+     * @param {Array} lines 
+     */
+    _buildWidths(lines) {
+        const widths = []
+        lines.forEach((line) => {
+            const width = calculateWidthForText(this.lineContent, line)
+            widths.push(width)
+        })
+        return widths
+    }
+
+    /**
+     * 
+     * @param {String} textToSearchFor 
+     */
+    _singleLineHighlighter(textToSearchFor) {
+        const text = textToSearchFor.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        this.textToSearchFor = textToSearchFor
+        this.textToSearchForWithEscapedRegex = text
+        this.textToSearchForLength = textToSearchFor.length
+        this._catchAllAppearancesInFullText(text).then((numberOfAppearences) => {
+            this._updateInfo(numberOfAppearences)
+        })
+        this._highlightTextVisibleOnScreen(text)
     }
 
     /**
@@ -231,6 +279,7 @@ export default class SearchHandler {
             background-color: orange;
             width: ${coordinates.width}px;
             height: 28.8px;
+            top: ${coordinates.top}px;
             left: ${coordinates.left}px;
         `
         return highlight

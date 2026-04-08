@@ -41,6 +41,13 @@ export default class SearchHandler {
             this.firstVisibleLine = linesLoader.firstVisibleLine
             this._searchForText()
         })
+        this.searchField.addEventListener('keydown', (event) => {
+            const isPastingText = event.key == "c" || event.key == "C"
+            if (event.ctrlKey && isPastingText) {
+                this.firstVisibleLine = linesLoader.firstVisibleLine
+                this._searchForText()
+            }
+        })
     }
 
     changeVisibility() {

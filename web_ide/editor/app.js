@@ -122,6 +122,7 @@ function scrollVertical(event) {
     barVerticalHandler.scrollBasedOnPercentage(percentage)
     linesLoader.reloadLinesForNewTopOffset(loaderHandler.topOffset)
     textSelection.setLoaderOffset(loaderHandler.topOffset)
+    searchHandler.updateOnScrolling()
 }
 
 function scrollHorizontal(event) {
@@ -152,6 +153,7 @@ barHorizontalElement.addEventListener('mousedown', (event) => {
 scrollbarAreaElementVertical.addEventListener('mousemove', (event) => {
     if (barVerticalIsSelected) {
         verticalScrolling(event)
+        searchHandler.updateOnScrolling()
     }
 })
 
@@ -271,6 +273,7 @@ function verticalScrollingOnWindowMouseMove(event) {
         const isAllowedToScroll = mouseOutsideOfScreenInPx <= widthOfAreaAllowedToScrollOutsideOfScreen
         if (isAllowedToScroll) {
             verticalScrolling(event)
+            searchHandler.updateOnScrolling()
         }
     }
 }

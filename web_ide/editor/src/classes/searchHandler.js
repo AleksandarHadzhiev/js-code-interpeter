@@ -21,6 +21,8 @@ export default class SearchHandler {
         this.searchField = document.getElementById('search-field')
         this.lineContent = document.getElementById('line-content')
         this.placer = document.getElementById('caret-placer')
+        this.textToSearchFor = ""
+        this.textToSearchForLength = 0
         this.infoForAmountOfAppearencesOfText = document.getElementById(`info-highlighted-lines`)
         this.class = 'hidden'
         this.amountOfAppearences = "No results"
@@ -71,10 +73,12 @@ export default class SearchHandler {
      */
     _singleLineHighlighter(textToSearchFor) {
         const text = textToSearchFor.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        this.textToSearchFor = text
+        this.textToSearchForLength = textToSearchFor.length
         this._singleLineHighlightCheckInFullText(text).then((numberOfAppearences) => {
             this._updateInfo(numberOfAppearences)
         })
-        this._highlightTextVisibleOnScreen(text, textToSearchFor.length).then((highlighters) => {
+        this._highlightTextVisibleOnScreen(text, this.textToSearchForLength).then((highlighters) => {
             this._buildHighlighters(highlighters)
         })
     }
@@ -147,7 +151,6 @@ export default class SearchHandler {
      * @param {Array} highlighters 
      */
     _buildHighlighters(highlighters) {
-        console.log(highlighters)
         highlighters.forEach((highlighter) => {
             const higlight = this._buildHighlight(highlighter)
             this.highlighter.appendChild(higlight)
@@ -172,6 +175,13 @@ export default class SearchHandler {
             top: ${highlighter.top}px;
         `
         return highlight
+    }
+
+    updateOnScrolling() {
+        console.log("UPDATE")
+        this._highlightTextVisibleOnScreen(this.textToSearchFor, this.textToSearchForLength).then((highlighters) => {
+            this._buildHighlighters(highlighters)
+        })
     }
 }
 

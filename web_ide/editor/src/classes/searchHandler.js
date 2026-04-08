@@ -227,7 +227,7 @@ export default class SearchHandler {
         const matchesOnLine = lineText.matchAll(textToSearchFor)
         const lineHighlighter = this._buildLineHighlighter(lineId, topOffset)
         matchesOnLine.forEach((match, index) => {
-            this._buildCoordinatesToHighlight(match, lineText, topOffset, width, this.lineContent)
+            this._buildCoordinatesToHighlight(match, lineText, width, this.lineContent)
                 .then((coordinatesToHighlight) => {
                     const higlight = this._buildHighlight(coordinatesToHighlight, lineHighlighter)
                     lineHighlighter.appendChild(higlight)
@@ -255,12 +255,12 @@ export default class SearchHandler {
  * @param {HTMLElement} lineContent 
  * @returns 
  */
-    _buildCoordinatesToHighlight(match, lineText, topOffset, width, lineContent) {
+    _buildCoordinatesToHighlight(match, lineText, width, lineContent) {
         return new Promise(function (resolve, reject) {
             try {
                 const text = lineText.substring(0, match.index)
                 const leftOffset = calculateWidthForText(lineContent, text)
-                resolve(new Coordinates(width, leftOffset, topOffset))
+                resolve(new Coordinates(width, leftOffset, 0))
             } catch (error) {
                 reject(error)
             }
@@ -344,5 +344,23 @@ export default class SearchHandler {
             this._buildAHighlighter()
             this._multilineHighlighter(this.textToSearchFor, lines)
         }
+    }
+
+    _nultilineUpdateOnSlowScrolling() {
+        const lines = this.lineContent.childNodes
+        lines.forEach((line) => {
+            const id = line.id
+            const highlightedLine = document.getElementById(`${id}-highlighter`)
+            if (highlightedLine == null)
+                console.log("highlighted")
+            // this._highlightTextForLine(line, this.textToSearchForWithEscapedRegex, this.widthOfTextToHighlight)
+            else if (highlightedLine.classList.contains('hidden'))
+                highlightedLine.classList.remove('hidden')
+        })
+        this.highlighter.childNodes.forEach((highlightedLine) => {
+            const id = String(highlightedLine.id).replace(`-highlighter`, '')
+            const lineElement = document.getElementById(String(id))
+            if (lineElement == null) highlightedLine.class = 'hidden'
+        })
     }
 }

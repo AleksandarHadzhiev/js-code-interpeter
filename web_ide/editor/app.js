@@ -404,9 +404,15 @@ function removeExistingHighlighter() {
 
 window.addEventListener('keydown', (event) => {
     const isClickingF = event.key == "f" || event.key == "F"
+    const isCopiingText = event.key == "c" || event.key == "C"
     if (event.ctrlKey && isClickingF) {
         event.preventDefault()
         searchHandler.changeVisibility()
+    }
+    else if (event.ctrlKey && isCopiingText) {
+        event.preventDefault()
+        const selectedText = textSelection.selectTextOnCopyCommand(searchHandler.textToWokWith)
+        searchHandler.setSelectedText(selectedText)
     }
     else handleCaretMovement(event)
 })

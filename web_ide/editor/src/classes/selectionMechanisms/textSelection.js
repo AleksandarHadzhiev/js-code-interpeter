@@ -4,6 +4,8 @@ import { StartingPoint } from "../dtos/caretDTOs.js"
 import CaretBuilder from "./caretBuilder.js"
 import MarkedPoint from "./MarkedPoint.js"
 import ContentScrollingHandler from "../scrollingMechanisms/ContentScrollingHandler.js"
+import turnWidthToIndexForText from "../calculators/offsetToTextCalculator.js"
+import calculateWidthForText from "../calculators/widthOfTextCalculator.js"
 
 
 export default class TextSelection {
@@ -31,6 +33,31 @@ export default class TextSelection {
         this.contentElementOffsetLeft = contentElementOffsetLeft
         this.lastTextLine = maxLines
         this.scrollHandler = contentScrollHandler
+        this.selectedText = ""
+    }
+
+    /**
+     * @param {String} fullText 
+     */
+    selectTextOnCopyCommand(fullText) {
+        const lines = fullText.split('\n')
+        const lineForEndingPoint = this.highlighter.endingPoint.lineId
+        const lineForStartingPoint = this.highlighter.startingPoint.lineId
+        let text = ""
+        if (lineForStartingPoint == lineForEndingPoint) {
+            console.log("ONE LINE TEXT SELECTION")
+            const fullText = this.highlighter.startingPoint.fullText
+            const fullTextWidth = calculateWidthForText(this.contentElement, fullText)
+            const startingIndex = turnWidthToIndexForText(this.highlighter.startingPoint.leftOffset, fullTextWidth, fullText.length)
+            const endingIndex = turnWidthToIndexForText(this.highlighter.endingPoint.leftOffset, fullTextWidth, fullText.length)
+            text = fullText.substring(startingIndex, endingIndex)
+            console.log(text)
+        }
+        else {
+            console.log("MULTILINE TEXT SELECTION")
+        }
+        this.selectedText = text
+        return this.selectedText
     }
 
     /**

@@ -271,3 +271,60 @@ html::selection {
     position: absolute;
     left: var(--width-for-menu);
 }
+
+.search-container {
+    position: absolute;
+    top: calc(5% + var(--height-for-navigation));
+    right: calc(5% + var(--width-of-vertical-scrollbar));
+    width: 400px;
+    height: 50px;
+    background-color: rgb(48, 48, 48);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.input-field {
+    outline: none;
+    resize: none;
+    padding-left: 10px;
+    padding-top: 5px;
+    background-color: rgb(66, 66, 66);
+    color: gray;
+    height: var(--min-line-height);
+    width: 250px;
+    font-size: var(--font-size);
+    font-family: 'Courier New', Courier, monospace;
+    border: black 1px solid;
+    border-radius: 2px;
+    text-decoration: none;
+}
+
+.input-field::selection {
+    background-color: rgb(44, 44, 254);
+    color: white;
+}
+
+.input-field:focus {
+    outline: none;
+}
+
+.info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: fit-content;
+    color: gray;
+    background-color: transparent;
+}
+
+#highlighter {
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    background-color: transparent;
+    color: transparent;
+    z-index: -1;
+}

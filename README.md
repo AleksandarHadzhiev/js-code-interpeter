@@ -34,6 +34,8 @@ Order of versions - from newest to oldest. For the full explanation behind the v
 - allow to search for text in file
 - allow to replace the found text in file
 - select text on ctrl + f command
+- change line loading structure
+   - from two identical lines to text from a file
 
 
 ### Version 1.1.4

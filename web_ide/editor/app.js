@@ -12,12 +12,12 @@ import { MousePosition } from "./src/classes/selectionMechanisms/enums.js"
 import ContentScrollingHandler from "./src/classes/scrollingMechanisms/ContentScrollingHandler.js"
 import calculateWidthForText from "./src/classes/calculators/widthOfTextCalculator.js"
 import LineSelector from "./src/classes/selectionMechanisms/lineSelector.js"
+import SearchHandler from "./src/classes/searchHandler.js"
 
 const mainContainer = document.getElementById('container')
 const menuContainer = document.getElementById('menu')
 const navigationElement = document.getElementById('navigation')
 const loaderElement = document.getElementById('loader')
-
 
 const scrollbarElementVertical = document.getElementById('scrollbar-vertical')
 const scrollbarAreaElementVertical = document.getElementById('scrollable-area-vertical')
@@ -31,6 +31,7 @@ const barHorizontalElement = document.getElementById('bar-horizontal')
 const lineNumerationElement = document.getElementById('line-numeration')
 const lineContentElement = document.getElementById('line-content')
 const contentElement = document.getElementById('content')
+
 
 const scrollbarVerticalHeight = scrollbarElementVertical.offsetHeight
 const scrollbarVerticalTopOffset = navigationElement.offsetHeight
@@ -76,6 +77,7 @@ const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationEleme
 const textSelectionScrolling = new TextSelectionScrolling(barVerticalHandler, loaderHandler, linesLoader)
 const scrollOncaretMovement = new ScrollOnCaretMovement(loaderHandler, barVerticalHandler, linesLoader, contentScrollingHandler, barHorizontalHandler)
 const caretMover = new CaretMover(scrollOncaretMovement, lineContentElement)
+const searchHandler = new SearchHandler(linesLoader)
 
 function displayVerticalScrollbar() {
     if (loaderHeight > mainContainer.offsetHeight) {
@@ -107,18 +109,21 @@ displayVerticalScrollbar()
 displayHorizontalScrollbar()
 
 window.addEventListener('wheel', (event) => {
-    scrollVertical(event)
-    scrollHorizontal(event)
+    if (event.deltaY != -0)
+        scrollVertical(event)
+    else scrollHorizontal(event)
     displayHighlightIfThereIsSelectedText()
 })
 
 function scrollVertical(event) {
+    console.log("scrolling")
     const offsetTop = offsetCalculator.calculateOffsetBasedOnDeltaYOfMouseEvent(event.deltaY)
     loaderHandler.scrollWithOffset(offsetTop)
     const percentage = loaderHandler.getPercentageOfScroll()
     barVerticalHandler.scrollBasedOnPercentage(percentage)
     linesLoader.reloadLinesForNewTopOffset(loaderHandler.topOffset)
     textSelection.setLoaderOffset(loaderHandler.topOffset)
+    searchHandler.updateOnScrolling()
 }
 
 function scrollHorizontal(event) {
@@ -163,6 +168,7 @@ function verticalScrolling(event) {
     linesLoader.reloadLinesForNewTopOffset(loaderHandler.topOffset)
     textSelection.setLoaderOffset(loaderHandler.topOffset)
     displayHighlightIfThereIsSelectedText()
+    searchHandler.updateOnScrolling()
 }
 
 scrollbarAreaElementHorizontal.addEventListener('mousemove', (event) => {
@@ -268,6 +274,7 @@ function verticalScrollingOnWindowMouseMove(event) {
         const isAllowedToScroll = mouseOutsideOfScreenInPx <= widthOfAreaAllowedToScrollOutsideOfScreen
         if (isAllowedToScroll) {
             verticalScrolling(event)
+            searchHandler.updateOnScrolling()
         }
     }
 }
@@ -396,6 +403,19 @@ function removeExistingHighlighter() {
 }
 
 window.addEventListener('keydown', (event) => {
+    const isClickingF = event.key == "f" || event.key == "F"
+    if (event.ctrlKey && isClickingF) {
+        event.preventDefault()
+        searchHandler.changeVisibility()
+    }
+    else handleCaretMovement(event)
+})
+
+/**
+ * 
+ * @param {MouseEvent} event 
+ */
+function handleCaretMovement(event) {
     const caret = document.getElementById('caret')
     if (caret) {
         const isScrollable = isCaretMovementScrollable(event)
@@ -403,7 +423,7 @@ window.addEventListener('keydown', (event) => {
             scrollOnScrollable()
         caretMover.moveCaretBasedOnKeybordKey(event, caret)
     }
-})
+}
 
 function isCaretMovementScrollable(event) {
     if (event.key == "Control") return false

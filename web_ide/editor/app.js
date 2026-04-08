@@ -19,7 +19,6 @@ const menuContainer = document.getElementById('menu')
 const navigationElement = document.getElementById('navigation')
 const loaderElement = document.getElementById('loader')
 
-
 const scrollbarElementVertical = document.getElementById('scrollbar-vertical')
 const scrollbarAreaElementVertical = document.getElementById('scrollable-area-vertical')
 const barVerticalElement = document.getElementById('bar-vertical')
@@ -110,12 +109,14 @@ displayVerticalScrollbar()
 displayHorizontalScrollbar()
 
 window.addEventListener('wheel', (event) => {
-    scrollVertical(event)
-    scrollHorizontal(event)
+    if (event.deltaY != -0)
+        scrollVertical(event)
+    else scrollHorizontal(event)
     displayHighlightIfThereIsSelectedText()
 })
 
 function scrollVertical(event) {
+    console.log("scrolling")
     const offsetTop = offsetCalculator.calculateOffsetBasedOnDeltaYOfMouseEvent(event.deltaY)
     loaderHandler.scrollWithOffset(offsetTop)
     const percentage = loaderHandler.getPercentageOfScroll()
@@ -153,7 +154,7 @@ barHorizontalElement.addEventListener('mousedown', (event) => {
 scrollbarAreaElementVertical.addEventListener('mousemove', (event) => {
     if (barVerticalIsSelected) {
         verticalScrolling(event)
-        searchHandler.updateOnScrolling()
+
     }
 })
 
@@ -168,6 +169,7 @@ function verticalScrolling(event) {
     linesLoader.reloadLinesForNewTopOffset(loaderHandler.topOffset)
     textSelection.setLoaderOffset(loaderHandler.topOffset)
     displayHighlightIfThereIsSelectedText()
+    searchHandler.updateOnScrolling()
 }
 
 scrollbarAreaElementHorizontal.addEventListener('mousemove', (event) => {

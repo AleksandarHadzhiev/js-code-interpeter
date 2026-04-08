@@ -21,7 +21,9 @@ export default class SearchHandler {
         this.searchField = document.getElementById('search-field')
         this.lineContent = document.getElementById('line-content')
         this.placer = document.getElementById('caret-placer')
+        this.loader = document.getElementById('loader')
         this.textToSearchFor = ""
+        this.textToSearchForWithEscapedRegex = ""
         this.textToSearchForLength = 0
         this.infoForAmountOfAppearencesOfText = document.getElementById(`info-highlighted-lines`)
         this.class = 'hidden'
@@ -73,14 +75,14 @@ export default class SearchHandler {
      */
     _singleLineHighlighter(textToSearchFor) {
         const text = textToSearchFor.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        this.textToSearchFor = text
+        this.textToSearchFor = textToSearchFor
+        this.textToSearchForWithEscapedRegex = text
         this.textToSearchForLength = textToSearchFor.length
+        this.widthOfTextToHighlight = calculateWidthForText(this.lineContent, this.textToSearchFor)
         this._singleLineHighlightCheckInFullText(text).then((numberOfAppearences) => {
             this._updateInfo(numberOfAppearences)
         })
-        this._highlightTextVisibleOnScreen(text, this.textToSearchForLength).then((highlighters) => {
-            this._buildHighlighters(highlighters)
-        })
+        this._highlightTextVisibleOnScreen(text)
     }
 
     _singleLineHighlightCheckInFullText(textToSearchFor) {
@@ -100,7 +102,6 @@ export default class SearchHandler {
     }
 
     _updateInfo(numberOfAppearences) {
-        console.log(numberOfAppearences)
         this.amountOfAppearences = `0 of ${numberOfAppearences}`
         this.infoForAmountOfAppearencesOfText.textContent = this.amountOfAppearences
     }
@@ -108,21 +109,69 @@ export default class SearchHandler {
     /**
      * 
      * @param {String} textToSearchFor 
-     * @param {Number} length
      * @returns 
      */
-    _highlightTextVisibleOnScreen(textToSearchFor, length) {
+    _highlightTextVisibleOnScreen(textToSearchFor) {
         const lines = this.lineContent.childNodes
-        const highlightForLine = this._highlightTextForLine
-        return new Promise(function (resolve, reject) {
-            const highlighters = [];
-            try {
-                lines.forEach((lineELement) => {
-                    highlightForLine(lineELement, textToSearchFor, highlighters, length)
+        try {
+            const width = this.widthOfTextToHighlight
+            lines.forEach((lineELement) => {
+                this._highlightTextForLine(lineELement, textToSearchFor, width)
+            })
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
+
+    /**
+     * 
+     * @param {HTMLElement} lineELement 
+     * @param {String} textToSearchFor 
+     * @param {Number} width
+     */
+    _highlightTextForLine(lineELement, textToSearchFor, width) {
+        const lineText = lineELement.textContent.toLowerCase()
+        const lineId = lineELement.id
+        const topOffset = lineId * 28.8
+        const matchesOnLine = lineText.matchAll(textToSearchFor)
+        const lineHighlighter = this._buildLineHighlighter(lineId, topOffset)
+        matchesOnLine.forEach((match, index) => {
+            this._buildCoordinatesToHighlight(match, lineText, topOffset, width, this.lineContent)
+                .then((coordinatesToHighlight) => {
+                    const higlight = this._buildHighlight(coordinatesToHighlight, lineHighlighter)
+                    lineHighlighter.appendChild(higlight)
                 })
-                resolve(highlighters)
-            }
-            catch (error) {
+        })
+        this.highlighter.appendChild(lineHighlighter)
+
+    }
+
+
+    _buildLineHighlighter(id, topOffset) {
+        const lineHighlighter = document.createElement('div')
+        lineHighlighter.classList.add(`line-content-marker`)
+        lineHighlighter.setAttribute('id', `${id}-highlighter`)
+        lineHighlighter.style = `top: ${topOffset}px;`
+        return lineHighlighter
+    }
+
+    /**
+ * 
+ * @param {RegExpExecArray} match 
+ * @param {String} lineText 
+ * @param {Number} topOffset 
+ * @param {Number} width 
+ * @param {HTMLElement} lineContent 
+ * @returns 
+ */
+    _buildCoordinatesToHighlight(match, lineText, topOffset, width, lineContent) {
+        return new Promise(function (resolve, reject) {
+            try {
+                const text = lineText.substring(0, match.index)
+                const leftOffset = calculateWidthForText(lineContent, text)
+                resolve(new Coordinates(width, leftOffset, topOffset))
+            } catch (error) {
                 reject(error)
             }
         })
@@ -130,74 +179,40 @@ export default class SearchHandler {
 
     /**
      * 
-     * @param {HTMLElement} lineELement 
-     * @param {String} textToSearchFor 
-     * @param {Array} highlighters 
-     * @param {Number} length
-     */
-    _highlightTextForLine(lineELement, textToSearchFor, highlighters, length) {
-        const parent = lineELement.parentElement
-        const lineText = lineELement.textContent.toLowerCase()
-        const topOffset = lineELement.id * 28.8
-        const matchesOnLine = lineText.matchAll(textToSearchFor)
-        matchesOnLine.forEach((match, index) => {
-            const coordinatesToHighlight = buildCoordinatesToHighlight(match, lineText, parent, topOffset, length)
-            highlighters.push(coordinatesToHighlight)
-        })
-    }
-
-    /**
-     * 
-     * @param {Array} highlighters 
-     */
-    _buildHighlighters(highlighters) {
-        highlighters.forEach((highlighter) => {
-            const higlight = this._buildHighlight(highlighter)
-            this.highlighter.appendChild(higlight)
-        })
-
-    }
-
-    /**
-     * 
-     * @param {*} highlighter 
+     * @param {Coordinates} coordinates 
      * @returns 
      */
-    _buildHighlight(highlighter) {
+    _buildHighlight(coordinates) {
         const highlight = document.createElement('span')
         highlight.style =
             `
             position: absolute;
             background-color: orange;
-            width: ${highlighter.width}px;
+            width: ${coordinates.width}px;
             height: 28.8px;
-            left: ${highlighter.left}px;
-            top: ${highlighter.top}px;
+            left: ${coordinates.left}px;
         `
         return highlight
     }
 
     updateOnScrolling() {
-        console.log("UPDATE")
-        this._highlightTextVisibleOnScreen(this.textToSearchFor, this.textToSearchForLength).then((highlighters) => {
-            this._buildHighlighters(highlighters)
-        })
+        if (this.class !== "hidden") {
+            const lines = this.lineContent.childNodes
+            lines.forEach((line) => {
+                const id = line.id
+                const highlightedLine = document.getElementById(`${id}-highlighter`)
+                if (highlightedLine == null) {
+                    this._highlightTextForLine(line, this.textToSearchForWithEscapedRegex, this.widthOfTextToHighlight)
+                }
+                else if (highlightedLine.classList.contains('hidden')) {
+                    highlightedLine.classList.remove('hidden')
+                }
+            })
+            this.highlighter.childNodes.forEach((highlightedLine) => {
+                const id = String(highlightedLine.id).replace(`-highlighter`, '')
+                const lineElement = document.getElementById(String(id))
+                if (lineElement == null) highlightedLine.class = 'hidden'
+            })
+        }
     }
-}
-
-/**
- * 
- * @param {RegExpExecArray} match 
- * @param {String} lineText 
- * @param {HTMLElement} parent 
- * @param {Number} topOffset 
- * @param {Number} length 
- * @returns 
- */
-function buildCoordinatesToHighlight(match, lineText, parent, topOffset, length) {
-    const text = lineText.substring(0, match.index)
-    const textForWidth = lineText.substring(match.index, match.index + length)
-    const leftOffset = calculateWidthForText(parent, text)
-    const width = calculateWidthForText(parent, textForWidth)
-    return new Coordinates(width, leftOffset, topOffset)
 }

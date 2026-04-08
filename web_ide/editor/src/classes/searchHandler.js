@@ -37,17 +37,26 @@ export default class SearchHandler {
         this.highlighter = null
         this.linesLoader = linesLoader
         this.firstVisibleLine = linesLoader.firstVisibleLine
+        this.lastVisibleLine = linesLoader.lastVisibleLine
         this.searchField.addEventListener('input', (event) => {
             this.firstVisibleLine = linesLoader.firstVisibleLine
+            this.lastVisibleLine = linesLoader.lastVisibleLine
             this._searchForText()
         })
         this.searchField.addEventListener('keydown', (event) => {
             const isPastingText = event.key == "c" || event.key == "C"
             if (event.ctrlKey && isPastingText) {
                 this.firstVisibleLine = linesLoader.firstVisibleLine
+                this.lastVisibleLine = linesLoader.lastVisibleLine
                 this._searchForText()
             }
         })
+    }
+
+    _stripTextFromLineToLine() {
+        const lines = this.textToWokWith.split('\n')
+        const text = lines.slice(this.firstVisibleLine, this.lastVisibleLine)
+        return text.join('\n').toLowerCase()
     }
 
     changeVisibility() {
@@ -86,7 +95,6 @@ export default class SearchHandler {
      */
     _higlightTextDifferentThanEmpty(textToSearchFor) {
         this.widthOfTextToHighlight = calculateWidthForText(this.lineContent, textToSearchFor)
-        console.log(this.widthOfTextToHighlight,)
         const lines = textToSearchFor.split('\n')
         if (lines.length > 1)
             this._multilineHighlighter(textToSearchFor, lines)
@@ -137,30 +145,34 @@ export default class SearchHandler {
      * @param {Array} lines 
      */
     _highlightMultilineSearchOnScreen(textToSearchFor, lines) {
-        const text = this.lineContent.textContent.toLowerCase()
-        const initialTopOffset = this.firstVisibleLine * 28.8
+        const text = this._stripTextFromLineToLine()
         try {
             const matches = text.matchAll(textToSearchFor)
-
             matches.forEach((match) => {
                 const textBefore = text.substring(0, match.index)
                 let lineId = textBefore.split('\n').length - 1
-                const topOffset = initialTopOffset + (lineId * 28.8)
-                lineId = Math.floor(topOffset / 28.8)
-                const lineHighlighter = this._buildLineHighlighter(lineId, topOffset)
-                const lineElement = document.getElementById(String(lineId))
-                lineElement.offsetWidth
-                const widths = this._buildWidths(lines)
-                const widthForFirstLine = calculateWidthForText(this.lineContent, lineElement.textContent)
-                const leftOffset = widthForFirstLine - widths[0]
-                widths.forEach((width, index) => {
-                    let coordinates = new Coordinates(width, leftOffset, index * 28.8)
-                    if (index != 0) coordinates.left = 0
-                    console.log(coordinates)
-                    const higlight = this._buildHighlight(coordinates, lineHighlighter)
-                    lineHighlighter.appendChild(higlight)
-                })
-                this.highlighter.appendChild(lineHighlighter)
+                lineId = this.firstVisibleLine + lineId
+                const topOffset = lineId * 28.8
+                let lineHighlighter = document.getElementById(`${lineId}-highlighter`)
+                if (lineHighlighter) {
+                    if (lineHighlighter.classList.contains('hidden'))
+                        lineHighlighter.classList.remove('hidden')
+                }
+                else {
+                    lineHighlighter = this._buildLineHighlighter(lineId, topOffset)
+                    const lineElement = document.getElementById(String(lineId))
+                    lineElement.offsetWidth
+                    const widths = this._buildWidths(lines)
+                    const widthForFirstLine = calculateWidthForText(this.lineContent, lineElement.textContent)
+                    const leftOffset = widthForFirstLine - widths[0]
+                    widths.forEach((width, index) => {
+                        let coordinates = new Coordinates(width, leftOffset, index * 28.8)
+                        if (index != 0) coordinates.left = 0
+                        const higlight = this._buildHighlight(coordinates, lineHighlighter)
+                        lineHighlighter.appendChild(higlight)
+                    })
+                    this.highlighter.appendChild(lineHighlighter)
+                }
             })
         }
         catch (error) {
@@ -324,7 +336,7 @@ export default class SearchHandler {
         this.highlighter.childNodes.forEach((highlightedLine) => {
             const id = String(highlightedLine.id).replace(`-highlighter`, '')
             const lineElement = document.getElementById(String(id))
-            if (lineElement == null) highlightedLine.class = 'hidden'
+            if (lineElement == null) highlightedLine.classList.add('hidden')
         })
     }
 
@@ -337,30 +349,21 @@ export default class SearchHandler {
             ? this.linesLoader.firstVisibleLine - this.firstVisibleLine
             : this.firstVisibleLine - this.linesLoader.firstVisibleLine
         this.firstVisibleLine = this.linesLoader.firstVisibleLine
+        this.lastVisibleLine = this.linesLoader.lastVisibleLine
         if (distance < this.linesLoader.maxVisibleLinesOnScreen)
-            // this._updateLineByLine()
-            console.log("STILL NEEDED")
+            this._nultilineUpdateOnSlowScrolling(lines)
         else {
             this._buildAHighlighter()
             this._multilineHighlighter(this.textToSearchFor, lines)
         }
     }
 
-    _nultilineUpdateOnSlowScrolling() {
-        const lines = this.lineContent.childNodes
-        lines.forEach((line) => {
-            const id = line.id
-            const highlightedLine = document.getElementById(`${id}-highlighter`)
-            if (highlightedLine == null)
-                console.log("highlighted")
-            // this._highlightTextForLine(line, this.textToSearchForWithEscapedRegex, this.widthOfTextToHighlight)
-            else if (highlightedLine.classList.contains('hidden'))
-                highlightedLine.classList.remove('hidden')
-        })
+    _nultilineUpdateOnSlowScrolling(lines) {
+        this._multilineHighlighter(this.textToSearchFor, lines)
         this.highlighter.childNodes.forEach((highlightedLine) => {
             const id = String(highlightedLine.id).replace(`-highlighter`, '')
             const lineElement = document.getElementById(String(id))
-            if (lineElement == null) highlightedLine.class = 'hidden'
+            if (lineElement == null) highlightedLine.classList.add('hidden')
         })
     }
 }

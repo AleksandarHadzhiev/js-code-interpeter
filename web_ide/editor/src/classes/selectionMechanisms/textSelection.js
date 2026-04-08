@@ -48,9 +48,8 @@ export default class TextSelection {
             text = this._singleLineTextSelection()
         }
         else {
-            text = this._multilineTextSelection(lines)
+            text = this._multilineTextSelection(lines, lineForStartingPoint, lineForEndingPoint)
         }
-        console.log(text)
         this.selectedText = text
         return this.selectedText
     }
@@ -66,23 +65,31 @@ export default class TextSelection {
     /**
      * 
      * @param {Array} lines 
+     * @param {Number} lineForStartingPoint 
+     * @param {Number} lineForEndingPoint 
      */
-    _multilineTextSelection(lines) {
-        const lineForEndingPoint = this.highlighter.endingPoint.lineId
-        const lineForStartingPoint = this.highlighter.startingPoint.lineId
+    _multilineTextSelection(lines, lineForStartingPoint, lineForEndingPoint) {
         if (lineForEndingPoint > lineForStartingPoint) {
-            return this._startingLineFirst()
+            return this._startingLineFirst(lines, lineForStartingPoint, lineForEndingPoint)
         }
         else {
-            return this._endingLineFirst()
+            return this._endingLineFirst(lines, lineForEndingPoint, lineForStartingPoint)
         }
     }
 
-    _startingLineFirst() {
+    /**
+     * 
+     * @param {Array} lines 
+     * @param {Number} firstLine 
+     * @param {Number} lastLine 
+     * @returns 
+     */
+    _startingLineFirst(lines, firstLine, lastLine) {
         const selectedTextLines = []
         const textOfFirstLine = this._getTextForFirstSelectedLine(this.highlighter.startingPoint)
         const textOfEndingLine = this._getOfLastLine(this.highlighter.endingPoint)
         selectedTextLines.push(textOfFirstLine)
+        this._getLinesInBetween(lines, firstLine + 1, lastLine, selectedTextLines)
         selectedTextLines.push(textOfEndingLine)
         return selectedTextLines.join('\n')
     }
@@ -101,11 +108,32 @@ export default class TextSelection {
         return fullText.substring(startingIndex, endingIndex)
     }
 
-    _endingLineFirst() {
+    /**
+     * 
+     * @param {Array} lines 
+     * @param {Number} firstLine 
+     * @param {Number} lastLine 
+     * @param {Array} linesText 
+     */
+    _getLinesInBetween(lines, firstLine, lastLine, linesText) {
+        for (let index = firstLine; index < lastLine; index++) {
+            const lineText = lines[index];
+            linesText.push(lineText)
+        }
+    }
+
+    /**
+    * @param {Array} lines 
+    * @param {Number} firstLine 
+    * @param {Number} lastLine 
+    * @returns 
+    */
+    _endingLineFirst(lines, firstLine, lastLine) {
         const selectedTextLines = []
         const textOfFirstLine = this._getTextForFirstSelectedLine(this.highlighter.endingPoint)
         const textOfEndingLine = this._getOfLastLine(this.highlighter.startingPoint)
         selectedTextLines.push(textOfFirstLine)
+        this._getLinesInBetween(lines, firstLine + 1, lastLine, selectedTextLines)
         selectedTextLines.push(textOfEndingLine)
         return selectedTextLines.join('\n')
     }

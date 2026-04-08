@@ -77,7 +77,7 @@ const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationEleme
 const textSelectionScrolling = new TextSelectionScrolling(barVerticalHandler, loaderHandler, linesLoader)
 const scrollOncaretMovement = new ScrollOnCaretMovement(loaderHandler, barVerticalHandler, linesLoader, contentScrollingHandler, barHorizontalHandler)
 const caretMover = new CaretMover(scrollOncaretMovement, lineContentElement)
-const searchHandler = new SearchHandler()
+const searchHandler = new SearchHandler(linesLoader)
 
 function displayVerticalScrollbar() {
     if (loaderHeight > mainContainer.offsetHeight) {
@@ -154,7 +154,6 @@ barHorizontalElement.addEventListener('mousedown', (event) => {
 scrollbarAreaElementVertical.addEventListener('mousemove', (event) => {
     if (barVerticalIsSelected) {
         verticalScrolling(event)
-
     }
 })
 

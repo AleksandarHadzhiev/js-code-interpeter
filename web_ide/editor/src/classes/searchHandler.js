@@ -1,5 +1,6 @@
 import { textToWokWith } from "../../textToWorkWith.js";
 import calculateWidthForText from "./calculators/widthOfTextCalculator.js";
+import LinesLoader from "./scrollingMechanisms/LinesLoader.js";
 
 class Coordinates {
     /**
@@ -16,7 +17,11 @@ class Coordinates {
 }
 
 export default class SearchHandler {
-    constructor() {
+    /**
+     * 
+     * @param {LinesLoader} linesLoader 
+     */
+    constructor(linesLoader) {
         this.search = document.getElementById('search-container')
         this.searchField = document.getElementById('search-field')
         this.lineContent = document.getElementById('line-content')
@@ -30,7 +35,10 @@ export default class SearchHandler {
         this.amountOfAppearences = "No results"
         this.textToWokWith = textToWokWith
         this.highlighter = null
+        this.linesLoader = linesLoader
+        this.firstVisibleLine = linesLoader.firstVisibleLine
         this.searchField.addEventListener('input', (event) => {
+            this.firstVisibleLine = linesLoader.firstVisibleLine
             this._searchForText()
         })
     }
@@ -197,22 +205,35 @@ export default class SearchHandler {
 
     updateOnScrolling() {
         if (this.class !== "hidden") {
-            const lines = this.lineContent.childNodes
-            lines.forEach((line) => {
-                const id = line.id
-                const highlightedLine = document.getElementById(`${id}-highlighter`)
-                if (highlightedLine == null) {
-                    this._highlightTextForLine(line, this.textToSearchForWithEscapedRegex, this.widthOfTextToHighlight)
-                }
-                else if (highlightedLine.classList.contains('hidden')) {
-                    highlightedLine.classList.remove('hidden')
-                }
-            })
-            this.highlighter.childNodes.forEach((highlightedLine) => {
-                const id = String(highlightedLine.id).replace(`-highlighter`, '')
-                const lineElement = document.getElementById(String(id))
-                if (lineElement == null) highlightedLine.class = 'hidden'
-            })
+            const distance = this.linesLoader.firstVisibleLine > this.firstVisibleLine
+                ? this.linesLoader.firstVisibleLine - this.firstVisibleLine
+                : this.firstVisibleLine - this.linesLoader.firstVisibleLine
+
+            if (distance < this.linesLoader.maxVisibleLinesOnScreen)
+                this._updateLineByLine()
+            else {
+                this._buildAHighlighter()
+                this._singleLineHighlighter(this.textToSearchFor)
+
+            }
+            this.firstVisibleLine = this.linesLoader.firstVisibleLine
         }
+    }
+
+    _updateLineByLine() {
+        const lines = this.lineContent.childNodes
+        lines.forEach((line) => {
+            const id = line.id
+            const highlightedLine = document.getElementById(`${id}-highlighter`)
+            if (highlightedLine == null)
+                this._highlightTextForLine(line, this.textToSearchForWithEscapedRegex, this.widthOfTextToHighlight)
+            else if (highlightedLine.classList.contains('hidden'))
+                highlightedLine.classList.remove('hidden')
+        })
+        this.highlighter.childNodes.forEach((highlightedLine) => {
+            const id = String(highlightedLine.id).replace(`-highlighter`, '')
+            const lineElement = document.getElementById(String(id))
+            if (lineElement == null) highlightedLine.class = 'hidden'
+        })
     }
 }

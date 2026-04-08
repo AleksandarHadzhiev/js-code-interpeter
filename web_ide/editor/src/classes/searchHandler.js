@@ -80,7 +80,7 @@ export default class SearchHandler {
     _higlightTextDifferentThanEmpty(textToSearchFor) {
         const lines = textToSearchFor.split('\n')
         if (lines.length > 1)
-            this._multilineHighlighter(lines)
+            this._multilineHighlighter(lines, textToSearchFor)
         else
             this._singleLineHighlighter(textToSearchFor)
     }
@@ -88,8 +88,18 @@ export default class SearchHandler {
     /**
      * 
      * @param {Array} lines 
+     * @param {String} textToSearchFor 
      */
-    _multilineHighlighter(lines) {
+    _multilineHighlighter(lines, textToSearchFor) {
+        const text = textToSearchFor.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace('\n', '[\\n]');
+        this.textToSearchFor = textToSearchFor
+        this.textToSearchForWithEscapedRegex = text
+        console.log(text)
+        const regex = /getName\(age\) \{ console.log\("MEOW"\); \}[\n]T/g
+        this.textToSearchForLength = textToSearchFor.length
+        this._catchAllAppearancesInFullText(text).then((numberOfAppearences) => {
+            this._updateInfo(numberOfAppearences)
+        })
         console.log(lines)
     }
 
@@ -103,17 +113,17 @@ export default class SearchHandler {
         this.textToSearchForWithEscapedRegex = text
         this.textToSearchForLength = textToSearchFor.length
         this.widthOfTextToHighlight = calculateWidthForText(this.lineContent, this.textToSearchFor)
-        this._singleLineHighlightCheckInFullText(text).then((numberOfAppearences) => {
+        this._catchAllAppearancesInFullText(text).then((numberOfAppearences) => {
             this._updateInfo(numberOfAppearences)
         })
         this._highlightTextVisibleOnScreen(text)
     }
 
-    _singleLineHighlightCheckInFullText(textToSearchFor) {
+    _catchAllAppearancesInFullText(textToSearchFor) {
         return new Promise(function (resolve, reject) {
             let amountOfAppearences = 0
             try {
-                const matches = textToWokWith.matchAll(textToSearchFor)
+                const matches = textToWokWith.toLowerCase().matchAll(textToSearchFor)
                 matches.forEach((match, index) => {
                     amountOfAppearences += 1
                 })

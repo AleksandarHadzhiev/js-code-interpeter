@@ -19,11 +19,9 @@ export default class LineBUilder {
         let innerHTML = ''
         const colorDefiner = new WordColorDefiner(this.words)
         this.words.forEach((word, index) => {
-            if (index < this.words.length - 1)
-                innerHTML += builder.buildWordAtIndexInWordsAsHTML(word, index, colorDefiner)
-            else innerHTML += builder.buildWordAtIndexInWordsAsHTML('\n', index, colorDefiner)
+            innerHTML += builder.buildWordAtIndexInWordsAsHTML(word, index, colorDefiner)
         });
-
+        innerHTML += builder.buildWordAtIndexInWordsAsHTML('\n', this.words.length, colorDefiner)
         return innerHTML
     }
 }

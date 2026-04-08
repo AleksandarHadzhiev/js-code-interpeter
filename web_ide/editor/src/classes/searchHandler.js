@@ -1,6 +1,20 @@
 import { textToWokWith } from "../../textToWorkWith.js";
 import calculateWidthForText from "./calculators/widthOfTextCalculator.js";
 
+class Coordinates {
+    /**
+     * 
+     * @param {Number} width 
+     * @param {Number} left 
+     * @param {Number} top 
+     */
+    constructor(width, left, top) {
+        this.width = width
+        this.left = left
+        this.top = top
+    }
+}
+
 export default class SearchHandler {
     constructor() {
         this.search = document.getElementById('search-container')

@@ -104,31 +104,41 @@ export default class SearchHandler {
     /**
      * 
      * @param {String} textToSearchFor 
+     * @param {Number} length
      * @returns 
      */
-    _highlightTextVisibleOnScreen(textToSearchFor) {
+    _highlightTextVisibleOnScreen(textToSearchFor, length) {
         const lines = this.lineContent.childNodes
+        const highlightForLine = this._highlightTextForLine
         return new Promise(function (resolve, reject) {
-            const highlighters = []
+            const highlighters = [];
             try {
                 lines.forEach((lineELement) => {
-                    const parent = lineELement.parentElement
-                    const lineText = lineELement.textContent.toLowerCase()
-                    const topOffset = lineELement.id * 28.8
-                    const matchesOnLine = lineText.matchAll(textToSearchFor)
-                    matchesOnLine.forEach((match, index) => {
-                        const text = lineText.substring(0, match.index)
-                        const textForWidth = lineText.substring(match.index, match.index + textToSearchFor.length)
-                        const leftOffset = calculateWidthForText(parent, text)
-                        const width = calculateWidthForText(parent, textForWidth)
-                        highlighters.push({ "width": width, "left": leftOffset, "top": topOffset })
-                    })
+                    highlightForLine(lineELement, textToSearchFor, highlighters, length)
                 })
                 resolve(highlighters)
             }
             catch (error) {
                 reject(error)
             }
+        })
+    }
+
+    /**
+     * 
+     * @param {HTMLElement} lineELement 
+     * @param {String} textToSearchFor 
+     * @param {Array} highlighters 
+     * @param {Number} length
+     */
+    _highlightTextForLine(lineELement, textToSearchFor, highlighters, length) {
+        const parent = lineELement.parentElement
+        const lineText = lineELement.textContent.toLowerCase()
+        const topOffset = lineELement.id * 28.8
+        const matchesOnLine = lineText.matchAll(textToSearchFor)
+        matchesOnLine.forEach((match, index) => {
+            const coordinatesToHighlight = buildCoordinatesToHighlight(match, lineText, parent, topOffset, length)
+            highlighters.push(coordinatesToHighlight)
         })
     }
 
@@ -163,4 +173,21 @@ export default class SearchHandler {
         `
         return highlight
     }
+}
+
+/**
+ * 
+ * @param {RegExpExecArray} match 
+ * @param {String} lineText 
+ * @param {HTMLElement} parent 
+ * @param {Number} topOffset 
+ * @param {Number} length 
+ * @returns 
+ */
+function buildCoordinatesToHighlight(match, lineText, parent, topOffset, length) {
+    const text = lineText.substring(0, match.index)
+    const textForWidth = lineText.substring(match.index, match.index + length)
+    const leftOffset = calculateWidthForText(parent, text)
+    const width = calculateWidthForText(parent, textForWidth)
+    return new Coordinates(width, leftOffset, topOffset)
 }

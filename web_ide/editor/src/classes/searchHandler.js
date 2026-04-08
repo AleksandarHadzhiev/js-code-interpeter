@@ -22,6 +22,7 @@ export default class SearchHandler {
      * @param {LinesLoader} linesLoader 
      */
     constructor(linesLoader) {
+        this.selectedText = ""
         this.search = document.getElementById('search-container')
         this.searchField = document.getElementById('search-field')
         this.lineContent = document.getElementById('line-content')
@@ -41,16 +42,23 @@ export default class SearchHandler {
         this.searchField.addEventListener('input', (event) => {
             this.firstVisibleLine = linesLoader.firstVisibleLine
             this.lastVisibleLine = linesLoader.lastVisibleLine
+            this.selectedText = String(this.searchField.value).toLowerCase()
             this._searchForText()
         })
         this.searchField.addEventListener('keydown', (event) => {
-            const isPastingText = event.key == "c" || event.key == "C"
+            const isPastingText = event.key == "v" || event.key == "V"
             if (event.ctrlKey && isPastingText) {
+                event.preventDefault()
                 this.firstVisibleLine = linesLoader.firstVisibleLine
                 this.lastVisibleLine = linesLoader.lastVisibleLine
+                this.searchField.textContent = this.selectedText
                 this._searchForText()
             }
         })
+    }
+
+    setSelectedText(selectedText) {
+        this.selectedText = selectedText
     }
 
     _stripTextFromLineToLine() {
@@ -66,7 +74,7 @@ export default class SearchHandler {
 
     _searchForText() {
         this._buildAHighlighter()
-        const textToSearchFor = String(this.searchField.value).toLowerCase()
+        const textToSearchFor = this.selectedText
         if (textToSearchFor.trim() !== "") {
             this._higlightTextDifferentThanEmpty(textToSearchFor)
         }

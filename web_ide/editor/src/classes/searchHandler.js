@@ -12,7 +12,6 @@ export default class SearchHandler {
         this.amountOfAppearences = "No results"
         this.textToWokWith = textToWokWith
         this.highlighter = null
-
         this.searchField.addEventListener('input', (event) => {
             this._searchForText()
         })
@@ -52,11 +51,16 @@ export default class SearchHandler {
         this._singleLineHighlighter(textToSearchFor)
     }
 
+    /**
+     * 
+     * @param {String} textToSearchFor 
+     */
     _singleLineHighlighter(textToSearchFor) {
-        this._singleLineHighlightCheckInFullText(textToSearchFor).then((numberOfAppearences) => {
+        const text = textToSearchFor.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        this._singleLineHighlightCheckInFullText(text).then((numberOfAppearences) => {
             this._updateInfo(numberOfAppearences)
         })
-        this._highlightTextVisibleOnScreen(textToSearchFor).then((highlighters) => {
+        this._highlightTextVisibleOnScreen(text, textToSearchFor.length).then((highlighters) => {
             this._buildHighlighters(highlighters)
         })
     }

@@ -144,8 +144,9 @@ export default class SearchHandler {
 
             matches.forEach((match) => {
                 const textBefore = text.substring(0, match.index)
-                const lineId = textBefore.split('\n').length - 1
+                let lineId = textBefore.split('\n').length - 1
                 const topOffset = initialTopOffset + (lineId * 28.8)
+                lineId = Math.floor(topOffset / 28.8)
                 const lineHighlighter = this._buildLineHighlighter(lineId, topOffset)
                 const lineElement = document.getElementById(String(lineId))
                 lineElement.offsetWidth
@@ -287,19 +288,27 @@ export default class SearchHandler {
 
     updateOnScrolling() {
         if (this.class !== "hidden") {
-            const distance = this.linesLoader.firstVisibleLine > this.firstVisibleLine
-                ? this.linesLoader.firstVisibleLine - this.firstVisibleLine
-                : this.firstVisibleLine - this.linesLoader.firstVisibleLine
-
-            if (distance < this.linesLoader.maxVisibleLinesOnScreen)
-                this._updateLineByLine()
-            else {
-                this._buildAHighlighter()
-                this._singleLineHighlighter(this.textToSearchFor)
-
-            }
-            this.firstVisibleLine = this.linesLoader.firstVisibleLine
+            const lines = this.textToSearchFor.split('\n')
+            if (lines.length <= 1)
+                this._singleLineSearch()
+            else
+                this._multilineSearch(lines)
         }
+    }
+
+    _singleLineSearch() {
+        const distance = this.linesLoader.firstVisibleLine > this.firstVisibleLine
+            ? this.linesLoader.firstVisibleLine - this.firstVisibleLine
+            : this.firstVisibleLine - this.linesLoader.firstVisibleLine
+
+        if (distance < this.linesLoader.maxVisibleLinesOnScreen)
+            this._updateLineByLine()
+        else {
+            this._buildAHighlighter()
+            this._singleLineHighlighter(this.textToSearchFor)
+
+        }
+        this.firstVisibleLine = this.linesLoader.firstVisibleLine
     }
 
     _updateLineByLine() {
@@ -317,5 +326,23 @@ export default class SearchHandler {
             const lineElement = document.getElementById(String(id))
             if (lineElement == null) highlightedLine.class = 'hidden'
         })
+    }
+
+    /**
+     * 
+     * @param {Array} lines 
+     */
+    _multilineSearch(lines) {
+        const distance = this.linesLoader.firstVisibleLine > this.firstVisibleLine
+            ? this.linesLoader.firstVisibleLine - this.firstVisibleLine
+            : this.firstVisibleLine - this.linesLoader.firstVisibleLine
+        this.firstVisibleLine = this.linesLoader.firstVisibleLine
+        if (distance < this.linesLoader.maxVisibleLinesOnScreen)
+            // this._updateLineByLine()
+            console.log("STILL NEEDED")
+        else {
+            this._buildAHighlighter()
+            this._multilineHighlighter(this.textToSearchFor, lines)
+        }
     }
 }

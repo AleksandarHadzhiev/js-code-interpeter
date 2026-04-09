@@ -200,7 +200,7 @@ html::selection {
     width: 100%;
     height: var(--scrollable-area-in-px);
     left: 0%;
-    bottom: 0%;
+    top: 100%;
     background-color: transparent;
     pointer-events: none;
 }

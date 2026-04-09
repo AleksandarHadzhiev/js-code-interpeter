@@ -1,5 +1,6 @@
-import { textToWokWith, shortText } from "../../../textToWorkWith.js"
-const listOfPossibleLinesToDisplay = shortText.split('\n')
+import { textToWorkWith, shortText } from "../../../textToWorkWith.js"
+
+const listOfPossibleLinesToDisplay = textToWorkWith.split('\n')
 export default class Line {
 
     constructor(index) {

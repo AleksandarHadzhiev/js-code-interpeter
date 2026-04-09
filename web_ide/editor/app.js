@@ -14,8 +14,8 @@ import calculateWidthForText from "./src/classes/calculators/widthOfTextCalculat
 import LineSelector from "./src/classes/selectionMechanisms/lineSelector.js"
 import SearchHandler from "./src/classes/searchHandler.js"
 
-import { textToWokWith, shortText } from "./textToWorkWith.js"
-const listOfPossibleLinesToDisplay = String(shortText).split('\n')
+import { textToWorkWith, shortText } from "./textToWorkWith.js"
+const listOfPossibleLinesToDisplay = String(textToWorkWith).split('\n')
 
 const mainContainer = document.getElementById('container')
 const menuContainer = document.getElementById('menu')

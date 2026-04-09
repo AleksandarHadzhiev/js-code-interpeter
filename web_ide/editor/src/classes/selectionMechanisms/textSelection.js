@@ -50,7 +50,6 @@ export default class TextSelection {
         else {
             text = this._multilineTextSelection(lines, lineForStartingPoint, lineForEndingPoint)
         }
-        console.log(text)
         this.selectedText = text
         navigator.clipboard.writeText(this.selectText)
         return this.selectedText

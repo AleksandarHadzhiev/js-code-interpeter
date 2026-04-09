@@ -63,7 +63,7 @@ export default class SearchHandler {
 
     _stripTextFromLineToLine() {
         const lines = this.textToWokWith.split('\n')
-        const text = lines.slice(this.firstVisibleLine, this.lastVisibleLine)
+        const text = lines.slice(this.firstVisibleLine, this.lastVisibleLine + 1)
         return text.join('\n').toLowerCase()
     }
 
@@ -160,7 +160,6 @@ export default class SearchHandler {
                 const textBefore = text.substring(0, match.index)
                 let lineId = textBefore.split('\n').length - 1
                 lineId = this.firstVisibleLine + lineId
-                console.log(lineId)
                 const topOffset = lineId * 28.8
                 const lineHighlighter = this._buildLineHighlighter(lineId, topOffset)
                 const lineElement = document.getElementById(String(lineId))

@@ -5,7 +5,6 @@ export default class Line {
 
     constructor(index) {
         this.index = index
-        console.log(index)
         this.content = this.getLineContent(index)
         this.numeration = this.getLineNumerationBasedOnIndexInLoop(index)
     }

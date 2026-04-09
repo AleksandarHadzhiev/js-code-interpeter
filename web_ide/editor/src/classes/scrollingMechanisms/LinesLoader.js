@@ -8,16 +8,18 @@ export default class LinesLoader {
      * @param {HTMLElement} lineNumerationElement  
      * @param {HTMLElement} lineContentElement  
      * @param {HTMLElement} contentElement  
+     * @param {Array} lines  
+     * @param {Number} minLineHeight  
     */
-    constructor(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement, contentElement) {
+    constructor(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement, contentElement, lines, minLineHeight) {
         this.firstVisibleLine = 0
         this.lastVisibleLine = this.firstVisibleLine + maxVisibleLinesOnScreen
         this.maxVisibleLinesOnScreen = maxVisibleLinesOnScreen
         this.previousLastVisibleLine = this.lastVisibleLine
         this.lineNumerationElement = lineNumerationElement
         this.lineContentElement = lineContentElement
-        this.lineHeightInPixels = 28.8
-        this.maxLines = 2000
+        this.lineHeightInPixels = minLineHeight
+        this.maxLines = lines.length
         this.contentElement = contentElement
     }
 

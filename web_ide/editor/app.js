@@ -416,7 +416,7 @@ window.addEventListener('keydown', (event) => {
     }
     else if (event.ctrlKey && isCopiingText) {
         event.preventDefault()
-        const selectedText = textSelection.selectTextOnCopyCommand(searchHandler.textToWokWith)
+        const selectedText = textSelection.selectTextOnCopyCommand(textToWorkWith)
         searchHandler.setSelectedText(selectedText)
     }
     else handleCaretMovement(event)

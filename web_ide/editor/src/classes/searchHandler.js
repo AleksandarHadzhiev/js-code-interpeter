@@ -1,4 +1,4 @@
-import { textToWokWith } from "../../textToWorkWith.js";
+import { textToWorkWith } from "../../textToWorkWith.js";
 import calculateWidthForText from "./calculators/widthOfTextCalculator.js";
 import LinesLoader from "./scrollingMechanisms/LinesLoader.js";
 
@@ -34,7 +34,7 @@ export default class SearchHandler {
         this.infoForAmountOfAppearencesOfText = document.getElementById(`info-highlighted-lines`)
         this.class = 'hidden'
         this.amountOfAppearences = "No results"
-        this.textToWokWith = textToWokWith
+        this.textToWorkWith = textToWorkWith
         this.highlighter = null
         this.linesLoader = linesLoader
         this.firstVisibleLine = linesLoader.firstVisibleLine
@@ -62,7 +62,7 @@ export default class SearchHandler {
     }
 
     _stripTextFromLineToLine() {
-        const lines = this.textToWokWith.split('\n')
+        const lines = this.textToWorkWith.split('\n')
         const text = lines.slice(this.firstVisibleLine, this.lastVisibleLine + 1)
         return text.join('\n').toLowerCase()
     }
@@ -130,7 +130,7 @@ export default class SearchHandler {
         return new Promise(function (resolve, reject) {
             let amountOfAppearences = 0
             try {
-                const matches = textToWokWith.toLowerCase().matchAll(textToSearchFor)
+                const matches = textToWorkWith.toLowerCase().matchAll(textToSearchFor)
                 matches.forEach((match, index) => {
                     amountOfAppearences += 1
                 })

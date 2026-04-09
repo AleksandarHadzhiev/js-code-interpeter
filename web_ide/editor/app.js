@@ -14,6 +14,9 @@ import calculateWidthForText from "./src/classes/calculators/widthOfTextCalculat
 import LineSelector from "./src/classes/selectionMechanisms/lineSelector.js"
 import SearchHandler from "./src/classes/searchHandler.js"
 
+import { textToWorkWith, shortText } from "./textToWorkWith.js"
+const listOfPossibleLinesToDisplay = String(textToWorkWith).split('\n')
+
 const mainContainer = document.getElementById('container')
 const menuContainer = document.getElementById('menu')
 const navigationElement = document.getElementById('navigation')
@@ -53,12 +56,14 @@ const scrollbarWidth = scrollbarElementHorizontal.offsetWidth
 const lineContentWidth = lineContentElement.scrollWidth
 
 const longestLinesInText = "This is a long line to be displayed, and for that reason it will have a lot of text inside it." // will be a data coming from the backend
-const lines = 2000 // will be a data coming from the backend.
+const lines = listOfPossibleLinesToDisplay.length // will be a data coming from the backend.
 const lineHeightInPixels = 28.8
-const maxVisibleLinesOnScreen = Math.ceil(mainContainer.offsetHeight / lineHeightInPixels)
+let maxVisibleLinesOnScreen = Math.ceil(mainContainer.offsetHeight / lineHeightInPixels)
 const widthOfLongestLine = calculateWidthForText(contentElement, longestLinesInText)
 
-const loaderHeight = (lines + maxVisibleLinesOnScreen - 1) * lineHeightInPixels
+let loaderHeightInLines = lines > maxVisibleLinesOnScreen - 1 ? (lines + maxVisibleLinesOnScreen - 1) : lines
+
+let loaderHeight = loaderHeightInLines * lineHeightInPixels
 loaderElement.style.height = `${loaderHeight}px`
 lineContentElement.style = `width: ${widthOfLongestLine}px;`
 let barVerticalIsSelected = false
@@ -73,7 +78,7 @@ const barVerticalHandler = new BarVerticalHandler(scrollbarVerticalHeight, barVe
 const barHorizontalHandler = new BarHorizontalHandler(scrollbarWidth, barHorizontalWidth, barHorizontalElement)
 const loaderHandler = new LoaderHandler(loaderHeight, scrollbarVerticalHeight, loaderElement)
 const offsetCalculator = new OffsetCalculator()
-const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement, contentElement)
+const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement, contentElement, listOfPossibleLinesToDisplay, lineHeightInPixels)
 const textSelectionScrolling = new TextSelectionScrolling(barVerticalHandler, loaderHandler, linesLoader)
 const scrollOncaretMovement = new ScrollOnCaretMovement(loaderHandler, barVerticalHandler, linesLoader, contentScrollingHandler, barHorizontalHandler)
 const caretMover = new CaretMover(scrollOncaretMovement, lineContentElement)
@@ -411,7 +416,7 @@ window.addEventListener('keydown', (event) => {
     }
     else if (event.ctrlKey && isCopiingText) {
         event.preventDefault()
-        const selectedText = textSelection.selectTextOnCopyCommand(searchHandler.textToWokWith)
+        const selectedText = textSelection.selectTextOnCopyCommand(textToWorkWith)
         searchHandler.setSelectedText(selectedText)
     }
     else handleCaretMovement(event)
@@ -483,14 +488,16 @@ window.addEventListener('resize', () => {
     removeExistingHighlighter()
     displayVerticalScrollbar()
     displayHorizontalScrollbar()
-    const newMaxVisibleLinesOnScreen = Math.ceil(mainContainer.offsetHeight / lineHeightInPixels)
-    const newLoaderHeight = (lines + newMaxVisibleLinesOnScreen - 1) * lineHeightInPixels
-    loaderElement.style.height = `${newLoaderHeight}px`
-    linesLoader.updateMaxVisibleLinesOnScreen(newMaxVisibleLinesOnScreen)
+    maxVisibleLinesOnScreen = Math.ceil(mainContainer.offsetHeight / lineHeightInPixels)
+    loaderHeightInLines = lines > maxVisibleLinesOnScreen - 1 ? (lines + maxVisibleLinesOnScreen - 1) : lines
+    loaderHeight = loaderHeightInLines * lineHeightInPixels
+    loaderElement.style.height = `${loaderHeight}px`
+    linesLoader.updateMaxVisibleLinesOnScreen(maxVisibleLinesOnScreen)
     linesLoader.resizeLines()
     caretMover.updateScreenWidth()
     const scrollbarVerticalHeight = scrollbarElementVertical.offsetHeight
-    loaderHandler.updateHeights(newLoaderHeight, scrollbarVerticalHeight)
+
+    loaderHandler.updateHeights(loaderHeight, scrollbarVerticalHeight)
     barVerticalHandler.updateHeights(scrollbarVerticalHeight, barVerticalElement.offsetHeight)
     barHorizontalHandler.updateWidths(scrollbarElementHorizontal.offsetWidth, barHorizontalElement.offsetWidth)
     contentScrollingHandler.updateMaxLeftOffset(lineContentElement.scrollWidth, scrollbarHorizontalLeftOffset, barHorizontalWidth)

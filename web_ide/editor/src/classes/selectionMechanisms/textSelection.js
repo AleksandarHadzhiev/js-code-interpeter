@@ -51,6 +51,7 @@ export default class TextSelection {
             text = this._multilineTextSelection(lines, lineForStartingPoint, lineForEndingPoint)
         }
         this.selectedText = text
+        navigator.clipboard.writeText(this.selectText)
         return this.selectedText
     }
 

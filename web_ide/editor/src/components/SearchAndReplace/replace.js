@@ -1,11 +1,8 @@
-class CustomReplaceContainer extends HTMLElement {
+export default class CustomReplaceContainer {
     constructor() {
-        super()
-        const container = this._buildReplaceContainer()
-        this.appendChild(container)
     }
 
-    _buildReplaceContainer() {
+    buildReplaceContainer() {
         const replaceContainer = document.createElement('div')
         replaceContainer.classList.add('hidden')
         replaceContainer.setAttribute('id', 'replace-container')
@@ -22,5 +19,3 @@ class CustomReplaceContainer extends HTMLElement {
         return replaceField
     }
 }
-
-customElements.define('custom-replace-container', CustomReplaceContainer)

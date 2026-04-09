@@ -1,11 +1,8 @@
-class CustomSearchContainer extends HTMLElement {
+export default class CustomSearchContainer {
     constructor() {
-        super()
-        const container = this._buildSearchContainer()
-        this.appendChild(container)
     }
 
-    _buildSearchContainer() {
+    buildSearchContainer() {
         const searchContainer = document.createElement('div')
         searchContainer.classList.add('hidden')
         searchContainer.setAttribute('id', 'search-container')
@@ -32,5 +29,3 @@ class CustomSearchContainer extends HTMLElement {
         return info
     }
 }
-
-customElements.define('custom-search-container', CustomSearchContainer)

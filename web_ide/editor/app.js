@@ -12,7 +12,6 @@ import { MousePosition } from "./src/classes/selectionMechanisms/enums.js"
 import ContentScrollingHandler from "./src/classes/scrollingMechanisms/ContentScrollingHandler.js"
 import calculateWidthForText from "./src/classes/calculators/widthOfTextCalculator.js"
 import LineSelector from "./src/classes/selectionMechanisms/lineSelector.js"
-import SearchHandler from "./src/classes/searchHandler.js"
 import SearchReplaceHandler from "./src/classes/searchReplace/searchReplaceHandler.js"
 
 import { textToWorkWith, shortText } from "./textToWorkWith.js"
@@ -22,6 +21,7 @@ const mainContainer = document.getElementById('container')
 const menuContainer = document.getElementById('menu')
 const navigationElement = document.getElementById('navigation')
 const loaderElement = document.getElementById('loader')
+
 
 const scrollbarElementVertical = document.getElementById('scrollbar-vertical')
 const scrollbarAreaElementVertical = document.getElementById('scrollable-area-vertical')
@@ -83,7 +83,6 @@ const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationEleme
 const textSelectionScrolling = new TextSelectionScrolling(barVerticalHandler, loaderHandler, linesLoader)
 const scrollOncaretMovement = new ScrollOnCaretMovement(loaderHandler, barVerticalHandler, linesLoader, contentScrollingHandler, barHorizontalHandler)
 const caretMover = new CaretMover(scrollOncaretMovement, lineContentElement)
-const searchHandler = new SearchHandler(linesLoader)
 const searchReplaceHandler = new SearchReplaceHandler(linesLoader)
 
 function displayVerticalScrollbar() {
@@ -130,7 +129,7 @@ function scrollVertical(event) {
     barVerticalHandler.scrollBasedOnPercentage(percentage)
     linesLoader.reloadLinesForNewTopOffset(loaderHandler.topOffset)
     textSelection.setLoaderOffset(loaderHandler.topOffset)
-    searchHandler.updateOnScrolling()
+    searchReplaceHandler.updateOnScrolling()
 }
 
 function scrollHorizontal(event) {
@@ -175,7 +174,7 @@ function verticalScrolling(event) {
     linesLoader.reloadLinesForNewTopOffset(loaderHandler.topOffset)
     textSelection.setLoaderOffset(loaderHandler.topOffset)
     displayHighlightIfThereIsSelectedText()
-    searchHandler.updateOnScrolling()
+    searchReplaceHandler.updateOnScrolling()
 }
 
 scrollbarAreaElementHorizontal.addEventListener('mousemove', (event) => {
@@ -281,7 +280,7 @@ function verticalScrollingOnWindowMouseMove(event) {
         const isAllowedToScroll = mouseOutsideOfScreenInPx <= widthOfAreaAllowedToScrollOutsideOfScreen
         if (isAllowedToScroll) {
             verticalScrolling(event)
-            searchHandler.updateOnScrolling()
+            searchReplaceHandler.updateOnScrolling()
         }
     }
 }
@@ -415,12 +414,11 @@ window.addEventListener('keydown', (event) => {
     if (event.ctrlKey && isClickingF) {
         event.preventDefault()
         searchReplaceHandler.changeVisibility()
-        // searchHandler.changeVisibility()
     }
     else if (event.ctrlKey && isCopiingText) {
         event.preventDefault()
         const selectedText = textSelection.selectTextOnCopyCommand(textToWorkWith)
-        searchHandler.setSelectedText(selectedText)
+        searchReplaceHandler.setSelectedText(selectedText)
     }
     else handleCaretMovement(event)
 })

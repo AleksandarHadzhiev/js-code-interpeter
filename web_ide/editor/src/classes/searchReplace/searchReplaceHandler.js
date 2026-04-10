@@ -1,5 +1,5 @@
 import LinesLoader from "../scrollingMechanisms/LinesLoader.js";
-import SearchHandler from "../searchHandler.js";
+import SearchHandler from "../searchReplace/searchHandler.js";
 
 export default class SearchReplaceHandler {
     /**
@@ -17,5 +17,9 @@ export default class SearchReplaceHandler {
     changeVisibility() {
         this.class = this.class == "hidden" ? "search-replace" : "hidden"
         this.searchRaplce.className = this.class
+    }
+
+    updateOnScrolling() {
+        this.searchHandler.updateOnScrolling()
     }
 }

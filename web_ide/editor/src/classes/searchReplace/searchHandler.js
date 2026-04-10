@@ -54,6 +54,10 @@ export default class SearchHandler {
         })
     }
 
+    /**
+     * 
+     * @param {String} selectedText 
+     */
     setSelectedText(selectedText) {
         this.selectedText = selectedText
     }

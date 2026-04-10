@@ -10,6 +10,7 @@ export default class ReplaceHandler {
         this.replaceField = document.getElementById('replace-field')
         this.selectedText = ""
         this.textToReplaceWith = ""
+        this.textToReplace = ""
         this.replaceField.addEventListener('input', () => {
             this.textToReplaceWith = String(this.replaceField.value)
         })
@@ -28,5 +29,12 @@ export default class ReplaceHandler {
      */
     setSelectedText(selectedText) {
         this.selectedText = selectedText
+    }
+
+    /**
+     * @param {String} textToReplace
+     */
+    setTextToReplace(textToReplace) {
+        this.textToReplace = textToReplace
     }
 }

@@ -296,13 +296,11 @@ export default class SearchHandler {
     }
 
     updateOnScrolling() {
-        if (this.class !== "hidden") {
-            const lines = this.textToSearchFor.split('\n')
-            if (lines.length <= 1)
-                this._singleLineSearch()
-            else
-                this._multilineSearch(lines)
-        }
+        const lines = this.textToSearchFor.split('\n')
+        if (lines.length <= 1)
+            this._singleLineSearch()
+        else
+            this._multilineSearch(lines)
     }
 
     _singleLineSearch() {

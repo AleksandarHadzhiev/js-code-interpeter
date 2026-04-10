@@ -13,6 +13,7 @@ import ContentScrollingHandler from "./src/classes/scrollingMechanisms/ContentSc
 import calculateWidthForText from "./src/classes/calculators/widthOfTextCalculator.js"
 import LineSelector from "./src/classes/selectionMechanisms/lineSelector.js"
 import SearchHandler from "./src/classes/searchHandler.js"
+import SearchReplaceHandler from "./src/classes/searchReplace/searchReplaceHandler.js"
 
 import { textToWorkWith, shortText } from "./textToWorkWith.js"
 const listOfPossibleLinesToDisplay = String(textToWorkWith).split('\n')
@@ -83,6 +84,7 @@ const textSelectionScrolling = new TextSelectionScrolling(barVerticalHandler, lo
 const scrollOncaretMovement = new ScrollOnCaretMovement(loaderHandler, barVerticalHandler, linesLoader, contentScrollingHandler, barHorizontalHandler)
 const caretMover = new CaretMover(scrollOncaretMovement, lineContentElement)
 const searchHandler = new SearchHandler(linesLoader)
+const searchReplaceHandler = new SearchReplaceHandler(linesLoader)
 
 function displayVerticalScrollbar() {
     if (loaderHeight > mainContainer.offsetHeight) {
@@ -412,7 +414,8 @@ window.addEventListener('keydown', (event) => {
     const isCopiingText = event.key == "c" || event.key == "C"
     if (event.ctrlKey && isClickingF) {
         event.preventDefault()
-        searchHandler.changeVisibility()
+        searchReplaceHandler.changeVisibility()
+        // searchHandler.changeVisibility()
     }
     else if (event.ctrlKey && isCopiingText) {
         event.preventDefault()

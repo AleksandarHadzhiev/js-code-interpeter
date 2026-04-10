@@ -6,10 +6,11 @@ export default class SearchReplaceHandler {
     /**
      * 
      * @param {LinesLoader} linesLoader 
+     * @param {String} textToWorkWith
      */
-    constructor(linesLoader) {
-        this.searchHandler = new SearchHandler(linesLoader)
-        this.replaceHandler = new ReplaceHandler(linesLoader)
+    constructor(linesLoader, textToWorkWith) {
+        this.searchHandler = new SearchHandler(linesLoader, textToWorkWith)
+        this.replaceHandler = new ReplaceHandler(linesLoader, textToWorkWith)
         this.searchReplace = document.getElementById("search-replace")
         this.replaceOne = document.getElementById("replace-one")
         this.replaceAll = document.getElementById("replace-all")
@@ -21,6 +22,7 @@ export default class SearchReplaceHandler {
 
         this.replaceAll.addEventListener('click', () => {
             this.replaceHandler.setTextToReplace(this.searchHandler.textToSearchForWithEscapedRegex)
+            this.replaceHandler.replaceAll()
         })
     }
 
@@ -30,7 +32,9 @@ export default class SearchReplaceHandler {
     }
 
     updateOnScrolling() {
-        this.searchHandler.updateOnScrolling()
+        if (this.class !== "hidden") {
+            this.searchHandler.updateOnScrolling()
+        }
     }
 
     /**

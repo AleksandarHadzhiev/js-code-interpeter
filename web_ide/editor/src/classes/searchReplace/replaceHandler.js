@@ -4,9 +4,11 @@ export default class ReplaceHandler {
     /**
      * 
      * @param {LinesLoader} linesLoader 
+     * @param {String} textToWorkWith 
      */
-    constructor(linesLoader) {
+    constructor(linesLoader, textToWorkWith) {
         this.linesLoader = linesLoader
+        this.textToWorkWith = textToWorkWith
         this.replaceField = document.getElementById('replace-field')
         this.selectedText = ""
         this.textToReplaceWith = ""
@@ -36,5 +38,13 @@ export default class ReplaceHandler {
      */
     setTextToReplace(textToReplace) {
         this.textToReplace = textToReplace
+    }
+
+    replaceOne() {
+    }
+
+    replaceAll() {
+        const newText = this.textToWorkWith.replaceAll(this.textToReplace, this.textToReplaceWith)
+        console.log(newText)
     }
 }

@@ -79,11 +79,11 @@ const barVerticalHandler = new BarVerticalHandler(scrollbarVerticalHeight, barVe
 const barHorizontalHandler = new BarHorizontalHandler(scrollbarWidth, barHorizontalWidth, barHorizontalElement)
 const loaderHandler = new LoaderHandler(loaderHeight, scrollbarVerticalHeight, loaderElement)
 const offsetCalculator = new OffsetCalculator()
-const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement, contentElement, listOfPossibleLinesToDisplay, lineHeightInPixels)
+const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement, contentElement, listOfPossibleLinesToDisplay, lineHeightInPixels, textToWorkWith)
 const textSelectionScrolling = new TextSelectionScrolling(barVerticalHandler, loaderHandler, linesLoader)
 const scrollOncaretMovement = new ScrollOnCaretMovement(loaderHandler, barVerticalHandler, linesLoader, contentScrollingHandler, barHorizontalHandler)
 const caretMover = new CaretMover(scrollOncaretMovement, lineContentElement)
-const searchReplaceHandler = new SearchReplaceHandler(linesLoader)
+const searchReplaceHandler = new SearchReplaceHandler(linesLoader, textToWorkWith)
 
 function displayVerticalScrollbar() {
     if (loaderHeight > mainContainer.offsetHeight) {

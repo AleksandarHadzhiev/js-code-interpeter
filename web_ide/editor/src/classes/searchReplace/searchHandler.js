@@ -1,4 +1,3 @@
-import { textToWorkWith } from "../../../textToWorkWith.js";
 import calculateWidthForText from "../calculators/widthOfTextCalculator.js";
 import LinesLoader from "../scrollingMechanisms/LinesLoader.js";
 
@@ -20,8 +19,9 @@ export default class SearchHandler {
     /**
      * 
      * @param {LinesLoader} linesLoader 
+     * @param {String} textToWorkWith
      */
-    constructor(linesLoader) {
+    constructor(linesLoader, textToWorkWith) {
         this.selectedText = ""
         this.searchField = document.getElementById('search-field')
         this.lineContent = document.getElementById('line-content')
@@ -123,6 +123,7 @@ export default class SearchHandler {
     }
 
     _catchAllAppearancesInFullText(textToSearchFor) {
+        const textToWorkWith = this.textToWorkWith
         return new Promise(function (resolve, reject) {
             let amountOfAppearences = 0
             try {

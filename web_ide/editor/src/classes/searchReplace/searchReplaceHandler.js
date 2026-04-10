@@ -17,11 +17,12 @@ export default class SearchReplaceHandler {
         this.class = "hidden"
 
         this.replaceOne.addEventListener('click', () => {
-            this.replaceHandler.setTextToReplace(this.searchHandler.textToSearchForWithEscapedRegex)
+            this.replaceHandler.setTextToReplace(this.searchHandler.textToSearchFor)
+            this.replaceHandler.replaceOne()
         })
 
         this.replaceAll.addEventListener('click', () => {
-            this.replaceHandler.setTextToReplace(this.searchHandler.textToSearchForWithEscapedRegex)
+            this.replaceHandler.setTextToReplace(this.searchHandler.textToSearchFor)
             this.replaceHandler.replaceAll()
         })
     }

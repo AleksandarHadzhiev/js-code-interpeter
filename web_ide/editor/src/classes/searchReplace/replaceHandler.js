@@ -44,7 +44,6 @@ export default class ReplaceHandler {
     }
 
     replaceAll() {
-        const newText = this.textToWorkWith.replaceAll(this.textToReplace, this.textToReplaceWith)
-        console.log(newText)
+        const newText = this.textToWorkWith.toLowerCase().replaceAll(this.textToReplace, this.textToReplaceWith)
     }
 }

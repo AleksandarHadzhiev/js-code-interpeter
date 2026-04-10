@@ -12,8 +12,6 @@ export default class SearchReplaceHandler {
         this.class = "hidden"
     }
 
-
-
     changeVisibility() {
         this.class = this.class == "hidden" ? "search-replace" : "hidden"
         this.searchRaplce.className = this.class
@@ -21,5 +19,13 @@ export default class SearchReplaceHandler {
 
     updateOnScrolling() {
         this.searchHandler.updateOnScrolling()
+    }
+
+    /**
+     * 
+     * @param {String} selectedText 
+     */
+    setSelectedText(selectedText) {
+        this.searchHandler.setSelectedText(selectedText)
     }
 }

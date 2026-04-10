@@ -1,6 +1,6 @@
-import { textToWorkWith } from "../../textToWorkWith.js";
-import calculateWidthForText from "./calculators/widthOfTextCalculator.js";
-import LinesLoader from "./scrollingMechanisms/LinesLoader.js";
+import { textToWorkWith } from "../../../textToWorkWith.js";
+import calculateWidthForText from "../calculators/widthOfTextCalculator.js";
+import LinesLoader from "../scrollingMechanisms/LinesLoader.js";
 
 class Coordinates {
     /**
@@ -23,16 +23,13 @@ export default class SearchHandler {
      */
     constructor(linesLoader) {
         this.selectedText = ""
-        this.search = document.getElementById('search-container')
         this.searchField = document.getElementById('search-field')
         this.lineContent = document.getElementById('line-content')
         this.placer = document.getElementById('caret-placer')
-        this.loader = document.getElementById('loader')
         this.textToSearchFor = ""
         this.textToSearchForWithEscapedRegex = ""
         this.textToSearchForLength = 0
         this.infoForAmountOfAppearencesOfText = document.getElementById(`info-highlighted-lines`)
-        this.class = 'hidden'
         this.amountOfAppearences = "No results"
         this.textToWorkWith = textToWorkWith
         this.highlighter = null
@@ -65,11 +62,6 @@ export default class SearchHandler {
         const lines = this.textToWorkWith.split('\n')
         const text = lines.slice(this.firstVisibleLine, this.lastVisibleLine + 1)
         return text.join('\n').toLowerCase()
-    }
-
-    changeVisibility() {
-        this.class = this.class == "hidden" ? "search-container" : "hidden"
-        this.search.className = this.class
     }
 
     _searchForText() {

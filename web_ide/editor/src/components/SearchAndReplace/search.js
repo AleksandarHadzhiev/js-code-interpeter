@@ -4,8 +4,8 @@ export default class CustomSearchContainer {
 
     buildSearchContainer() {
         const searchContainer = document.createElement('div')
-        searchContainer.classList.add('hidden')
         searchContainer.setAttribute('id', 'search-container')
+        searchContainer.className = 'search-container'
         const searchField = this._buildSearchTextField()
         const info = this._buildInfo()
         searchContainer.appendChild(searchField)

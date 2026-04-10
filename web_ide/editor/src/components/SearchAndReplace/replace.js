@@ -4,7 +4,7 @@ export default class CustomReplaceContainer {
 
     buildReplaceContainer() {
         const replaceContainer = document.createElement('div')
-        replaceContainer.classList.add('hidden')
+        replaceContainer.className = 'replace-container'
         replaceContainer.setAttribute('id', 'replace-container')
         const replaceField = this._buildReplaceTextField()
         replaceContainer.appendChild(replaceField)

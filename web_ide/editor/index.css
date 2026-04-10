@@ -272,11 +272,32 @@ html::selection {
     left: var(--width-for-menu);
 }
 
-.search-container {
+.search-replace {
     position: absolute;
     top: calc(5% + var(--height-for-navigation));
     right: calc(5% + var(--width-of-vertical-scrollbar));
-    width: 400px;
+    width: 450px;
+    height: 110px;
+    background-color: rgb(48, 48, 48);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.search-container {
+    width: 100%;
+    height: 50px;
+    background-color: rgb(48, 48, 48);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.replace-container {
+    width: 100%;
     height: 50px;
     background-color: rgb(48, 48, 48);
     border-radius: 5px;

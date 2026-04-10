@@ -122,7 +122,6 @@ window.addEventListener('wheel', (event) => {
 })
 
 function scrollVertical(event) {
-    console.log("scrolling")
     const offsetTop = offsetCalculator.calculateOffsetBasedOnDeltaYOfMouseEvent(event.deltaY)
     loaderHandler.scrollWithOffset(offsetTop)
     const percentage = loaderHandler.getPercentageOfScroll()

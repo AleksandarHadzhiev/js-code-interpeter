@@ -297,11 +297,14 @@ export default class SearchHandler {
     }
 
     updateOnScrolling() {
-        const lines = this.textToSearchFor.split('\n')
-        if (lines.length <= 1)
-            this._singleLineSearch()
-        else
-            this._multilineSearch(lines)
+        const highlighter = document.getElementById('highlighter')
+        if (highlighter) {
+            const lines = this.textToSearchFor.split('\n')
+            if (lines.length <= 1)
+                this._singleLineSearch()
+            else
+                this._multilineSearch(lines)
+        }
     }
 
     _singleLineSearch() {

@@ -1,4 +1,6 @@
+import { BarHorizontalHandler, BarVerticalHandler } from "../scrollingMechanisms/BarHandler.js";
 import LinesLoader from "../scrollingMechanisms/LinesLoader.js";
+import LoaderHandler from "../scrollingMechanisms/LoaderHandler.js";
 import SearchHandler from "../searchReplace/searchHandler.js";
 import ReplaceHandler from "./replaceHandler.js";
 import SwitchHandler from "./switchHandler.js";
@@ -8,9 +10,12 @@ export default class SearchReplaceHandler {
      * 
      * @param {LinesLoader} linesLoader 
      * @param {String} textToWorkWith
+     * @param {LoaderHandler} loaderHandler
+     * @param {BarVerticalHandler} barVerticalHandler
+     * @param {BarHorizontalHandler} barHorizontalHandler
      */
-    constructor(linesLoader, textToWorkWith) {
-        this.switchHandler = new SwitchHandler(textToWorkWith)
+    constructor(linesLoader, textToWorkWith, loaderHandler, barVerticalHandler, barHorizontalHandler) {
+        this.switchHandler = new SwitchHandler(textToWorkWith, loaderHandler, barVerticalHandler, barHorizontalHandler, linesLoader)
         this.searchHandler = new SearchHandler(linesLoader, textToWorkWith, this.switchHandler)
         this.replaceHandler = new ReplaceHandler(linesLoader, textToWorkWith)
         this.linesLoader = linesLoader

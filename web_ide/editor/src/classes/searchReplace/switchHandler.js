@@ -1,12 +1,22 @@
 import calculateWidthForText from "../calculators/widthOfTextCalculator.js"
+import { BarHorizontalHandler, BarVerticalHandler } from "../scrollingMechanisms/BarHandler.js"
+import LinesLoader from "../scrollingMechanisms/LinesLoader.js"
+import LoaderHandler from "../scrollingMechanisms/LoaderHandler.js"
 import Coordinates from "./coordinates.js"
 
 export default class SwitchHandler {
     /**
-     * 
      * @param {String} textToWorkWith 
+     * @param {LoaderHandler} loaderHandler 
+     * @param {BarVerticalHandler} barVerticalHandler 
+     * @param {BarHorizontalHandler} barHorizontalHandler 
+     * @param {LinesLoader} linesLoader 
      */
-    constructor(textToWorkWith) {
+    constructor(textToWorkWith, loaderHandler, barVerticalHandler, barHorizontalHandler, linesLoader) {
+        this.loaderHandler = loaderHandler
+        this.barVerticalHandler = barVerticalHandler
+        this.barHorizontalHandler = barHorizontalHandler
+        this.linesLoader = linesLoader
         this.content = document.getElementById('content')
         this.highlighter = document.getElementById('highlighter')
         this.textToWorkWith = textToWorkWith

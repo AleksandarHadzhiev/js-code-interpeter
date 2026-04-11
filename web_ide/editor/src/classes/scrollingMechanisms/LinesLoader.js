@@ -26,6 +26,12 @@ export default class LinesLoader {
         this.linesToWorkWith = textToWorkWith.split('\n')
     }
 
+    updateFullContent(newTextToWorkWith) {
+        this.textToWorkWith = newTextToWorkWith
+        this.linesToWorkWith = newTextToWorkWith.split('\n')
+        this._buildLines()
+    }
+
     updateMaxVisibleLinesOnScreen(newMaxVisibleLinesOnScreen) {
         this.maxVisibleLinesOnScreen = newMaxVisibleLinesOnScreen
     }
@@ -34,10 +40,14 @@ export default class LinesLoader {
      * @param {Function} updateWidths 
      */
     loadLines(updateWidths) {
+        this._buildLines()
+        updateWidths()
+    }
+
+    _buildLines() {
         for (let index = this.firstVisibleLine; index < this.lastVisibleLine; index++) {
             this._buildLineForIndex(index)
         }
-        updateWidths()
     }
 
     /**
@@ -56,7 +66,9 @@ export default class LinesLoader {
      */
     _addNumerationElementToSection(line) {
         const lineNumeration = this._buildLineNumerationElementForLine(line)
-        this.lineNumerationElement.appendChild(lineNumeration)
+        if (document.getElementById(`numeration-${line.index}`) == null) {
+            this.lineNumerationElement.appendChild(lineNumeration)
+        }
     }
 
     /**
@@ -79,7 +91,9 @@ export default class LinesLoader {
      */
     _addLineContentToContent(line) {
         const lineContent = this._buildLineWithContent(line)
-        this.lineContentElement.appendChild(lineContent)
+        if (document.getElementById(`${line.index}`) == null) {
+            this.lineContentElement.appendChild(lineContent)
+        }
     }
 
     /**
@@ -89,9 +103,8 @@ export default class LinesLoader {
      */
     _buildLineWithContent(line) {
         const builder = new LineBUilder(line.content)
-        const lineElement = builder.buildLine()
+        const lineElement = builder.buildLine(line.index)
         lineElement.classList.add('line-content')
-        lineElement.setAttribute('id', String(line.index))
         lineElement.style = `top:${line.index * this.lineHeightInPixels}px;`
         lineElement.addEventListener('mousedown', (event) => {
             const lineSeleect = document.getElementById('line-selector')

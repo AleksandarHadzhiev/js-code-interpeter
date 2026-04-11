@@ -15,7 +15,13 @@ export default class SearchReplaceHandler {
         this.searchReplace = document.getElementById("search-replace")
         this.replaceOne = document.getElementById("replace-one")
         this.replaceAll = document.getElementById("replace-all")
+        this.closeSearchReplace = document.getElementById(`close-search-replace`)
         this.class = "hidden"
+
+        this.closeSearchReplace.addEventListener('click', () => {
+            this.class = 'hidden'
+            this.searchReplace.className = this.class
+        })
 
         this.replaceOne.addEventListener('click', () => {
             this.replaceHandler.setTextToReplace(this.searchHandler.textToReplace)

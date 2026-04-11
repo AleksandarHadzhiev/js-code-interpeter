@@ -64,8 +64,8 @@ export default class CustomSearchContainer {
         container.className = "close-container"
         const closeSearchAndReplace = this._buildCloseSearchAndReplace()
         const searchInSelection = this._buildSearchForTextInSelection()
-        container.appendChild(closeSearchAndReplace)
         container.appendChild(searchInSelection)
+        container.appendChild(closeSearchAndReplace)
         return container
     }
 

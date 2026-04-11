@@ -9,9 +9,11 @@ export default class CustomSearchContainer {
         const searchField = this._buildSearchTextField()
         const info = this._buildInfo()
         const switchContainer = this._buildSwitchContainer()
+        const closeContainer = this._buildCloseContainer()
         searchContainer.appendChild(searchField)
         searchContainer.appendChild(info)
         searchContainer.appendChild(switchContainer)
+        searchContainer.appendChild(closeContainer)
         return searchContainer
     }
 
@@ -55,5 +57,31 @@ export default class CustomSearchContainer {
         goDownButton.className = 'switch-button'
         goDownButton.textContent = ">"
         return goDownButton
+    }
+
+    _buildCloseContainer() {
+        const container = document.createElement('div')
+        container.className = "close-container"
+        const closeSearchAndReplace = this._buildCloseSearchAndReplace()
+        const searchInSelection = this._buildSearchForTextInSelection()
+        container.appendChild(closeSearchAndReplace)
+        container.appendChild(searchInSelection)
+        return container
+    }
+
+    _buildCloseSearchAndReplace() {
+        const closeSearchAndReplace = document.createElement('button')
+        closeSearchAndReplace.textContent = "X"
+        closeSearchAndReplace.classList = 'switch-button'
+        closeSearchAndReplace.setAttribute('id', 'close-search-replace')
+        return closeSearchAndReplace
+    }
+
+    _buildSearchForTextInSelection() {
+        const searchInSelection = document.createElement('button')
+        searchInSelection.setAttribute('id', 'search-in-selection')
+        searchInSelection.classList = 'switch-button'
+        searchInSelection.textContent = 'S'
+        return searchInSelection
     }
 }

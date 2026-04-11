@@ -276,7 +276,7 @@ html::selection {
     position: absolute;
     top: calc(5% + var(--height-for-navigation));
     right: calc(5% + var(--width-of-vertical-scrollbar));
-    width: 450px;
+    width: 475px;
     height: 110px;
     background-color: rgb(48, 48, 48);
     border-radius: 5px;
@@ -306,12 +306,12 @@ html::selection {
 }
 
 .switch-container {
-    width: 65px;
+    width: 55px;
     height: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-between;
 }
 
 .switch-button {
@@ -401,4 +401,14 @@ html::selection {
     background-color: transparent;
     color: transparent;
     z-index: -1;
+}
+
+.close-container {
+    margin-right: 4px;
+    width: 55px;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 }

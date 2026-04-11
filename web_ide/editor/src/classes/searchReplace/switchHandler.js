@@ -88,13 +88,10 @@ export default class SwitchHandler {
             topOffset = lineElement.offsetTop
         }
         else {
-            if (lineId >= this.linesLoader.lastVisibleLine) {
-                this.loaderHandler.scrollWithOffset(250)
-            }
-            else {
-                this.loaderHandler.scrollWithOffset(-250)
-            }
-            const percentage = this.loaderHandler.getPercentageOfScroll()
+            topOffset = lineId * 28.8
+            const percentage = (topOffset / this.loaderHandler.height) * 100
+            console.log(percentage)
+            this.loaderHandler.scrollWithPercentage(percentage)
             this.barVerticalHandler.scrollBasedOnPercentage(percentage)
             this.linesLoader.reloadLinesForNewTopOffset(this.loaderHandler.topOffset)
         }

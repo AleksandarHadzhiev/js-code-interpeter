@@ -109,6 +109,7 @@ export default class SearchHandler {
             this.widthOfTextToHighlight = calculateWidthForText(this.lineContent, textToSearchFor)
             this._singleLineHighlighter(textToSearchFor)
         }
+        this._updateInfo()
     }
 
     /**
@@ -122,7 +123,6 @@ export default class SearchHandler {
         this.textToSearchForWithEscapedRegex = text
         this.textToSearchForLength = textToSearchFor.length
         this._catchAllAppearancesInFullText(text)
-        this._updateInfo()
         this._highlightMultilineSearchOnScreen(text, lines)
     }
 
@@ -147,8 +147,6 @@ export default class SearchHandler {
      * @param {Number} currentPosition
      */
     updatePosition(currentPosition) {
-        // this.switchHandler.updatePositions(currentPosition, this.highlights.size)
-        // this.switchHandler.setHighlights(this.highlights)
         this.amountOfAppearences = `${currentPosition + 1} of ${this.highlights.size}`
         this.infoForAmountOfAppearencesOfText.textContent = this.amountOfAppearences
     }
@@ -210,7 +208,6 @@ export default class SearchHandler {
         this.textToSearchForWithEscapedRegex = text
         this.textToSearchForLength = textToSearchFor.length
         this._catchAllAppearancesInFullText(text)
-        this._updateInfo()
         this._highlightTextVisibleOnScreen(text)
     }
 

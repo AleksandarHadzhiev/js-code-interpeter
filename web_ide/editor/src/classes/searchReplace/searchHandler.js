@@ -27,6 +27,7 @@ export default class SearchHandler {
         this.lineContent = document.getElementById('line-content')
         this.placer = document.getElementById('caret-placer')
         this.textToSearchFor = ""
+        this.textToReplace = ""
         this.textToSearchForWithEscapedRegex = ""
         this.textToSearchForLength = 0
         this.infoForAmountOfAppearencesOfText = document.getElementById(`info-highlighted-lines`)
@@ -39,7 +40,8 @@ export default class SearchHandler {
         this.searchField.addEventListener('input', (event) => {
             this.firstVisibleLine = linesLoader.firstVisibleLine
             this.lastVisibleLine = linesLoader.lastVisibleLine
-            this.selectedText = String(this.searchField.value).toLowerCase()
+            this.textToReplace = String(this.searchField.value)
+            this.selectedText = this.textToReplace.toLowerCase()
             this._searchForText()
         })
         this.searchField.addEventListener('keydown', (event) => {
@@ -49,9 +51,18 @@ export default class SearchHandler {
                 this.firstVisibleLine = linesLoader.firstVisibleLine
                 this.lastVisibleLine = linesLoader.lastVisibleLine
                 this.searchField.textContent = this.selectedText
+                this.textToReplace = String(this.searchField.value)
                 this._searchForText()
             }
         })
+    }
+
+    /**
+     * 
+     * @param {String} newTextToWorkWith 
+     */
+    updateTextToWorkWith(newTextToWorkWith) {
+        this.textToWorkWith = newTextToWorkWith
     }
 
     /**
@@ -296,28 +307,34 @@ export default class SearchHandler {
         return highlight
     }
 
+    updateOnReplaceAll() {
+        this.highlighter.remove()
+    }
+
     updateOnScrolling() {
         const highlighter = document.getElementById('highlighter')
         if (highlighter) {
-            const lines = this.textToSearchFor.split('\n')
-            if (lines.length <= 1)
-                this._singleLineSearch()
-            else
-                this._multilineSearch(lines)
+            this._updateHighlights()
         }
+    }
+
+    _updateHighlights() {
+        const lines = this.textToSearchFor.split('\n')
+        if (lines.length <= 1)
+            this._singleLineSearch()
+        else
+            this._multilineSearch(lines)
     }
 
     _singleLineSearch() {
         const distance = this.linesLoader.firstVisibleLine > this.firstVisibleLine
             ? this.linesLoader.firstVisibleLine - this.firstVisibleLine
             : this.firstVisibleLine - this.linesLoader.firstVisibleLine
-
         if (distance < this.linesLoader.maxVisibleLinesOnScreen)
             this._updateLineByLine()
         else {
             this._buildAHighlighter()
             this._singleLineHighlighter(this.textToSearchFor)
-
         }
         this.firstVisibleLine = this.linesLoader.firstVisibleLine
     }

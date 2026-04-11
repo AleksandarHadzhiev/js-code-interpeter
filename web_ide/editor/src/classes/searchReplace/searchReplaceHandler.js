@@ -49,11 +49,15 @@ export default class SearchReplaceHandler {
         })
 
         this.goUpButton.addEventListener('click', () => {
-            this.switchHandler.goUp()
+            const currentPosition = this.switchHandler.goUp()
+            this.searchHandler.updateOnScrolling()
+            this.searchHandler.updatePosition(currentPosition)
         })
 
         this.goDownButton.addEventListener('click', () => {
-            this.switchHandler.goDown()
+            const currentPosition = this.switchHandler.goDown()
+            this.searchHandler.updateOnScrolling()
+            this.searchHandler.updatePosition(currentPosition)
         })
     }
 

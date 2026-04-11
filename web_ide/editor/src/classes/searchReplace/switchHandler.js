@@ -48,7 +48,6 @@ export default class SwitchHandler {
     updatePositions(newCurrentPosition, newEndingPosition) {
         this.currentPosition = newCurrentPosition
         this.endingPosition = newEndingPosition
-        console.log(this)
     }
 
     /**
@@ -57,11 +56,9 @@ export default class SwitchHandler {
      */
     setHighlights(newHighlights) {
         this.highlighter = document.getElementById('highlighter')
-        console.log("HERE")
         this.highlights = newHighlights
         this.focusedHighlight = this._getFocusedHighlights()
         this.highlighter.appendChild(this.focusedHighlight)
-        console.log(this.focusedHighlight)
     }
 
 
@@ -83,17 +80,28 @@ export default class SwitchHandler {
         const textBefore = this.textToWorkWith.substring(0, index)
         const lines = textBefore.split('\n')
         const lineId = lines.length - 1
-        const lineElement = document.getElementById(`${lineId}`)
+        let lineElement = document.getElementById(`${lineId}`)
         const textBeforeSearch = lines.pop()
         const leftOffset = calculateWidthForText(this.content, textBeforeSearch)
         let topOffset = 0
         if (lineElement != null) {
             topOffset = lineElement.offsetTop
         }
+        else {
+            if (lineId >= this.linesLoader.lastVisibleLine) {
+                this.loaderHandler.scrollWithOffset(250)
+            }
+            else {
+                this.loaderHandler.scrollWithOffset(-250)
+            }
+            const percentage = this.loaderHandler.getPercentageOfScroll()
+            this.barVerticalHandler.scrollBasedOnPercentage(percentage)
+            this.linesLoader.reloadLinesForNewTopOffset(this.loaderHandler.topOffset)
+        }
+        lineElement = document.getElementById(`${lineId}`)
+        topOffset = lineElement.offsetTop
         const lineHighlighter = this._buildLineHighlighter(lineId, topOffset)
-
         const widths = this._calculateWidthsLine()
-
         widths.forEach((width, index) => {
             let coordinates = new Coordinates(width, 0, index * 28.8)
             if (index == 0) {
@@ -111,10 +119,8 @@ export default class SwitchHandler {
      */
     _calculateWidthsLine() {
         const widths = []
-        console.log(this.textToSearchForAsLines)
         if (this.textToSearchForAsLines.length == 1) {
             const width = calculateWidthForText(this.content, this.textToSearchForAsLines[0])
-            console.log(width)
             widths.push(width)
             return widths
         }
@@ -167,6 +173,7 @@ export default class SwitchHandler {
         this._updateCurrentPosition(this.currentPosition - 1)
         this.focusedHighlight = this._getFocusedHighlights()
         this.highlighter.appendChild(this.focusedHighlight)
+        return this.currentPosition
     }
 
     goDown() {
@@ -174,6 +181,7 @@ export default class SwitchHandler {
         this._updateCurrentPosition(this.currentPosition + 1)
         this.focusedHighlight = this._getFocusedHighlights()
         this.highlighter.appendChild(this.focusedHighlight)
+        return this.currentPosition
     }
     /**
      * 

@@ -139,7 +139,17 @@ export default class SearchHandler {
     _updateInfo() {
         this.switchHandler.updatePositions(0, this.highlights.size)
         this.switchHandler.setHighlights(this.highlights)
-        this.amountOfAppearences = `0 of ${this.highlights.size}`
+        this.amountOfAppearences = `1 of ${this.highlights.size}`
+        this.infoForAmountOfAppearencesOfText.textContent = this.amountOfAppearences
+    }
+
+    /**
+     * @param {Number} currentPosition
+     */
+    updatePosition(currentPosition) {
+        // this.switchHandler.updatePositions(currentPosition, this.highlights.size)
+        // this.switchHandler.setHighlights(this.highlights)
+        this.amountOfAppearences = `${currentPosition + 1} of ${this.highlights.size}`
         this.infoForAmountOfAppearencesOfText.textContent = this.amountOfAppearences
     }
 

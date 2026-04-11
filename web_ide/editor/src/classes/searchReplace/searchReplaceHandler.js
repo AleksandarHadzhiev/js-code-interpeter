@@ -25,6 +25,8 @@ export default class SearchReplaceHandler {
         this.closeSearchReplace.addEventListener('click', () => {
             this.class = 'hidden'
             this.searchReplace.className = this.class
+            const highlighter = document.getElementById('highlighter')
+            if (highlighter) highlighter.remove()
         })
 
         this.replaceOne.addEventListener('click', () => {

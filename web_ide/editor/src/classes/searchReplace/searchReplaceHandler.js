@@ -10,7 +10,7 @@ export default class SearchReplaceHandler {
      * @param {String} textToWorkWith
      */
     constructor(linesLoader, textToWorkWith) {
-        this.switchHandler = new SwitchHandler()
+        this.switchHandler = new SwitchHandler(textToWorkWith)
         this.searchHandler = new SearchHandler(linesLoader, textToWorkWith, this.switchHandler)
         this.replaceHandler = new ReplaceHandler(linesLoader, textToWorkWith)
         this.linesLoader = linesLoader
@@ -39,6 +39,7 @@ export default class SearchReplaceHandler {
             const newTextToWorkWith = this.replaceHandler.replaceAll()
             this.linesLoader.updateFullContent(newTextToWorkWith)
             this.searchHandler.updateTextToWorkWith(newTextToWorkWith)
+            this.switchHandler.updateTextToWorkWith(newTextToWorkWith)
             this.searchHandler.updateOnReplaceAll()
         })
 

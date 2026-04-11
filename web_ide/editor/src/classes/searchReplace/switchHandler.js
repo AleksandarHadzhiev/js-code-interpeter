@@ -1,8 +1,33 @@
+import calculateWidthForText from "../calculators/widthOfTextCalculator.js"
+import Coordinates from "./coordinates.js"
+
 export default class SwitchHandler {
-    constructor() {
+    /**
+     * 
+     * @param {String} textToWorkWith 
+     */
+    constructor(textToWorkWith) {
+        this.content = document.getElementById('content')
+        this.highlighter = document.getElementById('highlighter')
+        this.textToWorkWith = textToWorkWith
         this.startingPosition = 0
         this.currentPosition = 0
         this.endingPosition = 0
+        this.focusedHighlight = null // Will be the element which is lightly colorosed
+        this.highlights = new Map()
+        this.textToSearchForAsLines = []
+    }
+
+    updateTextToWorkWith(newTextToWorkWith) {
+        this.textToWorkWith = newTextToWorkWith
+    }
+
+    /**
+     * 
+     * @param {Array} lines 
+     */
+    setTextToSearchFor(lines) {
+        this.textToSearchForAsLines = lines
     }
 
     /**
@@ -16,18 +41,139 @@ export default class SwitchHandler {
         console.log(this)
     }
 
+    /**
+     * 
+     * @param {Map} newHighlights 
+     */
+    setHighlights(newHighlights) {
+        this.highlighter = document.getElementById('highlighter')
+        console.log("HERE")
+        this.highlights = newHighlights
+        this.focusedHighlight = this._getFocusedHighlights()
+        this.highlighter.appendChild(this.focusedHighlight)
+        console.log(this.focusedHighlight)
+    }
+
+
+    /**
+     * 
+     * @returns {HTMLElement}
+     */
+    _getFocusedHighlights() {
+        const focusedHighligtAsIndexInText = this.highlights.get(this.currentPosition)
+        const lineHighlighter = this._turnIndexIntoHighlightedElement(focusedHighligtAsIndexInText)
+        return lineHighlighter
+    }
+
+    /**
+     * 
+     * @param {Number} index 
+     */
+    _turnIndexIntoHighlightedElement(index) {
+        const textBefore = this.textToWorkWith.substring(0, index)
+        const lines = textBefore.split('\n')
+        const lineId = lines.length - 1
+        const lineElement = document.getElementById(`${lineId}`)
+        const textBeforeSearch = lines.pop()
+        const leftOffset = calculateWidthForText(this.content, textBeforeSearch)
+        let topOffset = 0
+        if (lineElement != null) {
+            topOffset = lineElement.offsetTop
+        }
+        const lineHighlighter = this._buildLineHighlighter(lineId, topOffset)
+
+        const widths = this._calculateWidthsLine()
+
+        widths.forEach((width, index) => {
+            let coordinates = new Coordinates(width, 0, index * 28.8)
+            if (index == 0) {
+                coordinates = new Coordinates(width, leftOffset, index * 28.8)
+            }
+            const highlight = this._buildHighlight(coordinates)
+            lineHighlighter.appendChild(highlight)
+        })
+        return lineHighlighter
+    }
+
+    /**
+     * 
+     * @returns {Array}
+     */
+    _calculateWidthsLine() {
+        const widths = []
+        console.log(this.textToSearchForAsLines)
+        if (this.textToSearchForAsLines.length == 1) {
+            const width = calculateWidthForText(this.content, this.textToSearchForAsLines[0])
+            console.log(width)
+            widths.push(width)
+            return widths
+        }
+        return this._multiLine(widths)
+    }
+
+    /**
+     * 
+     * @param {Array} widths 
+     * @returns {Array}
+     */
+    _multiLine(widths) {
+        this.textToSearchForAsLines.forEach((content) => {
+            const width = calculateWidthForText(this.content, content)
+            widths.push(width)
+        })
+        return widths
+    }
+
+    _buildLineHighlighter(id, topOffset) {
+        const lineHighlighter = document.createElement('div')
+        lineHighlighter.classList.add(`line-content-marker`)
+        lineHighlighter.setAttribute('id', `${id}-highlighter`)
+        lineHighlighter.style = `top: ${topOffset}px;`
+        return lineHighlighter
+    }
+
+    /**
+     * 
+     * @param {Coordinates} coordinates 
+     * @returns 
+     */
+    _buildHighlight(coordinates) {
+        const highlight = document.createElement('span')
+        highlight.style =
+            `
+            z-index: 1;
+            position: absolute;
+            background-color: blue;
+            width: ${coordinates.width}px;
+            height: 28.8px;
+            top: ${coordinates.top}px;
+            left: ${coordinates.left}px;
+        `
+        return highlight
+    }
+
     goUp() {
-        this._updateCurrentPosition(this.currentPosition)
+        this.focusedHighlight.remove()
+        this._updateCurrentPosition(this.currentPosition - 1)
+        this.focusedHighlight = this._getFocusedHighlights()
+        this.highlighter.appendChild(this.focusedHighlight)
     }
 
     goDown() {
-        this._updateCurrentPosition(this.currentPosition)
+        this.focusedHighlight.remove()
+        this._updateCurrentPosition(this.currentPosition + 1)
+        this.focusedHighlight = this._getFocusedHighlights()
+        this.highlighter.appendChild(this.focusedHighlight)
     }
     /**
      * 
      * @param {Number} newCurrentPosition 
      */
     _updateCurrentPosition(newCurrentPosition) {
-        this.currentPosition = newCurrentPosition
+        if (newCurrentPosition < this.startingPosition)
+            this.currentPosition = this.endingPosition
+        else if (newCurrentPosition > this.endingPosition)
+            this.currentPosition = this.startingPosition
+        else this.currentPosition = newCurrentPosition
     }
 }

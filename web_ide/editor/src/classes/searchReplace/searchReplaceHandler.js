@@ -1,6 +1,7 @@
 import LinesLoader from "../scrollingMechanisms/LinesLoader.js";
 import SearchHandler from "../searchReplace/searchHandler.js";
 import ReplaceHandler from "./replaceHandler.js";
+import SwitchHandler from "./switchHandler.js";
 
 export default class SearchReplaceHandler {
     /**
@@ -9,12 +10,15 @@ export default class SearchReplaceHandler {
      * @param {String} textToWorkWith
      */
     constructor(linesLoader, textToWorkWith) {
-        this.searchHandler = new SearchHandler(linesLoader, textToWorkWith)
+        this.switchHandler = new SwitchHandler()
+        this.searchHandler = new SearchHandler(linesLoader, textToWorkWith, this.switchHandler)
         this.replaceHandler = new ReplaceHandler(linesLoader, textToWorkWith)
         this.linesLoader = linesLoader
         this.searchReplace = document.getElementById("search-replace")
-        this.replaceOne = document.getElementById("replace-one")
+        this.goUpButton = document.getElementById('go-up')
+        this.goDownButton = document.getElementById('go-down')
         this.replaceAll = document.getElementById("replace-all")
+        this.replaceOne = document.getElementById("replace-one")
         this.closeSearchReplace = document.getElementById(`close-search-replace`)
         this.class = "hidden"
 
@@ -34,6 +38,14 @@ export default class SearchReplaceHandler {
             this.linesLoader.updateFullContent(newTextToWorkWith)
             this.searchHandler.updateTextToWorkWith(newTextToWorkWith)
             this.searchHandler.updateOnReplaceAll()
+        })
+
+        this.goUpButton.addEventListener('click', () => {
+            this.switchHandler.goUp()
+        })
+
+        this.goDownButton.addEventListener('click', () => {
+            this.switchHandler.goDown()
         })
     }
 

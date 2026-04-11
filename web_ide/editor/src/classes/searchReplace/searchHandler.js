@@ -1,5 +1,6 @@
 import calculateWidthForText from "../calculators/widthOfTextCalculator.js";
 import LinesLoader from "../scrollingMechanisms/LinesLoader.js";
+import SwitchHandler from "./switchHandler.js";
 
 class Coordinates {
     /**
@@ -20,9 +21,11 @@ export default class SearchHandler {
      * 
      * @param {LinesLoader} linesLoader 
      * @param {String} textToWorkWith
+     * @param {SwitchHandler} switchHandler
      */
-    constructor(linesLoader, textToWorkWith) {
+    constructor(linesLoader, textToWorkWith, switchHandler) {
         this.selectedText = ""
+        this.switchHandler = switchHandler
         this.searchField = document.getElementById('search-field')
         this.lineContent = document.getElementById('line-content')
         this.placer = document.getElementById('caret-placer')
@@ -151,6 +154,7 @@ export default class SearchHandler {
     }
 
     _updateInfo(numberOfAppearences) {
+        this.switchHandler.updatePositions(0, numberOfAppearences)
         this.amountOfAppearences = `0 of ${numberOfAppearences}`
         this.infoForAmountOfAppearencesOfText.textContent = this.amountOfAppearences
     }

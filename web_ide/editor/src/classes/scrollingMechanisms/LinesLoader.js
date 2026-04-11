@@ -10,8 +10,9 @@ export default class LinesLoader {
      * @param {HTMLElement} contentElement  
      * @param {Array} lines  
      * @param {Number} minLineHeight  
+     * @param {String} textToWorkWith 
     */
-    constructor(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement, contentElement, lines, minLineHeight) {
+    constructor(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement, contentElement, lines, minLineHeight, textToWorkWith) {
         this.firstVisibleLine = 0
         this.lastVisibleLine = this.firstVisibleLine + maxVisibleLinesOnScreen
         this.maxVisibleLinesOnScreen = maxVisibleLinesOnScreen
@@ -21,6 +22,14 @@ export default class LinesLoader {
         this.lineHeightInPixels = minLineHeight
         this.maxLines = lines.length
         this.contentElement = contentElement
+        this.textToWorkWith = textToWorkWith
+        this.linesToWorkWith = textToWorkWith.split('\n')
+    }
+
+    updateFullContent(newTextToWorkWith) {
+        this.textToWorkWith = newTextToWorkWith
+        this.linesToWorkWith = newTextToWorkWith.split('\n')
+        this._buildLines()
     }
 
     updateMaxVisibleLinesOnScreen(newMaxVisibleLinesOnScreen) {
@@ -31,10 +40,14 @@ export default class LinesLoader {
      * @param {Function} updateWidths 
      */
     loadLines(updateWidths) {
+        this._buildLines()
+        updateWidths()
+    }
+
+    _buildLines() {
         for (let index = this.firstVisibleLine; index < this.lastVisibleLine; index++) {
             this._buildLineForIndex(index)
         }
-        updateWidths()
     }
 
     /**
@@ -42,7 +55,7 @@ export default class LinesLoader {
      * @param {Number} index 
      */
     _buildLineForIndex(index) {
-        const line = new Line(index)
+        const line = new Line(index, this.linesToWorkWith)
         this._addNumerationElementToSection(line)
         this._addLineContentToContent(line)
     }
@@ -53,7 +66,9 @@ export default class LinesLoader {
      */
     _addNumerationElementToSection(line) {
         const lineNumeration = this._buildLineNumerationElementForLine(line)
-        this.lineNumerationElement.appendChild(lineNumeration)
+        if (document.getElementById(`numeration-${line.index}`) == null) {
+            this.lineNumerationElement.appendChild(lineNumeration)
+        }
     }
 
     /**
@@ -76,7 +91,9 @@ export default class LinesLoader {
      */
     _addLineContentToContent(line) {
         const lineContent = this._buildLineWithContent(line)
-        this.lineContentElement.appendChild(lineContent)
+        if (document.getElementById(`${line.index}`) == null) {
+            this.lineContentElement.appendChild(lineContent)
+        }
     }
 
     /**
@@ -86,9 +103,8 @@ export default class LinesLoader {
      */
     _buildLineWithContent(line) {
         const builder = new LineBUilder(line.content)
-        const lineElement = builder.buildLine()
+        const lineElement = builder.buildLine(line.index)
         lineElement.classList.add('line-content')
-        lineElement.setAttribute('id', String(line.index))
         lineElement.style = `top:${line.index * this.lineHeightInPixels}px;`
         lineElement.addEventListener('mousedown', (event) => {
             const lineSeleect = document.getElementById('line-selector')
@@ -185,7 +201,7 @@ export default class LinesLoader {
 
     _updateContentForIdWithNewId(lineId, newId) {
         const lineContent = document.getElementById(`${lineId}`)
-        const line = new Line(newId)
+        const line = new Line(newId, this.linesToWorkWith)
         const newInnerHTML = new LineBUilder(line.content)._buildWordsForLine()
         lineContent.innerHTML = newInnerHTML
         lineContent.setAttribute('id', `${newId}`)

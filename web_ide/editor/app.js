@@ -12,7 +12,7 @@ import { MousePosition } from "./src/classes/selectionMechanisms/enums.js"
 import ContentScrollingHandler from "./src/classes/scrollingMechanisms/ContentScrollingHandler.js"
 import calculateWidthForText from "./src/classes/calculators/widthOfTextCalculator.js"
 import LineSelector from "./src/classes/selectionMechanisms/lineSelector.js"
-import SearchHandler from "./src/classes/searchHandler.js"
+import SearchReplaceHandler from "./src/classes/searchReplace/searchReplaceHandler.js"
 
 import { textToWorkWith, shortText } from "./textToWorkWith.js"
 const listOfPossibleLinesToDisplay = String(textToWorkWith).split('\n')
@@ -21,6 +21,7 @@ const mainContainer = document.getElementById('container')
 const menuContainer = document.getElementById('menu')
 const navigationElement = document.getElementById('navigation')
 const loaderElement = document.getElementById('loader')
+
 
 const scrollbarElementVertical = document.getElementById('scrollbar-vertical')
 const scrollbarAreaElementVertical = document.getElementById('scrollable-area-vertical')
@@ -78,11 +79,11 @@ const barVerticalHandler = new BarVerticalHandler(scrollbarVerticalHeight, barVe
 const barHorizontalHandler = new BarHorizontalHandler(scrollbarWidth, barHorizontalWidth, barHorizontalElement)
 const loaderHandler = new LoaderHandler(loaderHeight, scrollbarVerticalHeight, loaderElement)
 const offsetCalculator = new OffsetCalculator()
-const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement, contentElement, listOfPossibleLinesToDisplay, lineHeightInPixels)
+const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement, contentElement, listOfPossibleLinesToDisplay, lineHeightInPixels, textToWorkWith)
 const textSelectionScrolling = new TextSelectionScrolling(barVerticalHandler, loaderHandler, linesLoader)
 const scrollOncaretMovement = new ScrollOnCaretMovement(loaderHandler, barVerticalHandler, linesLoader, contentScrollingHandler, barHorizontalHandler)
 const caretMover = new CaretMover(scrollOncaretMovement, lineContentElement)
-const searchHandler = new SearchHandler(linesLoader)
+const searchReplaceHandler = new SearchReplaceHandler(linesLoader, textToWorkWith)
 
 function displayVerticalScrollbar() {
     if (loaderHeight > mainContainer.offsetHeight) {
@@ -121,14 +122,13 @@ window.addEventListener('wheel', (event) => {
 })
 
 function scrollVertical(event) {
-    console.log("scrolling")
     const offsetTop = offsetCalculator.calculateOffsetBasedOnDeltaYOfMouseEvent(event.deltaY)
     loaderHandler.scrollWithOffset(offsetTop)
     const percentage = loaderHandler.getPercentageOfScroll()
     barVerticalHandler.scrollBasedOnPercentage(percentage)
     linesLoader.reloadLinesForNewTopOffset(loaderHandler.topOffset)
     textSelection.setLoaderOffset(loaderHandler.topOffset)
-    searchHandler.updateOnScrolling()
+    searchReplaceHandler.updateOnScrolling()
 }
 
 function scrollHorizontal(event) {
@@ -173,7 +173,7 @@ function verticalScrolling(event) {
     linesLoader.reloadLinesForNewTopOffset(loaderHandler.topOffset)
     textSelection.setLoaderOffset(loaderHandler.topOffset)
     displayHighlightIfThereIsSelectedText()
-    searchHandler.updateOnScrolling()
+    searchReplaceHandler.updateOnScrolling()
 }
 
 scrollbarAreaElementHorizontal.addEventListener('mousemove', (event) => {
@@ -279,7 +279,7 @@ function verticalScrollingOnWindowMouseMove(event) {
         const isAllowedToScroll = mouseOutsideOfScreenInPx <= widthOfAreaAllowedToScrollOutsideOfScreen
         if (isAllowedToScroll) {
             verticalScrolling(event)
-            searchHandler.updateOnScrolling()
+            searchReplaceHandler.updateOnScrolling()
         }
     }
 }
@@ -412,12 +412,12 @@ window.addEventListener('keydown', (event) => {
     const isCopiingText = event.key == "c" || event.key == "C"
     if (event.ctrlKey && isClickingF) {
         event.preventDefault()
-        searchHandler.changeVisibility()
+        searchReplaceHandler.changeVisibility()
     }
     else if (event.ctrlKey && isCopiingText) {
         event.preventDefault()
         const selectedText = textSelection.selectTextOnCopyCommand(textToWorkWith)
-        searchHandler.setSelectedText(selectedText)
+        searchReplaceHandler.setSelectedText(selectedText)
     }
     else handleCaretMovement(event)
 })

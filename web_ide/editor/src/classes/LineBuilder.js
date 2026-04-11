@@ -7,10 +7,21 @@ export default class LineBUilder {
         this.words = new WordsSplitter().splitLineIntoWords(content)
     }
 
-    buildLine() {
-        const lineElement = document.createElement('div')
-        lineElement.innerHTML = this._buildWordsForLine()
-        lineElement.classList.add('line')
+    /**
+     * 
+     * @param {Number} index 
+     * @returns {HTMLElement}
+     */
+    buildLine(index) {
+        let lineElement = document.getElementById(`${index}`)
+        if (lineElement)
+            lineElement.innerHTML = this._buildWordsForLine()
+        else {
+            lineElement = document.createElement('div')
+            lineElement.setAttribute('id', String(index))
+            lineElement.innerHTML = this._buildWordsForLine()
+            lineElement.classList.add('line')
+        }
         return lineElement
     }
 

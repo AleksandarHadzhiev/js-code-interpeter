@@ -1,18 +1,16 @@
-import { textToWorkWith, shortText } from "../../../textToWorkWith.js"
-
-const listOfPossibleLinesToDisplay = textToWorkWith.split('\n')
 export default class Line {
 
-    constructor(index) {
+    constructor(index, lines) {
         this.index = index
+        this.lines = lines
         this.content = this.getLineContent(index)
         this.numeration = this.getLineNumerationBasedOnIndexInLoop(index)
     }
 
     getLineContent(index) {
-        if (index >= listOfPossibleLinesToDisplay.length)
+        if (index >= this.lines.length)
             return ""
-        return listOfPossibleLinesToDisplay[index]
+        return this.lines[index]
     }
 
     getLineNumerationBasedOnIndexInLoop(index) {

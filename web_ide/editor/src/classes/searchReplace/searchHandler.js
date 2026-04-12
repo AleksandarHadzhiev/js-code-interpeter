@@ -176,7 +176,7 @@ export default class SearchHandler {
     }
 
     _updateInfo() {
-        this.switchHandler.updatePositions(0, this.highlights.size)
+        this.switchHandler.updatePositions(this.currentPosition, this.highlights.size)
         this.switchHandler.setHighlights(this.highlights)
         this.amountOfAppearences = `${this.currentPosition + 1} of ${this.highlights.size}`
         this.infoForAmountOfAppearencesOfText.textContent = this.amountOfAppearences

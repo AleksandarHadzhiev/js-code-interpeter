@@ -17,6 +17,9 @@ export default class SearchHandler {
         this.searchField = document.getElementById('search-field')
         this.lineContent = document.getElementById('line-content')
         this.placer = document.getElementById('caret-placer')
+        this.caret = document.getElementById('caret')
+        this.caretIndexInText = 0
+        this.currentPosition = ""
         this.textToSearchFor = ""
         this.textToReplace = ""
         this.textToSearchForWithEscapedRegex = ""
@@ -29,34 +32,50 @@ export default class SearchHandler {
         this.firstVisibleLine = linesLoader.firstVisibleLine
         this.lastVisibleLine = linesLoader.lastVisibleLine
         this.searchField.addEventListener('input', (event) => {
+            this.currentPosition = "No"
             this.firstVisibleLine = linesLoader.firstVisibleLine
             this.lastVisibleLine = linesLoader.lastVisibleLine
             this.textToReplace = String(this.searchField.value)
             this.selectedText = this.textToReplace.toLowerCase()
             this._searchForText()
-            this.findCurrentPositionInText()
 
         })
         this.searchField.addEventListener('keydown', (event) => {
             const isPastingText = event.key == "v" || event.key == "V"
             if (event.ctrlKey && isPastingText) {
                 event.preventDefault()
+                this.currentPosition = "No"
                 this.firstVisibleLine = linesLoader.firstVisibleLine
                 this.lastVisibleLine = linesLoader.lastVisibleLine
                 this.searchField.textContent = this.selectedText
                 this.textToReplace = String(this.searchField.value)
                 this._searchForText()
-                this.searchHandler.findCurrentPositionInText()
 
             }
         })
+
+        this.caret.addEventListener('moved', () => {
+            this._findCaretCurrentPositionInText()
+        })
+
         this.highlights = new Map()
     }
 
-    findCaretCurrentPositionInText() {
-        const caret = document.getElementById()
-        const lineId = Math.floor(caret.offsetTop / 28.8)
-        const index = turnWidthToIndexForText(caret.offsetLeft)
+    _findCaretCurrentPositionInText() {
+        const lineId = Math.floor(this.caret.offsetTop / 28.8)
+        let index = 0
+        if (lineId != 0) {
+            const lines = this.textToWorkWith.split('\n')
+            const leftLines = lines.splice(0, lineId)
+            const text = leftLines.join('\n')
+            index = text.length - 1
+        }
+        const lineElement = document.getElementById(`${lineId}`)
+        const fullTextWidth = calculateWidthForText(this.lineContent, lineElement.textContent)
+        const indexInLine = turnWidthToIndexForText(this.caret.offsetLeft, fullTextWidth, lineElement.textContent.length)
+        index += indexInLine
+        console.log(index)
+        this.caretIndexInText = index
     }
 
     /**
@@ -94,6 +113,7 @@ export default class SearchHandler {
         }
         else {
             this.amountOfAppearences = `No results`
+            this.currentPosition = "No"
             this.infoForAmountOfAppearencesOfText.textContent = this.amountOfAppearences
         }
     }
@@ -146,6 +166,9 @@ export default class SearchHandler {
         try {
             const matches = this.textToWorkWith.toLowerCase().matchAll(textToSearchFor)
             matches.forEach((match, index) => {
+                if (match.index >= this.caretIndexInText && this.currentPosition == "No") {
+                    this.currentPosition = index
+                }
                 this.highlights.set(index, match.index)
             })
         }
@@ -155,7 +178,7 @@ export default class SearchHandler {
     _updateInfo() {
         this.switchHandler.updatePositions(0, this.highlights.size)
         this.switchHandler.setHighlights(this.highlights)
-        this.amountOfAppearences = `1 of ${this.highlights.size}`
+        this.amountOfAppearences = `${this.currentPosition + 1} of ${this.highlights.size}`
         this.infoForAmountOfAppearencesOfText.textContent = this.amountOfAppearences
     }
 

@@ -49,6 +49,7 @@ export default class CaretMover {
         else if (keybordKey == "ArrowDown") {
             this._moveDown(caret, isUsingCtrl)
         }
+        caret.dispatchEvent(new Event('moved'))
     }
 
     /**

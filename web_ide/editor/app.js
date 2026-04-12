@@ -4,7 +4,7 @@ import OffsetCalculator from "./src/classes/scrollingMechanisms/OffsetCalculator
 import LinesLoader from "./src/classes/scrollingMechanisms/LinesLoader.js"
 import TextSelection from "./src/classes/selectionMechanisms/textSelection.js"
 import TextSelectionScrolling from "./src/classes/scrollingMechanisms/textSelectionScrolling.js"
-import calculateTotalLeftOffsetOfCaretInTheLine from "./src/classes/calculators/caretLeftOffsetCalculator.js"
+import calculateTotalLeftOffsetOfCaretInTheLine, { findCaretCurrentPositionInText } from "./src/classes/calculators/caretLeftOffsetCalculator.js"
 import { CaretLeftOffsetDTO } from "./src/classes/dtos/caretDTOs.js"
 import CaretMover from "./src/classes/caretMover.js"
 import ScrollOnCaretMovement from "./src/classes/scrollingMechanisms/scrollOnCaretMovement.js"
@@ -511,5 +511,9 @@ window.addEventListener('resize', () => {
 })
 
 writerElement.addEventListener('input', (event) => {
-    console.log(event.data)
+    const caret = document.getElementById('caret')
+    const indexInText = findCaretCurrentPositionInText(caret, textToWorkWith, contentElement)
+    const textBefore = textToWorkWith.substring(0, indexInText - 1)
+    const textAfter = textToWorkWith.substring(indexInText - 1, textToWorkWith.length)
+    const newText = `${textBefore}${event.data}${textAfter}`
 })

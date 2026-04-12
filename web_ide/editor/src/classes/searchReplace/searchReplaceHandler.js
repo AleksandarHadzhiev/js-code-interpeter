@@ -31,6 +31,8 @@ export default class SearchReplaceHandler {
             this.class = 'hidden'
             this.searchReplace.className = this.class
             const highlighter = document.getElementById('highlighter')
+            const specialHighlighter = document.getElementById('special-highlighter')
+            specialHighlighter.remove()
             if (highlighter) highlighter.remove()
         })
 
@@ -74,6 +76,12 @@ export default class SearchReplaceHandler {
     updateOnScrolling() {
         if (this.class !== "hidden") {
             this.searchHandler.updateOnScrolling()
+        }
+        else {
+            const specialHighlighter = document.getElementById('special-highlighter')
+            const highlighter = document.getElementById('highlighter')
+            specialHighlighter.remove()
+            highlighter.remove()
         }
     }
 

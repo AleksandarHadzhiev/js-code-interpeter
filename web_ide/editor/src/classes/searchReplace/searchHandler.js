@@ -116,6 +116,8 @@ export default class SearchHandler {
             this._higlightTextDifferentThanEmpty(textToSearchFor)
         }
         else {
+            const specialHighlighter = document.getElementById('special-highlighter')
+            if (specialHighlighter) specialHighlighter.remove()
             this.amountOfAppearences = `No results`
             this.currentPosition = "No"
             this.infoForAmountOfAppearencesOfText.textContent = this.amountOfAppearences

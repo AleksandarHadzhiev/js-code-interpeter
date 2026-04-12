@@ -83,8 +83,7 @@ const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationEleme
 const textSelectionScrolling = new TextSelectionScrolling(barVerticalHandler, loaderHandler, linesLoader)
 const scrollOncaretMovement = new ScrollOnCaretMovement(loaderHandler, barVerticalHandler, linesLoader, contentScrollingHandler, barHorizontalHandler)
 const caretMover = new CaretMover(scrollOncaretMovement, lineContentElement)
-const searchReplaceHandler = new SearchReplaceHandler(linesLoader, textToWorkWith)
-
+const searchReplaceHandler = new SearchReplaceHandler(linesLoader, textToWorkWith, loaderHandler, barVerticalHandler, barHorizontalHandler)
 function displayVerticalScrollbar() {
     if (loaderHeight > mainContainer.offsetHeight) {
         scrollbarAreaElementVertical.classList.remove('hidden')

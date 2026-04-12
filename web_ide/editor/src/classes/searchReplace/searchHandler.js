@@ -1,28 +1,18 @@
 import calculateWidthForText from "../calculators/widthOfTextCalculator.js";
 import LinesLoader from "../scrollingMechanisms/LinesLoader.js";
-
-class Coordinates {
-    /**
-     * 
-     * @param {Number} width 
-     * @param {Number} left 
-     * @param {Number} top 
-     */
-    constructor(width, left, top) {
-        this.width = width
-        this.left = left
-        this.top = top
-    }
-}
+import SwitchHandler from "./switchHandler.js";
+import Coordinates from "./coordinates.js";
 
 export default class SearchHandler {
     /**
      * 
      * @param {LinesLoader} linesLoader 
      * @param {String} textToWorkWith
+     * @param {SwitchHandler} switchHandler
      */
-    constructor(linesLoader, textToWorkWith) {
+    constructor(linesLoader, textToWorkWith, switchHandler) {
         this.selectedText = ""
+        this.switchHandler = switchHandler
         this.searchField = document.getElementById('search-field')
         this.lineContent = document.getElementById('line-content')
         this.placer = document.getElementById('caret-placer')
@@ -55,6 +45,7 @@ export default class SearchHandler {
                 this._searchForText()
             }
         })
+        this.highlights = new Map()
     }
 
     /**
@@ -109,12 +100,16 @@ export default class SearchHandler {
      * @param {String} textToSearchFor 
      */
     _higlightTextDifferentThanEmpty(textToSearchFor) {
-        this.widthOfTextToHighlight = calculateWidthForText(this.lineContent, textToSearchFor)
+        this.highlights.clear()
         const lines = textToSearchFor.split('\n')
+        this.switchHandler.setTextToSearchFor(lines)
         if (lines.length > 1)
             this._multilineHighlighter(textToSearchFor, lines)
-        else
+        else {
+            this.widthOfTextToHighlight = calculateWidthForText(this.lineContent, textToSearchFor)
             this._singleLineHighlighter(textToSearchFor)
+        }
+        this._updateInfo()
     }
 
     /**
@@ -127,31 +122,32 @@ export default class SearchHandler {
         this.textToSearchFor = textToSearchFor
         this.textToSearchForWithEscapedRegex = text
         this.textToSearchForLength = textToSearchFor.length
-        this._catchAllAppearancesInFullText(text).then((numberOfAppearences) => {
-            this._updateInfo(numberOfAppearences)
-        })
+        this._catchAllAppearancesInFullText(text)
         this._highlightMultilineSearchOnScreen(text, lines)
     }
 
     _catchAllAppearancesInFullText(textToSearchFor) {
-        const textToWorkWith = this.textToWorkWith
-        return new Promise(function (resolve, reject) {
-            let amountOfAppearences = 0
-            try {
-                const matches = textToWorkWith.toLowerCase().matchAll(textToSearchFor)
-                matches.forEach((match, index) => {
-                    amountOfAppearences += 1
-                })
-                resolve(amountOfAppearences)
-            }
-            catch (error) {
-                reject(error)
-            }
-        })
+        try {
+            const matches = this.textToWorkWith.toLowerCase().matchAll(textToSearchFor)
+            matches.forEach((match, index) => {
+                this.highlights.set(index, match.index)
+            })
+        }
+        catch (error) { console.log(error) }
     }
 
-    _updateInfo(numberOfAppearences) {
-        this.amountOfAppearences = `0 of ${numberOfAppearences}`
+    _updateInfo() {
+        this.switchHandler.updatePositions(0, this.highlights.size)
+        this.switchHandler.setHighlights(this.highlights)
+        this.amountOfAppearences = `1 of ${this.highlights.size}`
+        this.infoForAmountOfAppearencesOfText.textContent = this.amountOfAppearences
+    }
+
+    /**
+     * @param {Number} currentPosition
+     */
+    updatePosition(currentPosition) {
+        this.amountOfAppearences = `${currentPosition + 1} of ${this.highlights.size}`
         this.infoForAmountOfAppearencesOfText.textContent = this.amountOfAppearences
     }
 
@@ -211,9 +207,7 @@ export default class SearchHandler {
         this.textToSearchFor = textToSearchFor
         this.textToSearchForWithEscapedRegex = text
         this.textToSearchForLength = textToSearchFor.length
-        this._catchAllAppearancesInFullText(text).then((numberOfAppearences) => {
-            this._updateInfo(numberOfAppearences)
-        })
+        this._catchAllAppearancesInFullText(text)
         this._highlightTextVisibleOnScreen(text)
     }
 

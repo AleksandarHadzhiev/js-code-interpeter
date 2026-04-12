@@ -42,18 +42,14 @@ export default class SearchReplaceHandler {
             this.replaceHandler.setTextToReplace(this.searchHandler.textToReplace)
             const index = this.switchHandler.highlights.get(this.switchHandler.currentPosition)
             const newText = this.replaceHandler.replaceOne(index)
-            this.linesLoader.updateFullContent(newText)
-            this.searchHandler.updateTextToWorkWith(newText)
-            this.switchHandler.updateTextToWorkWith(newText)
+            this.updateText(newText)
             this.searchHandler.updateOnReplaceOne()
         })
 
         this.replaceAll.addEventListener('click', () => {
             this.replaceHandler.setTextToReplace(this.searchHandler.textToReplace)
             const newTextToWorkWith = this.replaceHandler.replaceAll()
-            this.linesLoader.updateFullContent(newTextToWorkWith)
-            this.searchHandler.updateTextToWorkWith(newTextToWorkWith)
-            this.switchHandler.updateTextToWorkWith(newTextToWorkWith)
+            this.updateText(newTextToWorkWith)
             this.searchHandler.updateOnReplaceAll()
         })
 
@@ -68,6 +64,16 @@ export default class SearchReplaceHandler {
             this.searchHandler.updateOnScrolling()
             this.searchHandler.updatePosition(currentPosition)
         })
+    }
+
+    /**
+     * 
+     * @param {String} newText 
+     */
+    updateText(newText) {
+        this.linesLoader.updateFullContent(newText)
+        this.searchHandler.updateTextToWorkWith(newText)
+        this.switchHandler.updateTextToWorkWith(newText)
     }
 
     changeVisibility() {

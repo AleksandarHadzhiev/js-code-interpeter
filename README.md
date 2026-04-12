@@ -1,15 +1,6 @@
 # Table of Contents
 1. [About me](#about-me)
 2. [What's new](#whats-new)
-   - 2.1 [Version 1.2.0](#version-120)
-   - 2.2 [Version 1.1.5](#version-115)
-   - 2.3 [Version 1.1.4](#version-114)
-   - 2.4 [Version 1.1.3](#version-113)
-   - 2.5 [Version 1.1.2](#version-112)
-   - 2.6 [Version 1.1.1](#version-111)
-   - 2.7 [Version 1.1.0](#version-110)
-   - 2.8 [Version 1.0.0](#version-100)
-   - 2.9 [Version 0.0.0](#verions-000)
 3. [How to run](#how-to-run)
 4. [Documentation](#documentation)
 4. [Author](#author)
@@ -30,9 +21,12 @@ This project is an online IDE which aims to support reading and writing HTML/CSS
 
 For the full explanation behind the versions and their goals visit the [Roadmap](./docs/roadMap.md)
 
-The current version of the project is `1.1.5` and is in the process of becoming `1.2.0`.
+The current version of the project is `1.2.0` and is in the process of becoming `1.2.1`.
 
-**Supported functionality**:
+**Newly added**
+   - Insert text based on the caret position
+
+**Supported functionality untill now**:
    - Load the code on the screen
    - Colorise the code to showcase difference between variables, keywords, functions, etc.
    - Search for code

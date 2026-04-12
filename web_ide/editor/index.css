@@ -30,6 +30,20 @@ html::selection {
     background-color: transparent;
 }
 
+#writer {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: transparent;
+    color: transparent;
+    text-decoration: none;
+    outline: none;
+}
+
+#writer:focus {
+    outline: none;
+}
+
 .navigation {
     position: absolute;
     top: 0%;

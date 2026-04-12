@@ -83,4 +83,19 @@ export default class CaretBuilder {
         else if (caretElement.className == "hidden") caretElement.className = "caret"
         return caretElement
     }
+
+    /**
+     * 
+     * @param {String} text 
+     * @param {Array} lines 
+     * @param {HTMLElement} contentElement
+     */
+    rebuildCaretForInsertingText(text, lines, contentElement) {
+        const caretElement = this._buildCaret()
+        const lineId = lines.length - 1
+        const left = calculateWidthForText(contentElement, text)
+        caretElement.style = `top: ${lineId * 28.8}px; left: ${left}px;`
+        this.caretPlacer.prepend(caretElement)
+        caretElement.dispatchEvent(new Event('moved'))
+    }
 }

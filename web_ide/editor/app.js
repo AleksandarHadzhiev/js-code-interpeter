@@ -13,15 +13,17 @@ import ContentScrollingHandler from "./src/classes/scrollingMechanisms/ContentSc
 import calculateWidthForText from "./src/classes/calculators/widthOfTextCalculator.js"
 import LineSelector from "./src/classes/selectionMechanisms/lineSelector.js"
 import SearchReplaceHandler from "./src/classes/searchReplace/searchReplaceHandler.js"
+import WriterHandler from "./src/classes/writerHandler.js"
 
 import { textToWorkWith, shortText } from "./textToWorkWith.js"
+import CaretBuilder from "./src/classes/selectionMechanisms/caretBuilder.js"
 const listOfPossibleLinesToDisplay = String(textToWorkWith).split('\n')
 
 const mainContainer = document.getElementById('container')
 const menuContainer = document.getElementById('menu')
 const navigationElement = document.getElementById('navigation')
 const loaderElement = document.getElementById('loader')
-
+const writerElement = document.getElementById('writer')
 
 const scrollbarElementVertical = document.getElementById('scrollbar-vertical')
 const scrollbarAreaElementVertical = document.getElementById('scrollable-area-vertical')
@@ -83,7 +85,10 @@ const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationEleme
 const textSelectionScrolling = new TextSelectionScrolling(barVerticalHandler, loaderHandler, linesLoader)
 const scrollOncaretMovement = new ScrollOnCaretMovement(loaderHandler, barVerticalHandler, linesLoader, contentScrollingHandler, barHorizontalHandler)
 const caretMover = new CaretMover(scrollOncaretMovement, lineContentElement)
+const caretBuidler = new CaretBuilder()
 const searchReplaceHandler = new SearchReplaceHandler(linesLoader, textToWorkWith, loaderHandler, barVerticalHandler, barHorizontalHandler, contentScrollingHandler)
+const writerHandler = new WriterHandler(textToWorkWith, contentElement, searchReplaceHandler, caretBuidler)
+
 function displayVerticalScrollbar() {
     if (loaderHeight > mainContainer.offsetHeight) {
         scrollbarAreaElementVertical.classList.remove('hidden')
@@ -209,6 +214,7 @@ window.addEventListener('mouseup', (event) => {
     clearInterval(intervalHorizontalId)
     intervalId = null
     intervalHorizontalId = null
+    writerElement.focus()
 })
 
 lineContentElement.addEventListener('mousedown', (event) => {
@@ -507,4 +513,8 @@ window.addEventListener('resize', () => {
     contentScrollingHandler.updateMaxLeftOffset(lineContentElement.scrollWidth, scrollbarHorizontalLeftOffset, barHorizontalWidth)
     const newTotalWidthOfScreen = loaderElement.offsetWidth + lineNumerationWidth
     textSelection.updateWidths(newTotalWidthOfScreen, contentElementOffsetLeft)
+})
+
+writerElement.addEventListener('input', (event) => {
+    writerHandler.insertText(event.data)
 })

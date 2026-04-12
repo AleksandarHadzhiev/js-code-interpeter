@@ -4,7 +4,7 @@ import OffsetCalculator from "./src/classes/scrollingMechanisms/OffsetCalculator
 import LinesLoader from "./src/classes/scrollingMechanisms/LinesLoader.js"
 import TextSelection from "./src/classes/selectionMechanisms/textSelection.js"
 import TextSelectionScrolling from "./src/classes/scrollingMechanisms/textSelectionScrolling.js"
-import calculateTotalLeftOffsetOfCaretInTheLine, { findCaretCurrentPositionInText } from "./src/classes/calculators/caretLeftOffsetCalculator.js"
+import calculateTotalLeftOffsetOfCaretInTheLine from "./src/classes/calculators/caretLeftOffsetCalculator.js"
 import { CaretLeftOffsetDTO } from "./src/classes/dtos/caretDTOs.js"
 import CaretMover from "./src/classes/caretMover.js"
 import ScrollOnCaretMovement from "./src/classes/scrollingMechanisms/scrollOnCaretMovement.js"
@@ -13,6 +13,7 @@ import ContentScrollingHandler from "./src/classes/scrollingMechanisms/ContentSc
 import calculateWidthForText from "./src/classes/calculators/widthOfTextCalculator.js"
 import LineSelector from "./src/classes/selectionMechanisms/lineSelector.js"
 import SearchReplaceHandler from "./src/classes/searchReplace/searchReplaceHandler.js"
+import WriterHandler from "./src/classes/writerHandler.js"
 
 import { textToWorkWith, shortText } from "./textToWorkWith.js"
 const listOfPossibleLinesToDisplay = String(textToWorkWith).split('\n')
@@ -84,6 +85,8 @@ const textSelectionScrolling = new TextSelectionScrolling(barVerticalHandler, lo
 const scrollOncaretMovement = new ScrollOnCaretMovement(loaderHandler, barVerticalHandler, linesLoader, contentScrollingHandler, barHorizontalHandler)
 const caretMover = new CaretMover(scrollOncaretMovement, lineContentElement)
 const searchReplaceHandler = new SearchReplaceHandler(linesLoader, textToWorkWith, loaderHandler, barVerticalHandler, barHorizontalHandler, contentScrollingHandler)
+const writerHandler = new WriterHandler(textToWorkWith, contentElement, searchReplaceHandler)
+
 function displayVerticalScrollbar() {
     if (loaderHeight > mainContainer.offsetHeight) {
         scrollbarAreaElementVertical.classList.remove('hidden')
@@ -511,9 +514,5 @@ window.addEventListener('resize', () => {
 })
 
 writerElement.addEventListener('input', (event) => {
-    const caret = document.getElementById('caret')
-    const indexInText = findCaretCurrentPositionInText(caret, textToWorkWith, contentElement)
-    const textBefore = textToWorkWith.substring(0, indexInText - 1)
-    const textAfter = textToWorkWith.substring(indexInText - 1, textToWorkWith.length)
-    const newText = `${textBefore}${event.data}${textAfter}`
+    writerHandler.insertText(event.data)
 })

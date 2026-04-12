@@ -1,5 +1,6 @@
 import calculateWidthForText from "./widthOfTextCalculator.js"
 import { CaretLeftOffsetDTO } from "../dtos/caretDTOs.js"
+import turnWidthToIndexForText from "../calculators/offsetToTextCalculator.js";
 
 /**
 * @param {CaretLeftOffsetDTO} leftOffsetDTO contains the data needed to calculate the total offset
@@ -23,4 +24,29 @@ function _calculateOffsetOfCaretBasedOnContainerAndOffsetInsideTheContainer(cont
     return calculateWidthForText(contentElement, neededText)
 }
 
-// I need this functtionalities earlier to be used earlier...
+/**
+ * 
+ * @param {HTMLElement} caret 
+ * @param {String} textToWorkWith 
+ * @param {HTMLElement} content
+ */
+export function findCaretCurrentPositionInText(caret, textToWorkWith, content) {
+    const topOffset = caret.offsetTop
+    const leftOffset = caret.offsetLeft
+    let index = 0
+    const isZero = topOffset == 0 && leftOffset == 0
+    if (isZero == false) {
+        const lineId = Math.round(topOffset / 28.8)
+        if (lineId != 0) {
+            const lines = textToWorkWith.split('\n')
+            const leftLines = lines.splice(0, lineId)
+            const text = leftLines.join('\n')
+            index = text.length
+        }
+        const lineElement = document.getElementById(`${lineId}`)
+        const fullTextWidth = calculateWidthForText(content, lineElement.textContent)
+        const indexInLine = turnWidthToIndexForText(leftOffset, fullTextWidth, lineElement.textContent.length)
+        index += indexInLine + 1
+    }
+    return index
+}

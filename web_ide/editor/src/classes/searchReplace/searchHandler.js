@@ -2,7 +2,7 @@ import calculateWidthForText from "../calculators/widthOfTextCalculator.js";
 import LinesLoader from "../scrollingMechanisms/LinesLoader.js";
 import SwitchHandler from "./switchHandler.js";
 import Coordinates from "./coordinates.js";
-import turnWidthToIndexForText from "../calculators/offsetToTextCalculator.js";
+import { findCaretCurrentPositionInText } from "../calculators/caretLeftOffsetCalculator.js";
 
 export default class SearchHandler {
     /**
@@ -55,32 +55,13 @@ export default class SearchHandler {
         })
 
         this.caret.addEventListener('moved', () => {
-            this._findCaretCurrentPositionInText()
+            this.caretIndexInText = findCaretCurrentPositionInText(this.caret, this.textToWorkWith, this.lineContent)
         })
 
         this.highlights = new Map()
     }
 
-    _findCaretCurrentPositionInText() {
-        const topOffset = this.caret.offsetTop
-        const leftOffset = this.caret.offsetLeft
-        let index = 0
-        const isZero = topOffset == 0 && leftOffset == 0
-        if (isZero == false) {
-            const lineId = Math.round(topOffset / 28.8)
-            if (lineId != 0) {
-                const lines = this.textToWorkWith.split('\n')
-                const leftLines = lines.splice(0, lineId)
-                const text = leftLines.join('\n')
-                index = text.length
-            }
-            const lineElement = document.getElementById(`${lineId}`)
-            const fullTextWidth = calculateWidthForText(this.lineContent, lineElement.textContent)
-            const indexInLine = turnWidthToIndexForText(leftOffset, fullTextWidth, lineElement.textContent.length)
-            index += indexInLine + 1
-        }
-        this.caretIndexInText = index
-    }
+
 
     /**
      * 

@@ -41,7 +41,7 @@ export default class SearchReplaceHandler {
             this.linesLoader.updateFullContent(newText)
             this.searchHandler.updateTextToWorkWith(newText)
             this.switchHandler.updateTextToWorkWith(newText)
-            this.searchHandler.updateOnScrolling()
+            this.searchHandler.updateOnReplaceOne()
         })
 
         this.replaceAll.addEventListener('click', () => {

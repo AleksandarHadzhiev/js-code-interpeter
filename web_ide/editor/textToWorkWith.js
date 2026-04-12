@@ -2005,6 +2005,4 @@ This is a long line to be displayed, and for that reason it will have a lot of t
 function getName(age) { console.log("MEOW"); }
 This is a long line to be displayed, and for that reason it will have a lot of text inside it.
 function getName(age) { console.log("MEOW"); }
-This is a long line to be displayed, and for that reason it will have a lot of text inside it.
-
-`
+This is a long line to be displayed, and for that reason it will have a lot of text inside it.`

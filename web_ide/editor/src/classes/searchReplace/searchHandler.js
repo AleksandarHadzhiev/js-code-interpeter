@@ -301,8 +301,15 @@ export default class SearchHandler {
         return highlight
     }
 
+    updateOnReplaceOne() {
+        this._searchForText()
+    }
+
     updateOnReplaceAll() {
         this.highlighter.remove()
+        this.highlights.clear()
+        this.amountOfAppearences = `No results`
+        this.infoForAmountOfAppearencesOfText.textContent = this.amountOfAppearences
     }
 
     updateOnScrolling() {

@@ -40,13 +40,27 @@ export default class ReplaceHandler {
         this.textToReplace = textToReplace
     }
 
-    replaceOne() {
-
+    /**
+     * 
+     * @param {Number} indexFromWhereToReplace 
+     */
+    replaceOne(indexFromWhereToReplace) {
+        const textBefore = this.textToWorkWith.substring(0, indexFromWhereToReplace)
+        const textAfter = this.textToWorkWith.substring(indexFromWhereToReplace, this.textToWorkWith.length)
+        const newText = textAfter.replace(this.textToReplace, this.textToReplaceWith)
+        this.textToWorkWith = `${textBefore}${newText}`
+        const marker = document.getElementById('marker')
+        if (marker) marker.remove()
+        return this.textToWorkWith
     }
 
     replaceAll() {
         const newText = this.textToWorkWith.replaceAll(this.textToReplace, this.textToReplaceWith)
         this.textToWorkWith = newText
+        const specialHighlighter = document.getElementById('special-highlighter')
+        const marker = document.getElementById('marker')
+        if (specialHighlighter) specialHighlighter.remove()
+        if (marker) marker.remove()
         return newText
     }
 }

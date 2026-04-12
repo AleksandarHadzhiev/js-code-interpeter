@@ -36,7 +36,12 @@ export default class SearchReplaceHandler {
 
         this.replaceOne.addEventListener('click', () => {
             this.replaceHandler.setTextToReplace(this.searchHandler.textToReplace)
-            this.replaceHandler.replaceOne()
+            const index = this.switchHandler.highlights.get(this.switchHandler.currentPosition)
+            const newText = this.replaceHandler.replaceOne(index)
+            this.linesLoader.updateFullContent(newText)
+            this.searchHandler.updateTextToWorkWith(newText)
+            this.switchHandler.updateTextToWorkWith(newText)
+            this.searchHandler.updateOnReplaceOne()
         })
 
         this.replaceAll.addEventListener('click', () => {

@@ -89,6 +89,7 @@ export default class SwitchHandler {
             this.barVerticalHandler.scrollBasedOnPercentage(percentage)
             this.linesLoader.reloadLinesForNewTopOffset(this.loaderHandler.topOffset)
         }
+        const specialHighlighter = this._buildSpeicalHighlighter()
         const lineHighlighter = this._buildLineHighlighter(lineId, topOffset)
         const widths = this._calculateWidthsLine()
         widths.forEach((width, index) => {
@@ -99,7 +100,17 @@ export default class SwitchHandler {
             const highlight = this._buildHighlight(coordinates)
             lineHighlighter.appendChild(highlight)
         })
-        return lineHighlighter
+        specialHighlighter.appendChild(lineHighlighter)
+        return specialHighlighter
+    }
+
+    _buildSpeicalHighlighter() {
+        let specialHighlighter = document.getElementById('special-highlighter')
+        if (specialHighlighter) specialHighlighter.remove()
+        specialHighlighter = document.createElement('div')
+        specialHighlighter.setAttribute('id', 'special-highlighter')
+        specialHighlighter.style = `position: absolute;`
+        return specialHighlighter
     }
 
     /**

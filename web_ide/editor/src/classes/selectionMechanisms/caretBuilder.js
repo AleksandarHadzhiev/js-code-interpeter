@@ -18,6 +18,7 @@ export default class CaretBuilder {
         const left = calculateWidthForText(contentElement, lineElement.textContent)
         caretElement.style = `top: ${lineId * 28.8}px; left: ${left}px;`
         this.caretPlacer.prepend(caretElement)
+        caretElement.dispatchEvent(new Event('moved'))
     }
 
     /**
@@ -29,6 +30,7 @@ export default class CaretBuilder {
         const left = this._calculateLeftOffsetOfCaret()
         caretElement.style = `top: ${topOffset}px; left: ${left}px;`
         this.caretPlacer.prepend(caretElement)
+        caretElement.dispatchEvent(new Event('moved'))
     }
 
     _calculateLeftOffsetOfCaret() {
@@ -68,6 +70,7 @@ export default class CaretBuilder {
         }
         caretElement.style = `top: ${point.top}px; left: ${left}px;`
         this.caretPlacer.prepend(caretElement)
+        caretElement.dispatchEvent(new Event('moved'))
     }
 
     _buildCaret() {
@@ -77,6 +80,7 @@ export default class CaretBuilder {
             caretElement.classList.add('caret')
             caretElement.setAttribute('id', 'caret')
         }
+        else if (caretElement.className == "hidden") caretElement.className = "caret"
         return caretElement
     }
 }

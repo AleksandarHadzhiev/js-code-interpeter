@@ -2,6 +2,7 @@ import calculateWidthForText from "../calculators/widthOfTextCalculator.js";
 import LinesLoader from "../scrollingMechanisms/LinesLoader.js";
 import SwitchHandler from "./switchHandler.js";
 import Coordinates from "./coordinates.js";
+import turnWidthToIndexForText from "../calculators/offsetToTextCalculator.js";
 
 export default class SearchHandler {
     /**
@@ -16,6 +17,9 @@ export default class SearchHandler {
         this.searchField = document.getElementById('search-field')
         this.lineContent = document.getElementById('line-content')
         this.placer = document.getElementById('caret-placer')
+        this.caret = document.getElementById('caret')
+        this.caretIndexInText = 0
+        this.currentPosition = ""
         this.textToSearchFor = ""
         this.textToReplace = ""
         this.textToSearchForWithEscapedRegex = ""
@@ -28,24 +32,54 @@ export default class SearchHandler {
         this.firstVisibleLine = linesLoader.firstVisibleLine
         this.lastVisibleLine = linesLoader.lastVisibleLine
         this.searchField.addEventListener('input', (event) => {
+            this.currentPosition = "No"
             this.firstVisibleLine = linesLoader.firstVisibleLine
             this.lastVisibleLine = linesLoader.lastVisibleLine
             this.textToReplace = String(this.searchField.value)
             this.selectedText = this.textToReplace.toLowerCase()
             this._searchForText()
+
         })
         this.searchField.addEventListener('keydown', (event) => {
             const isPastingText = event.key == "v" || event.key == "V"
             if (event.ctrlKey && isPastingText) {
                 event.preventDefault()
+                this.currentPosition = "No"
                 this.firstVisibleLine = linesLoader.firstVisibleLine
                 this.lastVisibleLine = linesLoader.lastVisibleLine
                 this.searchField.textContent = this.selectedText
                 this.textToReplace = String(this.searchField.value)
                 this._searchForText()
+
             }
         })
+
+        this.caret.addEventListener('moved', () => {
+            this._findCaretCurrentPositionInText()
+        })
+
         this.highlights = new Map()
+    }
+
+    _findCaretCurrentPositionInText() {
+        const topOffset = this.caret.offsetTop
+        const leftOffset = this.caret.offsetLeft
+        let index = 0
+        const isZero = topOffset == 0 && leftOffset == 0
+        if (isZero == false) {
+            const lineId = Math.round(topOffset / 28.8)
+            if (lineId != 0) {
+                const lines = this.textToWorkWith.split('\n')
+                const leftLines = lines.splice(0, lineId)
+                const text = leftLines.join('\n')
+                index = text.length
+            }
+            const lineElement = document.getElementById(`${lineId}`)
+            const fullTextWidth = calculateWidthForText(this.lineContent, lineElement.textContent)
+            const indexInLine = turnWidthToIndexForText(leftOffset, fullTextWidth, lineElement.textContent.length)
+            index += indexInLine + 1
+        }
+        this.caretIndexInText = index
     }
 
     /**
@@ -82,7 +116,10 @@ export default class SearchHandler {
             this._higlightTextDifferentThanEmpty(textToSearchFor)
         }
         else {
+            const specialHighlighter = document.getElementById('special-highlighter')
+            if (specialHighlighter) specialHighlighter.remove()
             this.amountOfAppearences = `No results`
+            this.currentPosition = "No"
             this.infoForAmountOfAppearencesOfText.textContent = this.amountOfAppearences
         }
     }
@@ -135,6 +172,10 @@ export default class SearchHandler {
         try {
             const matches = this.textToWorkWith.toLowerCase().matchAll(textToSearchFor)
             matches.forEach((match, index) => {
+                const position = match.index + this.textToSearchForLength
+                if (position > this.caretIndexInText && this.currentPosition == "No") {
+                    this.currentPosition = index
+                }
                 this.highlights.set(index, match.index)
             })
         }
@@ -142,9 +183,13 @@ export default class SearchHandler {
     }
 
     _updateInfo() {
-        this.switchHandler.updatePositions(0, this.highlights.size)
+        this.switchHandler.updatePositions(this.currentPosition, this.highlights.size)
         this.switchHandler.setHighlights(this.highlights)
-        this.amountOfAppearences = `1 of ${this.highlights.size}`
+        if (this.highlights.size == 0) {
+            this.amountOfAppearences = "No results."
+            this.currentPosition = 0
+        }
+        else this.amountOfAppearences = `${this.currentPosition + 1} of ${this.highlights.size}`
         this.infoForAmountOfAppearencesOfText.textContent = this.amountOfAppearences
     }
 

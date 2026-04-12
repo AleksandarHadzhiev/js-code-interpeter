@@ -1,4 +1,5 @@
 import { BarHorizontalHandler, BarVerticalHandler } from "../scrollingMechanisms/BarHandler.js";
+import ContentScrollingHandler from "../scrollingMechanisms/ContentScrollingHandler.js";
 import LinesLoader from "../scrollingMechanisms/LinesLoader.js";
 import LoaderHandler from "../scrollingMechanisms/LoaderHandler.js";
 import SearchHandler from "../searchReplace/searchHandler.js";
@@ -13,9 +14,10 @@ export default class SearchReplaceHandler {
      * @param {LoaderHandler} loaderHandler
      * @param {BarVerticalHandler} barVerticalHandler
      * @param {BarHorizontalHandler} barHorizontalHandler
+     * @param {ContentScrollingHandler} contentScrollingHandler
      */
-    constructor(linesLoader, textToWorkWith, loaderHandler, barVerticalHandler, barHorizontalHandler) {
-        this.switchHandler = new SwitchHandler(textToWorkWith, loaderHandler, barVerticalHandler, barHorizontalHandler, linesLoader)
+    constructor(linesLoader, textToWorkWith, loaderHandler, barVerticalHandler, barHorizontalHandler, contentScrollingHandler) {
+        this.switchHandler = new SwitchHandler(textToWorkWith, loaderHandler, barVerticalHandler, barHorizontalHandler, linesLoader, contentScrollingHandler)
         this.searchHandler = new SearchHandler(linesLoader, textToWorkWith, this.switchHandler)
         this.replaceHandler = new ReplaceHandler(linesLoader, textToWorkWith)
         this.linesLoader = linesLoader
@@ -31,6 +33,8 @@ export default class SearchReplaceHandler {
             this.class = 'hidden'
             this.searchReplace.className = this.class
             const highlighter = document.getElementById('highlighter')
+            const specialHighlighter = document.getElementById('special-highlighter')
+            if (specialHighlighter) specialHighlighter.remove()
             if (highlighter) highlighter.remove()
         })
 
@@ -74,6 +78,12 @@ export default class SearchReplaceHandler {
     updateOnScrolling() {
         if (this.class !== "hidden") {
             this.searchHandler.updateOnScrolling()
+        }
+        else {
+            const specialHighlighter = document.getElementById('special-highlighter')
+            const highlighter = document.getElementById('highlighter')
+            if (specialHighlighter) specialHighlighter.remove()
+            if (highlighter) highlighter.remove()
         }
     }
 

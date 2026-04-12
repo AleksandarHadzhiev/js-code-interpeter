@@ -1,5 +1,6 @@
 import calculateWidthForText from "../calculators/widthOfTextCalculator.js"
 import { BarHorizontalHandler, BarVerticalHandler } from "../scrollingMechanisms/BarHandler.js"
+import ContentScrollingHandler from "../scrollingMechanisms/ContentScrollingHandler.js"
 import LinesLoader from "../scrollingMechanisms/LinesLoader.js"
 import LoaderHandler from "../scrollingMechanisms/LoaderHandler.js"
 import Coordinates from "./coordinates.js"
@@ -11,13 +12,15 @@ export default class SwitchHandler {
      * @param {BarVerticalHandler} barVerticalHandler 
      * @param {BarHorizontalHandler} barHorizontalHandler 
      * @param {LinesLoader} linesLoader 
+     * @param {ContentScrollingHandler} contentScrollingHandler
      */
-    constructor(textToWorkWith, loaderHandler, barVerticalHandler, barHorizontalHandler, linesLoader) {
+    constructor(textToWorkWith, loaderHandler, barVerticalHandler, barHorizontalHandler, linesLoader, contentScrollingHandler) {
         this.loaderHandler = loaderHandler
+        this.contentScrollingHandler = contentScrollingHandler
         this.barVerticalHandler = barVerticalHandler
         this.barHorizontalHandler = barHorizontalHandler
         this.linesLoader = linesLoader
-        this.content = document.getElementById('content')
+        this.content = document.getElementById('line-content')
         this.caretPlacer = document.getElementById('caret-placer')
         this.textToWorkWith = textToWorkWith
         this.startingPosition = 0
@@ -26,6 +29,27 @@ export default class SwitchHandler {
         this.focusedHighlight = null // Will be the element which is lightly colorosed
         this.highlights = new Map()
         this.textToSearchForAsLines = []
+        this.bufferZone = 75
+        this.widthLongestContent = this.content.offsetWidth
+    }
+
+    _scrollHorizontally(leftOffset) {
+        const parentLeftOffset = (this.content.offsetLeft * -1) + 75
+        const widthOfScreen = parentLeftOffset + this.content.parentElement.offsetWidth - this.bufferZone - 25
+        if (leftOffset <= parentLeftOffset + 50) {
+            let distance = leftOffset - 50
+            this._scroll(distance)
+        }
+        else if (leftOffset + 50 >= widthOfScreen) {
+            let distance = leftOffset - 50
+            this._scroll(distance)
+        }
+    }
+
+    _scroll(distance) {
+        const percentage = ((distance) / this.widthLongestContent) * 100
+        this.barHorizontalHandler.scrollBasedOnPercentage(percentage)
+        this.contentScrollingHandler.scrollWithPercentage(percentage)
     }
 
     updateTextToWorkWith(newTextToWorkWith) {
@@ -56,8 +80,10 @@ export default class SwitchHandler {
      */
     setHighlights(newHighlights) {
         this.highlights = newHighlights
-        this.focusedHighlight = this._getFocusedHighlights()
-        this.caretPlacer.appendChild(this.focusedHighlight)
+        if (this.highlights.size != 0) {
+            this.focusedHighlight = this._getFocusedHighlights()
+            this.caretPlacer.appendChild(this.focusedHighlight)
+        }
     }
 
 
@@ -89,6 +115,7 @@ export default class SwitchHandler {
             this.barVerticalHandler.scrollBasedOnPercentage(percentage)
             this.linesLoader.reloadLinesForNewTopOffset(this.loaderHandler.topOffset)
         }
+        this._scrollHorizontally(leftOffset)
         const specialHighlighter = this._buildSpeicalHighlighter()
         const lineHighlighter = this._buildLineHighlighter(lineId, topOffset)
         const widths = this._calculateWidthsLine()

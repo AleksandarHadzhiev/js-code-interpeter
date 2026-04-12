@@ -16,6 +16,7 @@ import SearchReplaceHandler from "./src/classes/searchReplace/searchReplaceHandl
 import WriterHandler from "./src/classes/writerHandler.js"
 
 import { textToWorkWith, shortText } from "./textToWorkWith.js"
+import CaretBuilder from "./src/classes/selectionMechanisms/caretBuilder.js"
 const listOfPossibleLinesToDisplay = String(textToWorkWith).split('\n')
 
 const mainContainer = document.getElementById('container')
@@ -84,8 +85,9 @@ const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationEleme
 const textSelectionScrolling = new TextSelectionScrolling(barVerticalHandler, loaderHandler, linesLoader)
 const scrollOncaretMovement = new ScrollOnCaretMovement(loaderHandler, barVerticalHandler, linesLoader, contentScrollingHandler, barHorizontalHandler)
 const caretMover = new CaretMover(scrollOncaretMovement, lineContentElement)
+const caretBuidler = new CaretBuilder()
 const searchReplaceHandler = new SearchReplaceHandler(linesLoader, textToWorkWith, loaderHandler, barVerticalHandler, barHorizontalHandler, contentScrollingHandler)
-const writerHandler = new WriterHandler(textToWorkWith, contentElement, searchReplaceHandler)
+const writerHandler = new WriterHandler(textToWorkWith, contentElement, searchReplaceHandler, caretBuidler)
 
 function displayVerticalScrollbar() {
     if (loaderHeight > mainContainer.offsetHeight) {

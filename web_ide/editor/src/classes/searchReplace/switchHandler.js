@@ -18,7 +18,7 @@ export default class SwitchHandler {
         this.barHorizontalHandler = barHorizontalHandler
         this.linesLoader = linesLoader
         this.content = document.getElementById('content')
-        this.highlighter = document.getElementById('highlighter')
+        this.caretPlacer = document.getElementById('caret-placer')
         this.textToWorkWith = textToWorkWith
         this.startingPosition = 0
         this.currentPosition = 0
@@ -55,10 +55,9 @@ export default class SwitchHandler {
      * @param {Map} newHighlights 
      */
     setHighlights(newHighlights) {
-        this.highlighter = document.getElementById('highlighter')
         this.highlights = newHighlights
         this.focusedHighlight = this._getFocusedHighlights()
-        this.highlighter.appendChild(this.focusedHighlight)
+        this.caretPlacer.appendChild(this.focusedHighlight)
     }
 
 
@@ -154,7 +153,6 @@ export default class SwitchHandler {
         const highlight = document.createElement('span')
         highlight.style =
             `
-            z-index: 1;
             position: absolute;
             background-color: blue;
             width: ${coordinates.width}px;
@@ -169,7 +167,7 @@ export default class SwitchHandler {
         this.focusedHighlight.remove()
         this._updateCurrentPosition(this.currentPosition - 1)
         this.focusedHighlight = this._getFocusedHighlights()
-        this.highlighter.appendChild(this.focusedHighlight)
+        this.caretPlacer.appendChild(this.focusedHighlight)
         return this.currentPosition
     }
 
@@ -177,7 +175,7 @@ export default class SwitchHandler {
         this.focusedHighlight.remove()
         this._updateCurrentPosition(this.currentPosition + 1)
         this.focusedHighlight = this._getFocusedHighlights()
-        this.highlighter.appendChild(this.focusedHighlight)
+        this.caretPlacer.appendChild(this.focusedHighlight)
         return this.currentPosition
     }
     /**

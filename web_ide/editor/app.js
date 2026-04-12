@@ -411,6 +411,11 @@ window.addEventListener('keydown', (event) => {
     const isCopiingText = event.key == "c" || event.key == "C"
     if (event.ctrlKey && isClickingF) {
         event.preventDefault()
+        if (document.getElementById('marker')) {
+            const selectedText = textSelection.selectTextOnCopyCommand(textToWorkWith)
+            searchReplaceHandler.setSelectedText(selectedText)
+            searchReplaceHandler.setTextToSearchField()
+        }
         searchReplaceHandler.changeVisibility()
     }
     else if (event.ctrlKey && isCopiingText) {

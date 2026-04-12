@@ -62,19 +62,23 @@ export default class SearchHandler {
     }
 
     _findCaretCurrentPositionInText() {
-        const lineId = Math.floor(this.caret.offsetTop / 28.8)
+        const topOffset = this.caret.offsetTop
+        const leftOffset = this.caret.offsetLeft
         let index = 0
-        if (lineId != 0) {
-            const lines = this.textToWorkWith.split('\n')
-            const leftLines = lines.splice(0, lineId)
-            const text = leftLines.join('\n')
-            index = text.length - 1
+        const isZero = topOffset == 0 && leftOffset == 0
+        if (isZero == false) {
+            const lineId = Math.round(topOffset / 28.8)
+            if (lineId != 0) {
+                const lines = this.textToWorkWith.split('\n')
+                const leftLines = lines.splice(0, lineId)
+                const text = leftLines.join('\n')
+                index = text.length
+            }
+            const lineElement = document.getElementById(`${lineId}`)
+            const fullTextWidth = calculateWidthForText(this.lineContent, lineElement.textContent)
+            const indexInLine = turnWidthToIndexForText(leftOffset, fullTextWidth, lineElement.textContent.length)
+            index += indexInLine + 1
         }
-        const lineElement = document.getElementById(`${lineId}`)
-        const fullTextWidth = calculateWidthForText(this.lineContent, lineElement.textContent)
-        const indexInLine = turnWidthToIndexForText(this.caret.offsetLeft, fullTextWidth, lineElement.textContent.length)
-        index += indexInLine
-        console.log(index)
         this.caretIndexInText = index
     }
 
@@ -166,7 +170,8 @@ export default class SearchHandler {
         try {
             const matches = this.textToWorkWith.toLowerCase().matchAll(textToSearchFor)
             matches.forEach((match, index) => {
-                if (match.index >= this.caretIndexInText && this.currentPosition == "No") {
+                const position = match.index + this.textToSearchForLength
+                if (position > this.caretIndexInText && this.currentPosition == "No") {
                     this.currentPosition = index
                 }
                 this.highlights.set(index, match.index)

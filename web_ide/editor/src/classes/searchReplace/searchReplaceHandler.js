@@ -88,6 +88,5 @@ export default class SearchReplaceHandler {
 
     setTextToSearchField() {
         this.searchHandler.setTextToSearchField()
-        this.searchHandler.findCurrentPositionInText()
     }
 }

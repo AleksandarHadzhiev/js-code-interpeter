@@ -516,7 +516,8 @@ window.addEventListener('resize', () => {
 })
 
 writerElement.addEventListener('input', (event) => {
-    writerHandler.insertText(event.data)
+    if (event.data != null)
+        writerHandler.insertText(event.data)
 })
 
 writerElement.addEventListener('keydown', (event) => {

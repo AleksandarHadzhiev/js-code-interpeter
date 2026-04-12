@@ -44,7 +44,7 @@ const scrollbarVerticalTopOffset = navigationElement.offsetHeight
 const barVerticalHeight = barVerticalElement.offsetHeight
 
 
-
+let isWriting = false
 let intervalId = null
 let intervalHorizontalId = null
 const lineNumerationWidth = lineNumerationElement.scrollWidth
@@ -198,6 +198,16 @@ function horizontalScrolling(event) {
     caretMover.updateScreenWidth()
 }
 
+window.addEventListener('mousedown', (event) => {
+    console.log(event.target)
+    console.log(event.currentTarget)
+
+    if (event.target.id != 'search-field' && event.target.id != 'replace-field')
+        isWriting = true
+    else isWriting = false
+})
+
+
 window.addEventListener('mouseup', (event) => {
     barVerticalIsSelected = false
     barHorizontalIsSelected = false
@@ -214,7 +224,8 @@ window.addEventListener('mouseup', (event) => {
     clearInterval(intervalHorizontalId)
     intervalId = null
     intervalHorizontalId = null
-    writerElement.focus()
+    if (isWriting)
+        writerElement.focus()
 })
 
 lineContentElement.addEventListener('mousedown', (event) => {

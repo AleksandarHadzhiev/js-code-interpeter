@@ -525,4 +525,7 @@ writerElement.addEventListener('keydown', (event) => {
     if (event.key.toLowerCase() == "backspace") {
         writerHandler.removeText()
     }
+    else if (event.key.toLowerCase() == "enter")
+        writerHandler.insertText('\n')
+
 })

@@ -64,6 +64,11 @@ export default class SearchHandler {
         this.selectedText = selectedText
     }
 
+    setTextToSearchField() {
+        this.searchField.textContent = this.selectedText
+        this._searchForText()
+    }
+
     _stripTextFromLineToLine() {
         const lines = this.textToWorkWith.split('\n')
         const text = lines.slice(this.firstVisibleLine, this.lastVisibleLine + 1)

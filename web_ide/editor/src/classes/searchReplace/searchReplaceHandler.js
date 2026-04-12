@@ -85,4 +85,8 @@ export default class SearchReplaceHandler {
         this.searchHandler.setSelectedText(selectedText)
         this.replaceHandler.setSelectedText(selectedText)
     }
+
+    setTextToSearchField() {
+        this.searchHandler.setTextToSearchField()
+    }
 }

@@ -79,29 +79,22 @@ export default class SwitchHandler {
         const textBefore = this.textToWorkWith.substring(0, index)
         const lines = textBefore.split('\n')
         const lineId = lines.length - 1
-        let lineElement = document.getElementById(`${lineId}`)
+        let highlighterElement = document.getElementById(`${lineId}-highlighter`)
         const textBeforeSearch = lines.pop()
         const leftOffset = calculateWidthForText(this.content, textBeforeSearch)
-        let topOffset = 0
-        if (lineElement != null) {
-            topOffset = lineElement.offsetTop
-        }
-        else {
-            topOffset = lineId * 28.8
+        let topOffset = lineId * 28.8
+        if (highlighterElement == null) {
             const percentage = (topOffset / this.loaderHandler.height) * 100
-            console.log(percentage)
             this.loaderHandler.scrollWithPercentage(percentage)
             this.barVerticalHandler.scrollBasedOnPercentage(percentage)
             this.linesLoader.reloadLinesForNewTopOffset(this.loaderHandler.topOffset)
         }
-        lineElement = document.getElementById(`${lineId}`)
-        topOffset = lineElement.offsetTop
         const lineHighlighter = this._buildLineHighlighter(lineId, topOffset)
         const widths = this._calculateWidthsLine()
         widths.forEach((width, index) => {
             let coordinates = new Coordinates(width, 0, index * 28.8)
             if (index == 0) {
-                coordinates = new Coordinates(width, leftOffset, index * 28.8)
+                coordinates = new Coordinates(width, leftOffset, 0)
             }
             const highlight = this._buildHighlight(coordinates)
             lineHighlighter.appendChild(highlight)

@@ -47,7 +47,7 @@ export default class SwitchHandler {
      */
     updatePositions(newCurrentPosition, newEndingPosition) {
         this.currentPosition = newCurrentPosition
-        this.endingPosition = newEndingPosition
+        this.endingPosition = newEndingPosition - 1
     }
 
     /**

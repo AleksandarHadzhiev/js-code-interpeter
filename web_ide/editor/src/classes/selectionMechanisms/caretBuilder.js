@@ -77,6 +77,7 @@ export default class CaretBuilder {
             caretElement.classList.add('caret')
             caretElement.setAttribute('id', 'caret')
         }
+        else if (caretElement.className == "hidden") caretElement.className = "caret"
         return caretElement
     }
 }

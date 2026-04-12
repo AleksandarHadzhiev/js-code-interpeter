@@ -60,8 +60,17 @@ class CustomEditorContainer extends HTMLElement {
 
     _buildCaretPlacer() {
         const caretPlacer = document.createElement('div')
+        const caret = this._buildCaret()
         caretPlacer.setAttribute('id', 'caret-placer')
+        caretPlacer.appendChild(caret)
         return caretPlacer
+    }
+
+    _buildCaret() {
+        const caretElement = document.createElement('div')
+        caretElement.classList.add('hidden')
+        caretElement.setAttribute('id', 'caret')
+        return caretElement
     }
 
     _buildLineNumeration() {

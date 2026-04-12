@@ -2,6 +2,7 @@ import calculateWidthForText from "../calculators/widthOfTextCalculator.js";
 import LinesLoader from "../scrollingMechanisms/LinesLoader.js";
 import SwitchHandler from "./switchHandler.js";
 import Coordinates from "./coordinates.js";
+import turnWidthToIndexForText from "../calculators/offsetToTextCalculator.js";
 
 export default class SearchHandler {
     /**
@@ -33,6 +34,8 @@ export default class SearchHandler {
             this.textToReplace = String(this.searchField.value)
             this.selectedText = this.textToReplace.toLowerCase()
             this._searchForText()
+            this.findCurrentPositionInText()
+
         })
         this.searchField.addEventListener('keydown', (event) => {
             const isPastingText = event.key == "v" || event.key == "V"
@@ -43,9 +46,17 @@ export default class SearchHandler {
                 this.searchField.textContent = this.selectedText
                 this.textToReplace = String(this.searchField.value)
                 this._searchForText()
+                this.searchHandler.findCurrentPositionInText()
+
             }
         })
         this.highlights = new Map()
+    }
+
+    findCaretCurrentPositionInText() {
+        const caret = document.getElementById()
+        const lineId = Math.floor(caret.offsetTop / 28.8)
+        const index = turnWidthToIndexForText(caret.offsetLeft)
     }
 
     /**

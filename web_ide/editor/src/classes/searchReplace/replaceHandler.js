@@ -40,8 +40,15 @@ export default class ReplaceHandler {
         this.textToReplace = textToReplace
     }
 
-    replaceOne() {
-
+    /**
+     * 
+     * @param {Number} indexFromWhereToReplace 
+     */
+    replaceOne(indexFromWhereToReplace) {
+        const textBefore = this.textToWorkWith.substring(0, indexFromWhereToReplace)
+        const textAfter = this.textToWorkWith.substring(indexFromWhereToReplace, this.textToWorkWith.length)
+        const newText = textAfter.replace(this.textToReplace, this.textToReplaceWith)
+        return `${textBefore}${newText}`
     }
 
     replaceAll() {

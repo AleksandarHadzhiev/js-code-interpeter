@@ -1,14 +1,15 @@
 # Table of Contents
 1. [About me](#about-me)
 2. [What's new](#whats-new)
-   - 2.1 [Version 1.1.5](#version-115)
-   - 2.1 [Version 1.1.4](#version-114)
-   - 2.1 [Version 1.1.3](#version-113)
-   - 2.2 [Version 1.1.2](#version-112)
-   - 2.3 [Version 1.1.1](#version-111)
-   - 2.4 [Version 1.1.0](#version-110)
-   - 2.5 [Version 1.0.0](#version-100)
-   - 2.6 [Version 0.0.0](#verions-000)
+   - 2.1 [Version 1.2.0](#version-120)
+   - 2.2 [Version 1.1.5](#version-115)
+   - 2.3 [Version 1.1.4](#version-114)
+   - 2.4 [Version 1.1.3](#version-113)
+   - 2.5 [Version 1.1.2](#version-112)
+   - 2.6 [Version 1.1.1](#version-111)
+   - 2.7 [Version 1.1.0](#version-110)
+   - 2.8 [Version 1.0.0](#version-100)
+   - 2.9 [Version 0.0.0](#verions-000)
 3. [How to run](#how-to-run)
 4. [Documentation](#documentation)
 4. [Author](#author)
@@ -27,64 +28,17 @@ This project is an online IDE which aims to support reading and writing HTML/CSS
 
 ## What's new
 
-Order of versions - from newest to oldest. For the full explanation behind the versions and their goals visit the [Roadmap](./docs/roadMap.md)
+For the full explanation behind the versions and their goals visit the [Roadmap](./docs/roadMap.md)
 
-### Version 1.1.5
+The current version of the project is `1.1.5` and is in the process of becoming `1.2.0`.
 
-- allow to search for text in file
-- allow to replace the found text in file
-- select text on ctrl + f command
-- fix copy paste operations from content element
-- change line loading structure
-   - from two identical lines to text from a file
-
-
-### Version 1.1.4
-
-Build prototypes to understand how to have fast and stable content loading on the screen, so that there is no black screen when scrolling up/down:
-- change the way elements are loaded: only the maximum visible lines on the screen are created - virtual scrolling
-- change the way elements are relaoded: no new elemens are created or old removed, the visible lines on the screen get updated
-
-Build prototypes for: text selection and search/replace functionalities with the new content loading approach:
-- custom text selection algorithm
-- custom caret element
-
-Integrate the learnings from the prototypes in the main project
-
-
-### Version 1.1.3
-
-Small changes to the search container and styling of highlighted text:
- - change of highlight colors - for better visual composition.
- - change in style - width and height - of the search container and its elements - for more stable view when screen size changes.
-
-### Version 1.1.2
-
-Small changes to the reaplce actions were added:
- - now there are icons for the buttons
- - and there is helping text displayed when the user hovers over the buttons - similar to the way VSCode does it.
-
-### Version 1.1.1
-
-Small problems were found, with the code display and it not being completely matched with the text field, during the integration of search and replace. The search and replace were pushed as they worked for majority of the cases and the situations in which they didnt work - the problems appeared form the unmatched display with textarea. This problem was fixed in this patch.
-
-### Version 1.1.0
-
-This version adds the feature of searching for text in code. As such it allows the action to be done
-via right click and then search, or via a shortcut (which by default will be `ctrl + f`).
-
-Together with that the version will provide the feature of replacing text (if found) in the code. Similar to the search feature it will be via shortcut or the right click and then replace.
-
-### Version 1.0.0
-
-The first version of the project is uploaded to the repository. This version contains only the reader/writer of JavaScript code. 
-As such it has the styling (colors, and how the project should work as elements) of the code.
-
-### Verions 0.0.0
-
-The actual project itself is not initialized. Instead, the main functionalities of the project are split into small prototypes, in which where and how to build and use them are practiced and learned. All of those functionalities can be found in the [protoypes](./code-editor/prototypes/) directory.
-
-You can read more about the processes and building of each prototype [here](./docs/prototypes.md)
+**Supported functionality**:
+   - Load the code on the screen
+   - Colorise the code to showcase difference between variables, keywords, functions, etc.
+   - Search for code
+   - Replace the found code (one by one, or all at once)
+   - Select text (pick a point in the text and start moving the mouse around)
+   - Copy paste (with allowing to copy the selected text in the clipboard so you can paste it outside the app)
 
 ## How to run
 

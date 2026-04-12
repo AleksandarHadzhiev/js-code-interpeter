@@ -518,3 +518,10 @@ window.addEventListener('resize', () => {
 writerElement.addEventListener('input', (event) => {
     writerHandler.insertText(event.data)
 })
+
+writerElement.addEventListener('keydown', (event) => {
+    console.log(event.key)
+    if (event.key.toLowerCase() == "backspace") {
+        writerHandler.removeText()
+    }
+})

@@ -18,6 +18,16 @@ export default class WriterHandler {
         this.caretBuilder = caretBuilder
     }
 
+    removeText() {
+        const indexInText = findCaretCurrentPositionInText(this.caret, this.textToWorkWith, this.contentElement)
+        const textBefore = this.textToWorkWith.substring(0, indexInText - 2)
+        const textAfter = this.textToWorkWith.substring(indexInText - 1, this.textToWorkWith.length)
+        const newIndexForCaret = indexInText - 1
+        this.textToWorkWith = `${textBefore}${textAfter}`
+        this.searchReplaceHandler.updateText(this.textToWorkWith)
+        this._moveCaretOneIndexFurther(newIndexForCaret)
+    }
+
     /**
      * 
      * @param {String} textToInsert 

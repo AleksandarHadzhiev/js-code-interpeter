@@ -86,13 +86,13 @@ export default class CaretBuilder {
 
     /**
      * 
-     * @param {String} text 
      * @param {Array} lines 
      * @param {HTMLElement} contentElement
      */
-    rebuildCaretForInsertingText(text, lines, contentElement) {
+    rebuildCaretForInsertingText(lines, contentElement) {
         const caretElement = this._buildCaret()
         const lineId = lines.length - 1
+        const text = lines[lineId]
         const left = calculateWidthForText(contentElement, text)
         caretElement.style = `top: ${lineId * 28.8}px; left: ${left}px;`
         this.caretPlacer.prepend(caretElement)

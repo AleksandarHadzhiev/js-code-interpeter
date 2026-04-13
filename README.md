@@ -21,12 +21,13 @@ This project is an online IDE which aims to support reading and writing HTML/CSS
 
 For the full explanation behind the versions and their goals visit the [Roadmap](./docs/roadMap.md)
 
-The current version of the project is `1.2.0` and is in the process of becoming `1.2.1`.
+The current version of the project is `1.2.1` and is in the process of becoming `1.2.2`.
 
 **Newly added**
-   - Insert text based on the caret position
+   - Remove text based on the caret position
 
 **Supported functionality untill now**:
+   - Insert text based on the caret position
    - Load the code on the screen
    - Colorise the code to showcase difference between variables, keywords, functions, etc.
    - Search for code

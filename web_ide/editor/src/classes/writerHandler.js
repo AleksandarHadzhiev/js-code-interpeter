@@ -20,27 +20,60 @@ export default class WriterHandler {
         this.caretBuilder = caretBuilder
     }
 
-    removeText() {
-        let indexInText = findCaretCurrentPositionInText(this.caret, this.textToWorkWith, this.contentElement)
-        let newIndexForCaret = indexInText
-        const textBefore = this.textToWorkWith.substring(0, indexInText - 1)
-        const textAfter = this.textToWorkWith.substring(indexInText, this.textToWorkWith.length)
-        newIndexForCaret = indexInText - 1
-        this.textToWorkWith = `${textBefore}${textAfter}`
-        this.searchReplaceHandler.updateText(this.textToWorkWith)
-        this._moveCaretOneIndexFurther(newIndexForCaret)
+    /**
+     * @param {{text: String, starting: Number, ending: Number}} selectedText
+     */
+    removeText(selectedText) {
+        console.log(selectedText)
+        if (selectedText != null) {
+            this._replaceTextBetweenIndexes(selectedText, "")
+        }
+        else {
+            let indexInText = findCaretCurrentPositionInText(this.caret, this.textToWorkWith, this.contentElement)
+            let newIndexForCaret = indexInText
+            const textBefore = this.textToWorkWith.substring(0, indexInText - 1)
+            const textAfter = this.textToWorkWith.substring(indexInText, this.textToWorkWith.length)
+            newIndexForCaret = indexInText - 1
+            this.textToWorkWith = `${textBefore}${textAfter}`
+            this.searchReplaceHandler.updateText(this.textToWorkWith)
+            this._moveCaretOneIndexFurther(newIndexForCaret)
+        }
     }
 
     /**
      * 
      * @param {String} textToInsert 
+     * @param {{text: String, starting: Number, ending: Number}} selectedText
      */
-    insertText(textToInsert) {
-        const indexInText = findCaretCurrentPositionInText(this.caret, this.textToWorkWith, this.contentElement)
-        const textBefore = this.textToWorkWith.substring(0, indexInText)
-        const textAfter = this.textToWorkWith.substring(indexInText, this.textToWorkWith.length)
-        const newIndexForCaret = indexInText + textToInsert.length
-        this.textToWorkWith = `${textBefore}${textToInsert}${textAfter}`
+    insertText(textToInsert, selectedText) {
+        console.log(selectedText)
+        if (selectedText != null) {
+            this._replaceTextBetweenIndexes(selectedText, textToInsert)
+        }
+        else {
+            const indexInText = findCaretCurrentPositionInText(this.caret, this.textToWorkWith, this.contentElement)
+            const textBefore = this.textToWorkWith.substring(0, indexInText)
+            const textAfter = this.textToWorkWith.substring(indexInText, this.textToWorkWith.length)
+            const newIndexForCaret = indexInText + textToInsert.length
+            this.textToWorkWith = `${textBefore}${textToInsert}${textAfter}`
+            this.searchReplaceHandler.updateText(this.textToWorkWith)
+            this._moveCaretOneIndexFurther(newIndexForCaret)
+        }
+    }
+
+    /**
+     * 
+     * @param {{text: String, starting: Number, ending: Number}} selectedText
+     */
+    _replaceTextBetweenIndexes(selectedText, textToReplaceWith) {
+        console.log(selectedText)
+        const textBefore = this.textToWorkWith.substring(0, selectedText.starting)
+        const textAfter = this.textToWorkWith.substring(selectedText.ending, this.textToWorkWith.length)
+        console.log(textBefore)
+        console.log(textAfter)
+        console.log(textToReplaceWith)
+        this.textToWorkWith = `${textBefore}${textToReplaceWith}${textAfter}`
+        const newIndexForCaret = selectedText.starting + textToReplaceWith.length
         this.searchReplaceHandler.updateText(this.textToWorkWith)
         this._moveCaretOneIndexFurther(newIndexForCaret)
     }
@@ -53,5 +86,7 @@ export default class WriterHandler {
         const text = this.textToWorkWith.substring(0, newIndexForCaret)
         const lines = text.split('\n')
         this.caretBuilder.rebuildCaretForInsertingText(lines, this.contentElement)
+        const marker = document.getElementById('marker')
+        if (marker) marker.remove()
     }
 }

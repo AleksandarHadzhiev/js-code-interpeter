@@ -4,8 +4,6 @@ import { StartingPoint } from "../dtos/caretDTOs.js"
 import CaretBuilder from "./caretBuilder.js"
 import MarkedPoint from "./MarkedPoint.js"
 import ContentScrollingHandler from "../scrollingMechanisms/ContentScrollingHandler.js"
-import turnWidthToIndexForText from "../calculators/offsetToTextCalculator.js"
-import calculateWidthForText from "../calculators/widthOfTextCalculator.js"
 import TextFetcher from "./textFetcher.js"
 
 
@@ -35,7 +33,7 @@ export default class TextSelection {
         this.lastTextLine = maxLines
         this.scrollHandler = contentScrollHandler
         this.selectedText = ""
-        this.textFetcher = new TextFetcher()
+        this.textFetcher = new TextFetcher(this.highlighter, this.contentElement)
     }
 
     /**

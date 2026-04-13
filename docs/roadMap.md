@@ -3,15 +3,17 @@
 # Table of Contents
 1. [Process](#process)
 2. [Version History](#version-history)
-   - 2.1 [Version 1.2.0](#version-120)
-   - 2.2 [Version 1.1.5](#version-115)
-   - 2.3 [Version 1.1.4](#version-114)
-   - 2.4 [Version 1.1.3](#version-113)
-   - 2.5 [Version 1.1.2](#version-112)
-   - 2.6 [Version 1.1.1](#version-111)
-   - 2.7 [Version 1.1.0](#version-110)
-   - 2.8 [Version 1.0.0](#version-100)
-   - 2.9 [Version 0.0.0](#verions-000)
+   - 2.1 [Version 1.2.2](#version-122)
+   - 2.2 [Version 1.2.1](#version-121)
+   - 2.3 [Version 1.2.0](#version-120)
+   - 2.4 [Version 1.1.5](#version-115)
+   - 2.5 [Version 1.1.4](#version-114)
+   - 2.6 [Version 1.1.3](#version-113)
+   - 2.7 [Version 1.1.2](#version-112)
+   - 2.8 [Version 1.1.1](#version-111)
+   - 2.9 [Version 1.1.0](#version-110)
+   - 3.0 [Version 1.0.0](#version-100)
+   - 3.1 [Version 0.0.0](#verions-000)
 
 # Process
 
@@ -26,13 +28,17 @@ The version aim to resemble iterations with one or more big goals which are the 
 
 Order of versions - from newest to oldest.
 
+### Version 1.2.2
+
+- Insert/Remove/Change text based on caret position when it is related to text selection
+
+### Version 1.2.1
+
+- remove text based on the caret position
+
 ### Version 1.2.0
 
-- Basic CRUD operations for text:
-   - write text on the caret position
-   - delete text based on the caret position
-   - change text based on text selection
-   - save text in the file - ctrl + s operation
+- write text on the caret position
    
 ### Version 1.1.5
 

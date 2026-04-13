@@ -532,11 +532,11 @@ writerElement.addEventListener('input', (event) => {
 })
 
 writerElement.addEventListener('keydown', (event) => {
-    console.log(event.key)
     if (event.key.toLowerCase() == "backspace") {
         writerHandler.removeText()
     }
-    else if (event.key.toLowerCase() == "enter")
+    else if (event.key.toLowerCase() == "enter") {
         writerHandler.insertText('\n')
+    }
 
 })

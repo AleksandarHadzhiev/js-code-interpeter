@@ -36,17 +36,24 @@ export function findCaretCurrentPositionInText(caret, textToWorkWith, content) {
     let index = 0
     const isZero = topOffset == 0 && leftOffset == 0
     if (isZero == false) {
+        const lines = textToWorkWith.split('\n')
         const lineId = Math.round(topOffset / 28.8)
         if (lineId != 0) {
-            const lines = textToWorkWith.split('\n')
             const leftLines = lines.splice(0, lineId)
             const text = leftLines.join('\n')
             index = text.length
+            const lineText = lines[lineId]
+            const fullTextWidth = calculateWidthForText(content, lineText)
+            const indexInLine = turnWidthToIndexForText(leftOffset, fullTextWidth, lineText.length)
+            index += indexInLine + 1
         }
-        const lineElement = document.getElementById(`${lineId}`)
-        const fullTextWidth = calculateWidthForText(content, lineElement.textContent)
-        const indexInLine = turnWidthToIndexForText(leftOffset, fullTextWidth, lineElement.textContent.length)
-        index += indexInLine + 1
+        else {
+            const lineText = lines[lineId]
+            const fullTextWidth = calculateWidthForText(content, lineText)
+            const indexInLine = turnWidthToIndexForText(leftOffset, fullTextWidth, lineText.length)
+            index = indexInLine
+        }
     }
+
     return index
 }

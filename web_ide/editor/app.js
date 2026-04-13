@@ -527,16 +527,29 @@ window.addEventListener('resize', () => {
 })
 
 writerElement.addEventListener('input', (event) => {
-    if (event.data != null)
+    if (event.data != null) {
+        const selectedText = checkIfThereIsMarker()
         writerHandler.insertText(event.data)
+    }
 })
 
 writerElement.addEventListener('keydown', (event) => {
+
     if (event.key.toLowerCase() == "backspace") {
+        const selectedText = checkIfThereIsMarker()
         writerHandler.removeText()
     }
     else if (event.key.toLowerCase() == "enter") {
+        const selectedText = checkIfThereIsMarker()
         writerHandler.insertText('\n')
     }
-
 })
+
+function checkIfThereIsMarker() {
+    const marker = document.getElementById('marker')
+    let selectedText = ""
+    if (marker) {
+        selectedText = textSelection.selectTextOnCopyCommand(textToWorkWith)
+    }
+    return selectedText
+}

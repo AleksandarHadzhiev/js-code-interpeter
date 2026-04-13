@@ -1,5 +1,16 @@
+import turnWidthToIndexForText from "../calculators/offsetToTextCalculator.js"
+import calculateWidthForText from "../calculators/widthOfTextCalculator.js"
+import Highlighter from "./highlighter.js"
+
 export default class TextFetcher {
-    constructor() {
+    /**
+     * 
+     * @param {Highlighter} highlighter 
+     * @param {HTMLElement} contentElement 
+     */
+    constructor(highlighter, contentElement) {
+        this.contentElement = contentElement
+        this.highlighter = highlighter
         this.startingIndex = 0
         this.endingIndex = 0
         this.text = ""

@@ -529,7 +529,7 @@ window.addEventListener('resize', () => {
 writerElement.addEventListener('input', (event) => {
     if (event.data != null) {
         const selectedText = checkIfThereIsMarker()
-        writerHandler.insertText(event.data)
+        writerHandler.insertText(event.data, selectedText)
     }
 })
 
@@ -537,11 +537,11 @@ writerElement.addEventListener('keydown', (event) => {
 
     if (event.key.toLowerCase() == "backspace") {
         const selectedText = checkIfThereIsMarker()
-        writerHandler.removeText()
+        writerHandler.removeText(selectedText)
     }
     else if (event.key.toLowerCase() == "enter") {
         const selectedText = checkIfThereIsMarker()
-        writerHandler.insertText('\n')
+        writerHandler.insertText('\n', selectedText)
     }
 })
 
@@ -550,6 +550,7 @@ function checkIfThereIsMarker() {
     let selectedText = ""
     if (marker) {
         selectedText = textSelection.selectTextOnCopyCommand(textToWorkWith)
+        return selectedText
     }
-    return selectedText
+    return null
 }

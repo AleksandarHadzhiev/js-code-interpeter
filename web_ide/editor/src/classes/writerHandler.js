@@ -37,9 +37,9 @@ export default class WriterHandler {
      */
     insertText(textToInsert) {
         const indexInText = findCaretCurrentPositionInText(this.caret, this.textToWorkWith, this.contentElement)
-        const textBefore = this.textToWorkWith.substring(0, indexInText - 1)
-        const textAfter = this.textToWorkWith.substring(indexInText - 1, this.textToWorkWith.length)
-        const newIndexForCaret = indexInText + textToInsert.length - 1
+        const textBefore = this.textToWorkWith.substring(0, indexInText)
+        const textAfter = this.textToWorkWith.substring(indexInText, this.textToWorkWith.length)
+        const newIndexForCaret = indexInText + textToInsert.length
         this.textToWorkWith = `${textBefore}${textToInsert}${textAfter}`
         this.searchReplaceHandler.updateText(this.textToWorkWith)
         this._moveCaretOneIndexFurther(newIndexForCaret)
@@ -52,6 +52,6 @@ export default class WriterHandler {
     _moveCaretOneIndexFurther(newIndexForCaret) {
         const text = this.textToWorkWith.substring(0, newIndexForCaret)
         const lines = text.split('\n')
-        this.caretBuilder.rebuildCaretForInsertingText(text, lines, this.contentElement)
+        this.caretBuilder.rebuildCaretForInsertingText(lines, this.contentElement)
     }
 }

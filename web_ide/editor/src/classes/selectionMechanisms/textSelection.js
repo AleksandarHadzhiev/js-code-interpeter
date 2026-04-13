@@ -4,8 +4,7 @@ import { StartingPoint } from "../dtos/caretDTOs.js"
 import CaretBuilder from "./caretBuilder.js"
 import MarkedPoint from "./MarkedPoint.js"
 import ContentScrollingHandler from "../scrollingMechanisms/ContentScrollingHandler.js"
-import turnWidthToIndexForText from "../calculators/offsetToTextCalculator.js"
-import calculateWidthForText from "../calculators/widthOfTextCalculator.js"
+import TextFetcher from "./textFetcher.js"
 
 
 export default class TextSelection {
@@ -34,112 +33,19 @@ export default class TextSelection {
         this.lastTextLine = maxLines
         this.scrollHandler = contentScrollHandler
         this.selectedText = ""
+        this.textFetcher = new TextFetcher(this.highlighter, this.contentElement)
     }
 
     /**
      * @param {String} fullText 
      */
     selectTextOnCopyCommand(fullText) {
-        const lines = fullText.split('\n')
-        const lineForEndingPoint = this.highlighter.endingPoint.lineId
-        const lineForStartingPoint = this.highlighter.startingPoint.lineId
-        let text = ""
-        if (lineForStartingPoint == lineForEndingPoint) {
-            text = this._singleLineTextSelection()
-        }
-        else {
-            text = this._multilineTextSelection(lines, lineForStartingPoint, lineForEndingPoint)
-        }
-        this.selectedText = text
-        navigator.clipboard.writeText(this.selectText)
-        return this.selectedText
-    }
 
-    _singleLineTextSelection() {
-        const fullText = this.highlighter.startingPoint.fullText
-        const fullTextWidth = calculateWidthForText(this.contentElement, fullText)
-        const startingIndex = turnWidthToIndexForText(this.highlighter.startingPoint.leftOffset, fullTextWidth, fullText.length)
-        const endingIndex = turnWidthToIndexForText(this.highlighter.endingPoint.leftOffset, fullTextWidth, fullText.length)
-        return fullText.substring(startingIndex, endingIndex)
+        const fetchedText = this.textFetcher.selectTextFromFullText(fullText)
+        this.selectedText = fetchedText.text
+        navigator.clipboard.writeText(this.selectedText)
+        return fetchedText
     }
-
-    /**
-     * 
-     * @param {Array} lines 
-     * @param {Number} lineForStartingPoint 
-     * @param {Number} lineForEndingPoint 
-     */
-    _multilineTextSelection(lines, lineForStartingPoint, lineForEndingPoint) {
-        if (lineForEndingPoint > lineForStartingPoint) {
-            return this._startingLineFirst(lines, lineForStartingPoint, lineForEndingPoint)
-        }
-        else {
-            return this._endingLineFirst(lines, lineForEndingPoint, lineForStartingPoint)
-        }
-    }
-
-    /**
-     * 
-     * @param {Array} lines 
-     * @param {Number} firstLine 
-     * @param {Number} lastLine 
-     * @returns 
-     */
-    _startingLineFirst(lines, firstLine, lastLine) {
-        const selectedTextLines = []
-        const textOfFirstLine = this._getTextForFirstSelectedLine(this.highlighter.startingPoint)
-        const textOfEndingLine = this._getOfLastLine(this.highlighter.endingPoint)
-        selectedTextLines.push(textOfFirstLine)
-        this._getLinesInBetween(lines, firstLine + 1, lastLine, selectedTextLines)
-        selectedTextLines.push(textOfEndingLine)
-        return selectedTextLines.join('\n')
-    }
-    _getTextForFirstSelectedLine(point) {
-        const fullText = point.fullText
-        const fullTextWidth = calculateWidthForText(this.contentElement, fullText)
-        const startingIndex = turnWidthToIndexForText(point.leftOffset, fullTextWidth, fullText.length)
-        return fullText.substring(startingIndex, fullText.length - 1)
-    }
-
-    _getOfLastLine(point) {
-        const fullText = point.fullText
-        const fullTextWidth = calculateWidthForText(this.contentElement, fullText)
-        const startingIndex = 0
-        const endingIndex = turnWidthToIndexForText(point.leftOffset, fullTextWidth, fullText.length)
-        return fullText.substring(startingIndex, endingIndex)
-    }
-
-    /**
-     * 
-     * @param {Array} lines 
-     * @param {Number} firstLine 
-     * @param {Number} lastLine 
-     * @param {Array} linesText 
-     */
-    _getLinesInBetween(lines, firstLine, lastLine, linesText) {
-        for (let index = firstLine; index < lastLine; index++) {
-            const lineText = lines[index];
-            linesText.push(lineText)
-        }
-    }
-
-    /**
-    * @param {Array} lines 
-    * @param {Number} firstLine 
-    * @param {Number} lastLine 
-    * @returns 
-    */
-    _endingLineFirst(lines, firstLine, lastLine) {
-        const selectedTextLines = []
-        const textOfFirstLine = this._getTextForFirstSelectedLine(this.highlighter.endingPoint)
-        const textOfEndingLine = this._getOfLastLine(this.highlighter.startingPoint)
-        selectedTextLines.push(textOfFirstLine)
-        this._getLinesInBetween(lines, firstLine + 1, lastLine, selectedTextLines)
-        selectedTextLines.push(textOfEndingLine)
-        return selectedTextLines.join('\n')
-    }
-
-
 
     /**
      * 

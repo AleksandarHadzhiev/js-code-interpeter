@@ -3,17 +3,18 @@
 # Table of Contents
 1. [Process](#process)
 2. [Version History](#version-history)
-   - 2.1 [Version 1.2.2](#version-122)
-   - 2.2 [Version 1.2.1](#version-121)
-   - 2.3 [Version 1.2.0](#version-120)
-   - 2.4 [Version 1.1.5](#version-115)
-   - 2.5 [Version 1.1.4](#version-114)
-   - 2.6 [Version 1.1.3](#version-113)
-   - 2.7 [Version 1.1.2](#version-112)
-   - 2.8 [Version 1.1.1](#version-111)
-   - 2.9 [Version 1.1.0](#version-110)
-   - 3.0 [Version 1.0.0](#version-100)
-   - 3.1 [Version 0.0.0](#verions-000)
+   - [Version 1.2.3](#version-123)
+   - [Version 1.2.2](#version-122)
+   - [Version 1.2.1](#version-121)
+   - [Version 1.2.0](#version-120)
+   - [Version 1.1.5](#version-115)
+   - [Version 1.1.4](#version-114)
+   - [Version 1.1.3](#version-113)
+   - [Version 1.1.2](#version-112)
+   - [Version 1.1.1](#version-111)
+   - [Version 1.1.0](#version-110)
+   - [Version 1.0.0](#version-100)
+   - [Version 0.0.0](#verions-000)
 
 # Process
 
@@ -27,6 +28,10 @@ The version aim to resemble iterations with one or more big goals which are the 
 # Version History
 
 Order of versions - from newest to oldest.
+
+### Version 1.2.3
+
+- integrate ctrl + z operations for returning previous state of code
 
 ### Version 1.2.2
 

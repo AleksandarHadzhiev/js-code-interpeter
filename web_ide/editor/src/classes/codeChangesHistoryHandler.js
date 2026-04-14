@@ -14,6 +14,15 @@ export default class CodeChangesHistoryHandler {
         this.changes.push({ "text": textToWorkWith, "style": caretStyle })
     }
 
+    updateFirstPositionOfCaret() {
+        if (this.changes.length == 1 && this.currentChanges == 0) {
+            const caretTop = this.caret.offsetTop
+            const caretLeft = this.caret.offsetLeft
+            const caretStyle = `top: ${caretTop}px; left: ${caretLeft}px;`
+            this.changes[0] = { "text": this.textToWorkWith, "style": caretStyle }
+        }
+    }
+
     /**
      * 
      * @param {String} textToWorkWith 

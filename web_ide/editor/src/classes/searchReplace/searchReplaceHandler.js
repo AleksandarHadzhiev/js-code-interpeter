@@ -42,6 +42,7 @@ export default class SearchReplaceHandler {
         })
 
         this.replaceOne.addEventListener('click', () => {
+            this.codeChangesHistoryHandler.updateFirstPositionOfCaret()
             this.replaceHandler.setTextToReplace(this.searchHandler.textToReplace)
             const index = this.switchHandler.highlights.get(this.switchHandler.currentPosition)
             const newText = this.replaceHandler.replaceOne(index)
@@ -51,6 +52,7 @@ export default class SearchReplaceHandler {
         })
 
         this.replaceAll.addEventListener('click', () => {
+            this.codeChangesHistoryHandler.updateFirstPositionOfCaret()
             this.replaceHandler.setTextToReplace(this.searchHandler.textToReplace)
             const newTextToWorkWith = this.replaceHandler.replaceAll()
             this.updateText(newTextToWorkWith)

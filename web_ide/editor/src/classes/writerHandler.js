@@ -25,6 +25,7 @@ export default class WriterHandler {
      * @param {{text: String, starting: Number, ending: Number}} selectedText
      */
     removeText(selectedText) {
+        this.codeChangesHistoryHandler.updateFirstPositionOfCaret()
         if (selectedText != null) {
             this._replaceTextBetweenIndexes(selectedText, "")
         }
@@ -47,6 +48,7 @@ export default class WriterHandler {
      * @param {{text: String, starting: Number, ending: Number}} selectedText
      */
     insertText(textToInsert, selectedText) {
+        this.codeChangesHistoryHandler.updateFirstPositionOfCaret()
         if (selectedText != null) {
             this._replaceTextBetweenIndexes(selectedText, textToInsert)
         }

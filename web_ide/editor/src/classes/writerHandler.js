@@ -24,7 +24,6 @@ export default class WriterHandler {
      * @param {{text: String, starting: Number, ending: Number}} selectedText
      */
     removeText(selectedText) {
-        console.log(selectedText)
         if (selectedText != null) {
             this._replaceTextBetweenIndexes(selectedText, "")
         }
@@ -46,7 +45,6 @@ export default class WriterHandler {
      * @param {{text: String, starting: Number, ending: Number}} selectedText
      */
     insertText(textToInsert, selectedText) {
-        console.log(selectedText)
         if (selectedText != null) {
             this._replaceTextBetweenIndexes(selectedText, textToInsert)
         }

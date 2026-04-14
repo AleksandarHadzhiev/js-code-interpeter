@@ -7,6 +7,7 @@ export default class CodeChangesHistoryHandler {
         this.changes = new Map()
         this.currentChanges = 0
         this.textToWorkWith = textToWorkWith
+        this.changes.set(this.currentChanges, this.textToWorkWith)
     }
 
     /**
@@ -16,10 +17,15 @@ export default class CodeChangesHistoryHandler {
     insertChange(textToWorkWith) {
         const id = this.changes.size
         this.changes.set(id, textToWorkWith)
-        this.currentChanges = 0
+        this.currentChanges = id
     }
 
+    /**
+     * 
+     * @returns {String}
+     */
     goBack() {
+        console.log(this.currentChanges)
         if (this.changes.size > 0) {
             if (this.currentChanges > 0)
                 this.currentChanges -= 1
@@ -29,6 +35,10 @@ export default class CodeChangesHistoryHandler {
         return this.textToWorkWith
     }
 
+    /**
+     * 
+     * @returns {String}
+     */
     goForward() {
         if (this.changes.size > 0) {
             if (this.currentChanges < this.changes.size - 1)

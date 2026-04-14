@@ -21,12 +21,14 @@ This project is an online IDE which aims to support reading and writing HTML/CSS
 
 For the full explanation behind the versions and their goals visit the [Roadmap](./docs/roadMap.md)
 
-The current version of the project is `1.2.2` and is in the process of becoming `1.2.3`.
+The current version of the project is `1.2.3` and is in the process of becoming `1.3.0`.
 
 **Newly added**
-   - Insert/Remove/Change text based on caret position when it is related to text selection
+   - keep changes history and switch between on ctrl + z operations.
+   - whole text selection on ctrl + a
 
 **Supported functionality untill now**:
+   - Insert/Remove/Change text based on caret position when it is related to text selection
    - Remove text based on the caret position
    - Insert text based on the caret position
    - Load the code on the screen

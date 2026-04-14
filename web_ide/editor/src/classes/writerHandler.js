@@ -1,8 +1,7 @@
 import SearchReplaceHandler from "./searchReplace/searchReplaceHandler.js"
 import { findCaretCurrentPositionInText } from "./calculators/caretLeftOffsetCalculator.js"
 import CaretBuilder from "./selectionMechanisms/caretBuilder.js"
-import turnWidthToIndexForText from "./calculators/offsetToTextCalculator.js"
-import calculateWidthForText from "./calculators/widthOfTextCalculator.js"
+import CodeChangesHistoryHandler from "./codeChangesHistoryHandler.js"
 
 export default class WriterHandler {
     /**
@@ -11,20 +10,22 @@ export default class WriterHandler {
      * @param {HTMLElement} contentElement 
      * @param {SearchReplaceHandler} searchReplaceHandler 
      * @param {CaretBuilder} caretBuilder 
+     * @param {CodeChangesHistoryHandler} codeChangesHistoryHandler 
      */
-    constructor(textToWorkWith, contentElement, searchReplaceHandler, caretBuilder) {
+    constructor(textToWorkWith, contentElement, searchReplaceHandler, caretBuilder, codeChangesHistoryHandler) {
         this.textToWorkWith = textToWorkWith
         this.contentElement = contentElement
         this.searchReplaceHandler = searchReplaceHandler
         this.caret = document.getElementById('caret')
         this.caretBuilder = caretBuilder
+        this.codeChangesHistoryHandler = codeChangesHistoryHandler
     }
 
     /**
      * @param {{text: String, starting: Number, ending: Number}} selectedText
      */
     removeText(selectedText) {
-        console.log(selectedText)
+        this.codeChangesHistoryHandler.updateFirstPositionOfCaret()
         if (selectedText != null) {
             this._replaceTextBetweenIndexes(selectedText, "")
         }
@@ -38,6 +39,7 @@ export default class WriterHandler {
             this.searchReplaceHandler.updateText(this.textToWorkWith)
             this._moveCaretOneIndexFurther(newIndexForCaret)
         }
+        this.codeChangesHistoryHandler.insertChange(this.textToWorkWith)
     }
 
     /**
@@ -46,7 +48,7 @@ export default class WriterHandler {
      * @param {{text: String, starting: Number, ending: Number}} selectedText
      */
     insertText(textToInsert, selectedText) {
-        console.log(selectedText)
+        this.codeChangesHistoryHandler.updateFirstPositionOfCaret()
         if (selectedText != null) {
             this._replaceTextBetweenIndexes(selectedText, textToInsert)
         }
@@ -59,6 +61,7 @@ export default class WriterHandler {
             this.searchReplaceHandler.updateText(this.textToWorkWith)
             this._moveCaretOneIndexFurther(newIndexForCaret)
         }
+        this.codeChangesHistoryHandler.insertChange(this.textToWorkWith)
     }
 
     /**

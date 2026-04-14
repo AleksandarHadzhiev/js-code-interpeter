@@ -14,6 +14,7 @@ import calculateWidthForText from "./src/classes/calculators/widthOfTextCalculat
 import LineSelector from "./src/classes/selectionMechanisms/lineSelector.js"
 import SearchReplaceHandler from "./src/classes/searchReplace/searchReplaceHandler.js"
 import WriterHandler from "./src/classes/writerHandler.js"
+import CodeChangesHistoryHandler from "./src/classes/codeChangesHistoryHandler.js"
 
 import { textToWorkWith, shortText } from "./textToWorkWith.js"
 import CaretBuilder from "./src/classes/selectionMechanisms/caretBuilder.js"
@@ -75,6 +76,7 @@ let isTextSelecting = false
 let startingRange = null
 let pageYMousePosition = 0
 
+const codeChangesHistoryHandler = new CodeChangesHistoryHandler(textToWorkWith)
 const contentScrollingHandler = new ContentScrollingHandler(lineContentWidth, scrollbarHorizontalLeftOffset, lineNumerationWidth, barVerticalWidth, lineContentElement)
 const textSelection = new TextSelection(scrollbarVerticalTopOffset, lineNumerationWidth, scrollbarVerticalHeight, loaderElement.offsetWidth, contentElement, contentElementOffsetLeft, lines, contentScrollingHandler)
 const barVerticalHandler = new BarVerticalHandler(scrollbarVerticalHeight, barVerticalHeight, barVerticalElement)
@@ -86,8 +88,8 @@ const textSelectionScrolling = new TextSelectionScrolling(barVerticalHandler, lo
 const scrollOncaretMovement = new ScrollOnCaretMovement(loaderHandler, barVerticalHandler, linesLoader, contentScrollingHandler, barHorizontalHandler)
 const caretMover = new CaretMover(scrollOncaretMovement, lineContentElement)
 const caretBuidler = new CaretBuilder()
-const searchReplaceHandler = new SearchReplaceHandler(linesLoader, textToWorkWith, loaderHandler, barVerticalHandler, barHorizontalHandler, contentScrollingHandler)
-const writerHandler = new WriterHandler(textToWorkWith, contentElement, searchReplaceHandler, caretBuidler)
+const searchReplaceHandler = new SearchReplaceHandler(linesLoader, textToWorkWith, loaderHandler, barVerticalHandler, barHorizontalHandler, contentScrollingHandler, codeChangesHistoryHandler)
+const writerHandler = new WriterHandler(textToWorkWith, contentElement, searchReplaceHandler, caretBuidler, codeChangesHistoryHandler)
 
 function displayVerticalScrollbar() {
     if (loaderHeight > mainContainer.offsetHeight) {
@@ -542,6 +544,16 @@ writerElement.addEventListener('keydown', (event) => {
     else if (event.key.toLowerCase() == "enter") {
         const selectedText = checkIfThereIsMarker()
         writerHandler.insertText('\n', selectedText)
+    }
+    else if (event.key.toLowerCase() == "z" && event.ctrlKey && event.shiftKey) {
+        const oldText = codeChangesHistoryHandler.goForward()
+        writerHandler.textToWorkWith = oldText
+        searchReplaceHandler.updateText(oldText)
+    }
+    else if (event.key.toLowerCase() == "z" && event.ctrlKey) {
+        const oldText = codeChangesHistoryHandler.goBack()
+        writerHandler.textToWorkWith = oldText
+        searchReplaceHandler.updateText(oldText)
     }
 })
 

@@ -66,12 +66,8 @@ export default class WriterHandler {
      * @param {{text: String, starting: Number, ending: Number}} selectedText
      */
     _replaceTextBetweenIndexes(selectedText, textToReplaceWith) {
-        console.log(selectedText)
         const textBefore = this.textToWorkWith.substring(0, selectedText.starting)
         const textAfter = this.textToWorkWith.substring(selectedText.ending, this.textToWorkWith.length)
-        console.log(textBefore)
-        console.log(textAfter)
-        console.log(textToReplaceWith)
         this.textToWorkWith = `${textBefore}${textToReplaceWith}${textAfter}`
         const newIndexForCaret = selectedText.starting + textToReplaceWith.length
         this.searchReplaceHandler.updateText(this.textToWorkWith)

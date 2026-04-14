@@ -33,6 +33,8 @@ export default class TextFetcher {
         else {
             this._multilineTextSelection(lineForStartingPoint, lineForEndingPoint)
         }
+        this._setPointsForTextSelection()
+        console.log(this.startingIndex, this.endingIndex)
         return {
             "text": this.text,
             "starting": this.startingIndex,
@@ -46,31 +48,27 @@ export default class TextFetcher {
         const fullTextWidth = calculateWidthForText(this.contentElement, fullText)
         const startingIndex = turnWidthToIndexForText(this.highlighter.startingPoint.leftOffset, fullTextWidth, fullText.length)
         const endingIndex = turnWidthToIndexForText(this.highlighter.endingPoint.leftOffset, fullTextWidth, fullText.length)
-        this._setPointsFor(startingIndex, endingIndex)
+        this.startingIndex = startingIndex
+        this.endingIndex = endingIndex
         this.text = fullText.substring(startingIndex, endingIndex)
     }
 
-    /**
-     * 
-     * @param {Number} startingIndex 
-     * @param {Number} endingIndex 
-     */
-    _setPointsFor(startingIndex, endingIndex) {
+    _setPointsForTextSelection() {
         const textInLinesTillFirst = this.lines.slice(0, this.highlighter.startingPoint.lineId)
         const textInLinesTillLast = this.lines.slice(0, this.highlighter.endingPoint.lineId)
         const textFirst = textInLinesTillFirst.join('\n')
         const textLast = textInLinesTillLast.join('\n')
         if (this.highlighter.startingPoint.lineId > 0) {
-            this.startingIndex = startingIndex + textFirst.length + 1
-            if (this.highlighter.endingPoint > 0)
-                this.endingIndex = endingIndex + textLast.length + 1
-            else this.endingIndex = endingIndex + textLast.length
+            this.startingIndex += textFirst.length + 1
+            if (this.highlighter.endingPoint.lineId > 0)
+                this.endingIndex += textLast.length + 1
+            else this.endingIndex += textLast.length
         }
         else {
-            this.startingIndex = startingIndex + textFirst.length
-            if (this.highlighter.endingPoint > 0)
-                this.endingIndex = endingIndex + textLast.length + 1
-            else this.endingIndex = endingIndex + textLast.length
+            this.startingIndex = this.startingIndex + textFirst.length
+            if (this.highlighter.endingPoint.lineId > 0)
+                this.endingIndex += textLast.length + 1
+            else this.endingIndex += textLast.length
         }
     }
 
@@ -81,10 +79,10 @@ export default class TextFetcher {
      */
     _multilineTextSelection(lineForStartingPoint, lineForEndingPoint) {
         if (lineForEndingPoint > lineForStartingPoint) {
-            return this._startingLineFirst(lineForStartingPoint, lineForEndingPoint)
+            this._startingLineFirst(lineForStartingPoint, lineForEndingPoint)
         }
         else {
-            return this._endingLineFirst(lineForEndingPoint, lineForStartingPoint)
+            this._endingLineFirst(lineForEndingPoint, lineForStartingPoint)
         }
     }
 

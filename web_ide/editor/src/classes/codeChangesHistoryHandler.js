@@ -4,10 +4,10 @@ export default class CodeChangesHistoryHandler {
      * @param {String} textToWorkWith 
      */
     constructor(textToWorkWith) {
-        this.changes = new Map()
+        this.changes = []
         this.currentChanges = 0
         this.textToWorkWith = textToWorkWith
-        this.changes.set(this.currentChanges, this.textToWorkWith)
+        this.changes.push(textToWorkWith)
     }
 
     /**
@@ -16,7 +16,7 @@ export default class CodeChangesHistoryHandler {
      */
     insertChange(textToWorkWith) {
         const id = this.changes.size
-        this.changes.set(id, textToWorkWith)
+        this.changes.push(textToWorkWith)
         this.currentChanges = id
     }
 
@@ -25,11 +25,10 @@ export default class CodeChangesHistoryHandler {
      * @returns {String}
      */
     goBack() {
-        console.log(this.currentChanges)
-        if (this.changes.size > 0) {
+        if (this.changes.length > 0) {
             if (this.currentChanges > 0)
                 this.currentChanges -= 1
-            const textToWorkWith = this.changes.get(this.currentChanges)
+            const textToWorkWith = this.changes[this.currentChanges]
             return textToWorkWith
         }
         return this.textToWorkWith
@@ -40,10 +39,10 @@ export default class CodeChangesHistoryHandler {
      * @returns {String}
      */
     goForward() {
-        if (this.changes.size > 0) {
-            if (this.currentChanges < this.changes.size - 1)
+        if (this.changes.length > 0) {
+            if (this.currentChanges < this.changes.length - 1)
                 this.currentChanges += 1
-            const textToWorkWith = this.changes.get(this.currentChanges)
+            const textToWorkWith = this.changes[this.currentChanges]
             return textToWorkWith
         }
         return this.textToWorkWith

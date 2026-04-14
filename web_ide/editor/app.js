@@ -88,7 +88,7 @@ const textSelectionScrolling = new TextSelectionScrolling(barVerticalHandler, lo
 const scrollOncaretMovement = new ScrollOnCaretMovement(loaderHandler, barVerticalHandler, linesLoader, contentScrollingHandler, barHorizontalHandler)
 const caretMover = new CaretMover(scrollOncaretMovement, lineContentElement)
 const caretBuidler = new CaretBuilder()
-const searchReplaceHandler = new SearchReplaceHandler(linesLoader, textToWorkWith, loaderHandler, barVerticalHandler, barHorizontalHandler, contentScrollingHandler)
+const searchReplaceHandler = new SearchReplaceHandler(linesLoader, textToWorkWith, loaderHandler, barVerticalHandler, barHorizontalHandler, contentScrollingHandler, codeChangesHistoryHandler)
 const writerHandler = new WriterHandler(textToWorkWith, contentElement, searchReplaceHandler, caretBuidler, codeChangesHistoryHandler)
 
 function displayVerticalScrollbar() {

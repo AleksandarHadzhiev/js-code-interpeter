@@ -1,3 +1,4 @@
+import CodeChangesHistoryHandler from "../codeChangesHistoryHandler.js";
 import { BarHorizontalHandler, BarVerticalHandler } from "../scrollingMechanisms/BarHandler.js";
 import ContentScrollingHandler from "../scrollingMechanisms/ContentScrollingHandler.js";
 import LinesLoader from "../scrollingMechanisms/LinesLoader.js";
@@ -15,8 +16,10 @@ export default class SearchReplaceHandler {
      * @param {BarVerticalHandler} barVerticalHandler
      * @param {BarHorizontalHandler} barHorizontalHandler
      * @param {ContentScrollingHandler} contentScrollingHandler
+     * @param {CodeChangesHistoryHandler} codeChangesHistoryHandler
      */
-    constructor(linesLoader, textToWorkWith, loaderHandler, barVerticalHandler, barHorizontalHandler, contentScrollingHandler) {
+    constructor(linesLoader, textToWorkWith, loaderHandler, barVerticalHandler, barHorizontalHandler, contentScrollingHandler, codeChangesHistoryHandler) {
+        this.codeChangesHistoryHandler = codeChangesHistoryHandler
         this.switchHandler = new SwitchHandler(textToWorkWith, loaderHandler, barVerticalHandler, barHorizontalHandler, linesLoader, contentScrollingHandler)
         this.searchHandler = new SearchHandler(linesLoader, textToWorkWith, this.switchHandler)
         this.replaceHandler = new ReplaceHandler(linesLoader, textToWorkWith)
@@ -44,6 +47,7 @@ export default class SearchReplaceHandler {
             const newText = this.replaceHandler.replaceOne(index)
             this.updateText(newText)
             this.searchHandler.updateOnReplaceOne()
+            this.codeChangesHistoryHandler.insertChange(newText)
         })
 
         this.replaceAll.addEventListener('click', () => {
@@ -51,6 +55,7 @@ export default class SearchReplaceHandler {
             const newTextToWorkWith = this.replaceHandler.replaceAll()
             this.updateText(newTextToWorkWith)
             this.searchHandler.updateOnReplaceAll()
+            this.codeChangesHistoryHandler.insertChange(newTextToWorkWith)
         })
 
         this.goUpButton.addEventListener('click', () => {

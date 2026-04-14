@@ -7,7 +7,11 @@ export default class CodeChangesHistoryHandler {
         this.changes = []
         this.currentChanges = 0
         this.textToWorkWith = textToWorkWith
-        this.changes.push(textToWorkWith)
+        this.caret = document.getElementById('caret')
+        const caretTop = this.caret.offsetTop
+        const caretLeft = this.caret.offsetLeft
+        const caretStyle = `top: ${caretTop}px; left: ${caretLeft}px;`
+        this.changes.push({ "text": textToWorkWith, "style": caretStyle })
     }
 
     /**
@@ -16,6 +20,9 @@ export default class CodeChangesHistoryHandler {
      */
     insertChange(textToWorkWith) {
         const id = this.changes.length
+        const caretTop = this.caret.offsetTop
+        const caretLeft = this.caret.offsetLeft
+        const caretStyle = `top: ${caretTop}px; left: ${caretLeft}px;`
         if (id - 1 > this.currentChanges) {
             let changes = []
             if (this.currentChanges == 0)
@@ -23,11 +30,11 @@ export default class CodeChangesHistoryHandler {
             else
                 changes = this.changes.slice(0, this.currentChanges)
             this.changes = changes
-            this.changes.push(textToWorkWith)
+            this.changes.push({ "text": textToWorkWith, "style": caretStyle })
             this.currentChanges = this.changes.length - 1
         }
         else {
-            this.changes.push(textToWorkWith)
+            this.changes.push({ "text": textToWorkWith, "style": caretStyle })
             this.currentChanges = id
         }
     }
@@ -40,7 +47,8 @@ export default class CodeChangesHistoryHandler {
         if (this.changes.length > 0) {
             if (this.currentChanges > 0)
                 this.currentChanges -= 1
-            const textToWorkWith = this.changes[this.currentChanges]
+            const textToWorkWith = this.changes[this.currentChanges].text
+            this.caret.style = this.changes[this.currentChanges].style
             return textToWorkWith
         }
         return this.textToWorkWith
@@ -54,7 +62,8 @@ export default class CodeChangesHistoryHandler {
         if (this.changes.length > 0) {
             if (this.currentChanges < this.changes.length - 1)
                 this.currentChanges += 1
-            const textToWorkWith = this.changes[this.currentChanges]
+            const textToWorkWith = this.changes[this.currentChanges].text
+            this.caret.style = this.changes[this.currentChanges].style
             return textToWorkWith
         }
         return this.textToWorkWith

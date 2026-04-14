@@ -34,7 +34,6 @@ export default class TextFetcher {
             this._multilineTextSelection(lineForStartingPoint, lineForEndingPoint)
         }
         this._setPointsForTextSelection()
-        console.log(this.startingIndex, this.endingIndex)
         return {
             "text": this.text,
             "starting": this.startingIndex,
@@ -48,27 +47,66 @@ export default class TextFetcher {
         const fullTextWidth = calculateWidthForText(this.contentElement, fullText)
         const startingIndex = turnWidthToIndexForText(this.highlighter.startingPoint.leftOffset, fullTextWidth, fullText.length)
         const endingIndex = turnWidthToIndexForText(this.highlighter.endingPoint.leftOffset, fullTextWidth, fullText.length)
-        this.startingIndex = startingIndex
-        this.endingIndex = endingIndex
+        if (startingIndex < endingIndex) {
+            this.startingIndex = startingIndex
+            this.endingIndex = endingIndex
+        }
+        else {
+            this.startingIndex = endingIndex
+            this.endingIndex = startingIndex
+        }
         this.text = fullText.substring(startingIndex, endingIndex)
     }
 
     _setPointsForTextSelection() {
-        const textInLinesTillFirst = this.lines.slice(0, this.highlighter.startingPoint.lineId)
-        const textInLinesTillLast = this.lines.slice(0, this.highlighter.endingPoint.lineId)
-        const textFirst = textInLinesTillFirst.join('\n')
-        const textLast = textInLinesTillLast.join('\n')
-        if (this.highlighter.startingPoint.lineId > 0) {
-            this.startingIndex += textFirst.length + 1
-            if (this.highlighter.endingPoint.lineId > 0)
-                this.endingIndex += textLast.length + 1
-            else this.endingIndex += textLast.length
+        let textInLinesTillFirst = ""
+        let textInLinesTillLast = ""
+        if (this.highlighter.startingPoint.lineId < this.highlighter.endingPoint.lineId ||
+            (this.highlighter.startingPoint.lineId == this.highlighter.endingPoint.lineId &&
+                this.highlighter.startingPoint.leftOffset <= this.highlighter.endingPoint.leftOffset)) {
+            textInLinesTillFirst = this.lines.slice(0, this.highlighter.startingPoint.lineId)
+            textInLinesTillLast = this.lines.slice(0, this.highlighter.endingPoint.lineId)
         }
         else {
-            this.startingIndex = this.startingIndex + textFirst.length
-            if (this.highlighter.endingPoint.lineId > 0)
-                this.endingIndex += textLast.length + 1
-            else this.endingIndex += textLast.length
+            textInLinesTillLast = this.lines.slice(0, this.highlighter.startingPoint.lineId)
+            textInLinesTillFirst = this.lines.slice(0, this.highlighter.endingPoint.lineId)
+        }
+
+        const textFirst = textInLinesTillFirst.join('\n')
+        const textLast = textInLinesTillLast.join('\n')
+        console.log(textFirst)
+        console.log(textLast)
+
+        if ((this.highlighter.startingPoint.lineId < this.highlighter.endingPoint.lineId ||
+            (this.highlighter.startingPoint.lineId == this.highlighter.endingPoint.lineId &&
+                this.highlighter.startingPoint.leftOffset <= this.highlighter.endingPoint.leftOffset))
+        ) {
+            if (this.highlighter.startingPoint.lineId > 0) {
+                this.startingIndex += textFirst.length + 1
+                if (this.highlighter.endingPoint.lineId > 0)
+                    this.endingIndex += textLast.length + 1
+                else this.endingIndex += textLast.length
+            }
+            else {
+                this.startingIndex = this.startingIndex + textFirst.length
+                if (this.highlighter.endingPoint.lineId > 0)
+                    this.endingIndex += textLast.length + 1
+                else this.endingIndex += textLast.length
+            }
+        }
+        else {
+            if (this.highlighter.endingPoint > 0) {
+                this.endingIndex += textFirst.length + 1
+                if (this.highlighter.endingPoint.lineId > 0)
+                    this.startingIndex += textLast.length + 1
+                else this.startingIndex += textLast.length
+            }
+            else {
+                this.endingIndex = this.endingIndex + textFirst.length
+                if (this.highlighter.endingPoint.lineId > 0)
+                    this.startingIndex += textLast.length + 1
+                else this.startingIndex += textLast.length
+            }
         }
     }
 

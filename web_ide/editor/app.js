@@ -545,6 +545,11 @@ writerElement.addEventListener('keydown', (event) => {
         const selectedText = checkIfThereIsMarker()
         writerHandler.insertText('\n', selectedText)
     }
+    else if (event.key.toLowerCase() == "z" && event.ctrlKey && event.shiftKey) {
+        const oldText = codeChangesHistoryHandler.goForward()
+        writerHandler.textToWorkWith = oldText
+        searchReplaceHandler.updateText(oldText)
+    }
     else if (event.key.toLowerCase() == "z" && event.ctrlKey) {
         const oldText = codeChangesHistoryHandler.goBack()
         writerHandler.textToWorkWith = oldText

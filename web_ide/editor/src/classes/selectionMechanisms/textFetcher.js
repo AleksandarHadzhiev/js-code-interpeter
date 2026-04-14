@@ -74,8 +74,6 @@ export default class TextFetcher {
 
         const textFirst = textInLinesTillFirst.join('\n')
         const textLast = textInLinesTillLast.join('\n')
-        console.log(textFirst)
-        console.log(textLast)
 
         if ((this.highlighter.startingPoint.lineId < this.highlighter.endingPoint.lineId ||
             (this.highlighter.startingPoint.lineId == this.highlighter.endingPoint.lineId &&
@@ -95,17 +93,17 @@ export default class TextFetcher {
             }
         }
         else {
-            if (this.highlighter.endingPoint > 0) {
-                this.endingIndex += textFirst.length + 1
+            if (this.highlighter.endingPoint.lineId > 0) {
+                this.startingIndex += textFirst.length + 1
                 if (this.highlighter.endingPoint.lineId > 0)
-                    this.startingIndex += textLast.length + 1
-                else this.startingIndex += textLast.length
+                    this.endingIndex += textLast.length + 1
+                else this.endingIndex += textLast.length
             }
             else {
-                this.endingIndex = this.endingIndex + textFirst.length
-                if (this.highlighter.endingPoint.lineId > 0)
-                    this.startingIndex += textLast.length + 1
-                else this.startingIndex += textLast.length
+                this.startingIndex += textFirst.length
+                if (this.highlighter.startingPoint.lineId > 0)
+                    this.endingIndex += textLast.length + 1
+                else this.endingIndex += textLast.length
             }
         }
     }

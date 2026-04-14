@@ -59,7 +59,6 @@ export default class WriterHandler {
             this.searchReplaceHandler.updateText(this.textToWorkWith)
             this._moveCaretOneIndexFurther(newIndexForCaret)
         }
-        console.log(this.textToWorkWith)
         this.codeChangesHistoryHandler.insertChange(this.textToWorkWith)
     }
 

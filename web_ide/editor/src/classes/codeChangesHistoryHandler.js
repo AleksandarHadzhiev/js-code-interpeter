@@ -15,9 +15,21 @@ export default class CodeChangesHistoryHandler {
      * @param {String} textToWorkWith 
      */
     insertChange(textToWorkWith) {
-        const id = this.changes.size
-        this.changes.push(textToWorkWith)
-        this.currentChanges = id
+        const id = this.changes.length
+        if (id - 1 > this.currentChanges) {
+            let changes = []
+            if (this.currentChanges == 0)
+                changes.push(this.changes[0])
+            else
+                changes = this.changes.slice(0, this.currentChanges)
+            this.changes = changes
+            this.changes.push(textToWorkWith)
+            this.currentChanges = this.changes.length - 1
+        }
+        else {
+            this.changes.push(textToWorkWith)
+            this.currentChanges = id
+        }
     }
 
     /**

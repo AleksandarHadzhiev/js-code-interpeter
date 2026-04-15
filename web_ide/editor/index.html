@@ -10,15 +10,16 @@
 
 <body>
     <header id="navigation" class="navigation"></header>
-    <main class="container">
+    <main class="container" id="screen">
         <textarea id="writer"></textarea>
         <custom-view-container class="view-container">
-            <section class="menu" id="menu"></section>
+            <custom-menu-container class="menu" id="menu"></custom-menu-container>
             <custom-editor-container class="editor" id="container"></custom-editor-container>
             <custom-search-replace-container class="hidden" id="search-replace"></custom-search-replace-container>
         </custom-view-container>
     </main>
 
+    <script type="module" src="./src/components/menuContainer.js"></script>
     <script type="module" src="./src/components/viewContainer.js"></script>
     <script type="module" src="./src/components/editorContainer.js"></script>
     <script type="module" src="./src/components/SearchAndReplace/searchAndReplace.js"></script>

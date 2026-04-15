@@ -30,11 +30,22 @@ export default class TextSelection {
         this.loaderOffset = 0
         this.mouseXPosition = 0
         this.contentElementOffsetLeft = contentElementOffsetLeft
+        this.lineNumerationScrollWidth = lineNumerationScrollWidth
         this.lastTextLine = maxLines
         this.scrollHandler = contentScrollHandler
         this.selectedText = ""
         this.textFetcher = new TextFetcher(this.highlighter, this.contentElement)
     }
+    /**
+     * 
+     * @param {Number} leftOffsetForContent 
+     * @param {Number} widthForContent 
+     */
+    updateLeftOffsetWithNewOffset(leftOffsetForContent, widthForContent) {
+        this.contentElementOffsetLeft = leftOffsetForContent + this.lineNumerationScrollWidth
+
+    }
+
     /**
      * 
      * @param {Number} firstVisibleLine 

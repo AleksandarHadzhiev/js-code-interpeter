@@ -15,6 +15,7 @@ import LineSelector from "./src/classes/selectionMechanisms/lineSelector.js"
 import SearchReplaceHandler from "./src/classes/searchReplace/searchReplaceHandler.js"
 import WriterHandler from "./src/classes/writerHandler.js"
 import CodeChangesHistoryHandler from "./src/classes/codeChangesHistoryHandler.js"
+import SizeChangesHandler from "./src/classes/sizesUpdateMechanisms/sizeChangesHandler.js"
 
 import { textToWorkWith, shortText } from "./textToWorkWith.js"
 import CaretBuilder from "./src/classes/selectionMechanisms/caretBuilder.js"
@@ -25,6 +26,7 @@ const menuContainer = document.getElementById('menu')
 const navigationElement = document.getElementById('navigation')
 const loaderElement = document.getElementById('loader')
 const writerElement = document.getElementById('writer')
+const sidebar = document.getElementById('sidebar')
 
 const scrollbarElementVertical = document.getElementById('scrollbar-vertical')
 const scrollbarAreaElementVertical = document.getElementById('scrollable-area-vertical')
@@ -90,6 +92,7 @@ const caretMover = new CaretMover(scrollOncaretMovement, lineContentElement)
 const caretBuidler = new CaretBuilder()
 const searchReplaceHandler = new SearchReplaceHandler(linesLoader, textToWorkWith, loaderHandler, barVerticalHandler, barHorizontalHandler, contentScrollingHandler, codeChangesHistoryHandler)
 const writerHandler = new WriterHandler(textToWorkWith, contentElement, searchReplaceHandler, caretBuidler, codeChangesHistoryHandler)
+const sizeChangesHandler = new SizeChangesHandler(textSelection)
 
 function displayVerticalScrollbar() {
     if (loaderHeight > mainContainer.offsetHeight) {
@@ -128,7 +131,6 @@ window.addEventListener('wheel', (event) => {
 })
 
 function scrollVertical(event) {
-    buildMarker()
     const offsetTop = offsetCalculator.calculateOffsetBasedOnDeltaYOfMouseEvent(event.deltaY)
     loaderHandler.scrollWithOffset(offsetTop)
     const percentage = loaderHandler.getPercentageOfScroll()
@@ -147,6 +149,7 @@ function scrollHorizontal(event) {
 }
 
 function displayHighlightIfThereIsSelectedText() {
+    buildMarker()
     const markerElement = document.getElementById('marker')
     if (markerElement) {
         textSelection.display(linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
@@ -174,7 +177,6 @@ scrollbarAreaElementVertical.addEventListener('mousemove', (event) => {
  * @param {MouseEvent} event 
  */
 function verticalScrolling(event) {
-    buildMarker()
     barVerticalHandler.scrollWithOffset(event.clientY - scrollbarVerticalTopOffset)
     const percentage = barVerticalHandler.getPercentageOfScroll()
     loaderHandler.scrollWithPercentage(percentage)
@@ -416,7 +418,8 @@ function buildMarker() {
 }
 
 mainContainer.addEventListener('mousedown', (event) => {
-    removeExistingHighlighter()
+    if (isTextSelecting == false && barHorizontalIsSelected == false && barVerticalIsSelected == false)
+        removeExistingHighlighter()
 })
 
 function removeExistingHighlighter() {

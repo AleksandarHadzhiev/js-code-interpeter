@@ -16,10 +16,12 @@ export default class CustomContentMarker {
      * @param {Array} lines
      */
     buildForWholeTextSelection(firstVisibleLine, lastVisibleLine, lines) {
+        const marker = document.getElementById('marker')
+
         this.algorithm = new LineColoriser(this.startingPoint, this.releasingPoint, this.contentElement)
         const multilineCoordinates = this.algorithm.coloriseLinesForWholeTextSelection(firstVisibleLine, lastVisibleLine, lines)
         multilineCoordinates.forEach((coordinates) => {
-            this._buildLineInMarkerForCoordinates(coordinates)
+            this._buildLineInMarkerForCoordinates(coordinates, marker)
         });
     }
 
@@ -38,10 +40,12 @@ export default class CustomContentMarker {
      * @param {Number} lastVisibleLine 
      */
     buildForLeftSection(firstVisibleLine, lastVisibleLine) {
+        const marker = document.getElementById('marker')
+
         this.algorithm = new LineColoriser(this.startingPoint, this.releasingPoint, this.contentElement)
         const multilineCoordinates = this.algorithm.coloriseLinesforLeftBetweenFirstAndLastVisibleLine(firstVisibleLine, lastVisibleLine)
         multilineCoordinates.forEach((coordinates) => {
-            this._buildLineInMarkerForCoordinates(coordinates)
+            this._buildLineInMarkerForCoordinates(coordinates, marker)
         });
     }
 
@@ -51,10 +55,12 @@ export default class CustomContentMarker {
      * @param {Number} lastVisibleLine 
      */
     buildForTopSection(firstVisibleLine, lastVisibleLine) {
+        const marker = document.getElementById('marker')
+
         this.algorithm = new LineColoriser(this.startingPoint, this.releasingPoint, this.contentElement)
         const multilineCoordinates = this.algorithm.coloriseLinesForTopInBetweenFirstAndLastVisibleLines(firstVisibleLine, lastVisibleLine)
         multilineCoordinates.forEach((coordinates) => {
-            this._buildLineInMarkerForCoordinates(coordinates)
+            this._buildLineInMarkerForCoordinates(coordinates, marker)
         });
     }
 
@@ -66,10 +72,12 @@ export default class CustomContentMarker {
      * @param {Number} lastTextLine 
      */
     buildForBottomSection(firstVisibleLine, lastVisibleLine, lastTextLine) {
+        const marker = document.getElementById('marker')
+
         this.algorithm = new LineColoriser(this.startingPoint, this.releasingPoint, this.contentElement)
         const multilineCoordinates = this.algorithm.coloriseLinesForBottomInBetweenFirstAndLastVisibleLines(firstVisibleLine, lastVisibleLine, lastTextLine)
         multilineCoordinates.forEach((coordinates) => {
-            this._buildLineInMarkerForCoordinates(coordinates)
+            this._buildLineInMarkerForCoordinates(coordinates, marker)
         });
     }
 
@@ -79,18 +87,20 @@ export default class CustomContentMarker {
  * @param {Number} lastVisibleLine 
  */
     buildForRightSection(firstVisibleLine, lastVisibleLine) {
+        const marker = document.getElementById('marker')
         this.algorithm = new LineColoriser(this.startingPoint, this.releasingPoint, this.contentElement)
         const multilineCoordinates = this.algorithm.coloriseLinesforRightBetweenFirstAndLastVisibleLine(firstVisibleLine, lastVisibleLine)
         multilineCoordinates.forEach((coordinates) => {
-            this._buildLineInMarkerForCoordinates(coordinates)
+            this._buildLineInMarkerForCoordinates(coordinates, marker)
         });
     }
 
     buildForMouseInEditorSection(firstVisibleLine, lastVisibleLine) {
+        const marker = document.getElementById('marker')
         this.algorithm = new LineColoriser(this.startingPoint, this.releasingPoint, this.contentElement)
         const multilineCoordinates = this.algorithm.coloriseForMouseInEditorSection(firstVisibleLine, lastVisibleLine)
         multilineCoordinates.forEach((coordinates) => {
-            this._buildLineInMarkerForCoordinates(coordinates)
+            this._buildLineInMarkerForCoordinates(coordinates, marker)
         });
     }
 
@@ -100,18 +110,21 @@ export default class CustomContentMarker {
      * @param {Number} lastVisibleLine 
      */
     display(firstVisibleLine, lastVisibleLine) {
-        const multilineCoordinates = this.algorithm.displayMarker(firstVisibleLine, lastVisibleLine)
-        multilineCoordinates.forEach((coordinates) => {
-            this._buildLineInMarkerForCoordinates(coordinates)
-        });
+        const marker = document.getElementById('marker')
+        if (this.algorithm) {
+            const multilineCoordinates = this.algorithm.displayMarker(firstVisibleLine, lastVisibleLine)
+            multilineCoordinates.forEach((coordinates) => {
+                this._buildLineInMarkerForCoordinates(coordinates, marker)
+            });
+        }
     }
 
     /**
      * Creates a line and appends it to the marker.
      * @param {StartingPositionOfLine} coordinates 
+     * @param {HTMLElement} marker 
      */
-    _buildLineInMarkerForCoordinates(coordinates) {
-        const marker = document.getElementById('marker')
+    _buildLineInMarkerForCoordinates(coordinates, marker) {
         const lineInMarker = document.createElement('div')
         lineInMarker.style = `
             position: absolute;

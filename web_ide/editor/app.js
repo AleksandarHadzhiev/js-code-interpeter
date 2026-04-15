@@ -203,9 +203,6 @@ function horizontalScrolling(event) {
 }
 
 window.addEventListener('mousedown', (event) => {
-    console.log(event.target)
-    console.log(event.currentTarget)
-
     if (event.target.id != 'search-field' && event.target.id != 'replace-field')
         isWriting = true
     else isWriting = false

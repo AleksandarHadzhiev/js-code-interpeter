@@ -35,6 +35,15 @@ export default class Highlighter {
      * @param {Array} lines 
      */
     selectWholeText(firstVisibleLine, lastVisibleLine, lines) {
+        const lineOfStartingPoint = 0
+        const lineOfReleasingPoint = lines.length - 1
+        let topOffset = 0
+        let leftOffset = 0
+        let width = calculateWidthForText(this.contentElement, lines[lineOfStartingPoint])
+        this.startingPoint = new StartingPoint(lineOfStartingPoint, topOffset, leftOffset, lines[lineOfStartingPoint])
+        topOffset = lineOfReleasingPoint * 28.8
+        width = calculateWidthForText(this.contentElement, lines[lineOfReleasingPoint])
+        this.endingPoint = new StartingPoint(lineOfReleasingPoint, topOffset, leftOffset, lines[lineOfReleasingPoint])
         this.customMarker.buildForWholeTextSelection(firstVisibleLine, lastVisibleLine, lines)
     }
 

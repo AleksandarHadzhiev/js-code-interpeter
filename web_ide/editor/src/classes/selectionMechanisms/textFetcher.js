@@ -14,7 +14,6 @@ export default class TextFetcher {
         this.startingIndex = 0
         this.endingIndex = 0
         this.text = ""
-        this.textToWorkWith = ""
         this.lines = []
     }
 
@@ -23,7 +22,6 @@ export default class TextFetcher {
      * @param {String} fullText 
      */
     selectTextFromFullText(fullText) {
-        this.textToWorkWith = fullText
         this.lines = fullText.split('\n')
         const lineForEndingPoint = this.highlighter.endingPoint.lineId
         const lineForStartingPoint = this.highlighter.startingPoint.lineId
@@ -61,9 +59,10 @@ export default class TextFetcher {
     _setPointsForTextSelection() {
         let textInLinesTillFirst = ""
         let textInLinesTillLast = ""
-        if (this.highlighter.startingPoint.lineId < this.highlighter.endingPoint.lineId ||
+        const isFromLeftToRight = (this.highlighter.startingPoint.lineId < this.highlighter.endingPoint.lineId ||
             (this.highlighter.startingPoint.lineId == this.highlighter.endingPoint.lineId &&
-                this.highlighter.startingPoint.leftOffset <= this.highlighter.endingPoint.leftOffset)) {
+                this.highlighter.startingPoint.leftOffset <= this.highlighter.endingPoint.leftOffset))
+        if (isFromLeftToRight) {
             textInLinesTillFirst = this.lines.slice(0, this.highlighter.startingPoint.lineId)
             textInLinesTillLast = this.lines.slice(0, this.highlighter.endingPoint.lineId)
         }
@@ -74,35 +73,27 @@ export default class TextFetcher {
 
         const textFirst = textInLinesTillFirst.join('\n')
         const textLast = textInLinesTillLast.join('\n')
-
-        if ((this.highlighter.startingPoint.lineId < this.highlighter.endingPoint.lineId ||
-            (this.highlighter.startingPoint.lineId == this.highlighter.endingPoint.lineId &&
-                this.highlighter.startingPoint.leftOffset <= this.highlighter.endingPoint.leftOffset))
-        ) {
+        if (isFromLeftToRight) {
             if (this.highlighter.startingPoint.lineId > 0) {
                 this.startingIndex += textFirst.length + 1
-                if (this.highlighter.endingPoint.lineId > 0)
-                    this.endingIndex += textLast.length + 1
+                if (this.highlighter.endingPoint.lineId > 0) this.endingIndex += textLast.length + 1
                 else this.endingIndex += textLast.length
             }
             else {
                 this.startingIndex = this.startingIndex + textFirst.length
-                if (this.highlighter.endingPoint.lineId > 0)
-                    this.endingIndex += textLast.length + 1
+                if (this.highlighter.endingPoint.lineId > 0) this.endingIndex += textLast.length + 1
                 else this.endingIndex += textLast.length
             }
         }
         else {
             if (this.highlighter.endingPoint.lineId > 0) {
                 this.startingIndex += textFirst.length + 1
-                if (this.highlighter.endingPoint.lineId > 0)
-                    this.endingIndex += textLast.length + 1
+                if (this.highlighter.startingPoint.lineId > 0) this.endingIndex += textLast.length + 1
                 else this.endingIndex += textLast.length
             }
             else {
                 this.startingIndex += textFirst.length
-                if (this.highlighter.startingPoint.lineId > 0)
-                    this.endingIndex += textLast.length + 1
+                if (this.highlighter.startingPoint.lineId > 0) this.endingIndex += textLast.length + 1
                 else this.endingIndex += textLast.length
             }
         }

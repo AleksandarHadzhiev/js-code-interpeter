@@ -40,7 +40,6 @@ export default class TextSelection {
      * @param {String} fullText 
      */
     selectTextOnCopyCommand(fullText) {
-
         const fetchedText = this.textFetcher.selectTextFromFullText(fullText)
         this.selectedText = fetchedText.text
         navigator.clipboard.writeText(this.selectedText)

@@ -1,10 +1,54 @@
-export const shortText = `class CustomViewContainer extends HTMLElement {
-    constructor() {
-        super()
+export const shortText = `import CustomRangeElement from "../selectionMechanisms/customRangeElement.js";
+/**
+ * This DTO transfers the data needed to calculate the total left offset of the caret position on the line.
+ */
+export class CaretLeftOffsetDTO {
+    container;
+    offsetLeft;
+    caretIndex;
+
+    /**
+     * 
+     * @param {HTMLElement} container 
+     * @param {Number} offsetLeft 
+     * @param {Number} caretIndex 
+     */
+    constructor(container, offsetLeft, caretIndex) {
+        this.container = container
+        this.offsetLeft = offsetLeft
+        this.caretIndex = caretIndex
+    }
+}
+export class SelectedTextDTO {
+    range;
+    offsetLeft;
+    /**
+     * 
+     * @param {CustomRangeElement} range 
+     * @param {Number} offsetLeft 
+     */
+    constructor(range, offsetLeft) {
+        this.range = range
+        this.offsetLeft = offsetLeft
     }
 }
 
-customElements.define('custom-view-container', CustomViewContainer)`
+export class StartingPoint {
+    /**
+     * 
+     * @param {Number} lineId 
+     * @param {Number} topOffset 
+     * @param {Number} leftOffset 
+     * @param {String} fullText 
+     */
+    constructor(lineId, topOffset, leftOffset, fullText) {
+        this.lineId = lineId
+        this.topOffset = topOffset
+        this.leftOffset = leftOffset
+        this.fullText = fullText
+    }
+}
+`
 
 export const textToWorkWith = `function getName(age) { console.log("MEOW"); }
 This is a long line to be displayed, and for that reason it will have a lot of text inside it.

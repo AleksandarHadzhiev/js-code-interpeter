@@ -3,6 +3,7 @@
 # Table of Contents
 1. [Process](#process)
 2. [Version History](#version-history)
+   - [Version 1.3.1](#version-131)
    - [Version 1.3.0](#version-130)
    - [Version 1.2.3](#version-123)
    - [Version 1.2.2](#version-122)
@@ -29,6 +30,10 @@ The version aim to resemble iterations with one or more big goals which are the 
 # Version History
 
 Order of versions - from newest to oldest.
+
+### Version.1.3.1
+
+- load text on screen based on clicked file
 
 ### Version.1.3.0
 

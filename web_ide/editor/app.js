@@ -538,7 +538,7 @@ writerElement.addEventListener('input', (event) => {
 })
 
 writerElement.addEventListener('keydown', (event) => {
-
+    const isSelectingTheWholeText = event.ctrlKey && event.key.toLowerCase() == "a"
     if (event.key.toLowerCase() == "backspace") {
         const selectedText = checkIfThereIsMarker()
         writerHandler.removeText(selectedText)
@@ -560,6 +560,10 @@ writerElement.addEventListener('keydown', (event) => {
         writerHandler.textToWorkWith = oldText
         searchReplaceHandler.updateText(oldText)
         text = writerHandler.textToWorkWith
+    }
+    else if (isSelectingTheWholeText) {
+        buildMarker()
+        textSelection.selectWholeText(linesLoader.firstVisibleLine, linesLoader.lastVisibleLine, text)
     }
 })
 

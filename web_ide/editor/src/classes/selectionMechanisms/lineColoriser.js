@@ -20,6 +20,28 @@ export default class LineColoriser {
         this.contentElement = contentElement
     }
 
+
+    /**
+     * 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     * @param {Array} lines 
+     */
+    coloriseLinesForWholeTextSelection(firstVisibleLine, lastVisibleLine, lines) {
+        this.coordinatesToHighlight.clear()
+        this._coloriseBetweenTwoLines(firstVisibleLine, lastVisibleLine)
+        const lineOfStartingPoint = 0
+        const lineOfReleasingPoint = lines.length - 1
+        let topOffset = 0
+        let leftOffset = 0
+        let width = calculateWidthForText(this.contentElement, lines[lineOfStartingPoint])
+        this.startingMarkedPoint = new MarkedPoint(leftOffset, topOffset, width, lineOfStartingPoint)
+        topOffset = lineOfReleasingPoint * 28.8
+        width = calculateWidthForText(this.contentElement, lines[lineOfReleasingPoint])
+        this.endingMarkedPoint = new MarkedPoint(leftOffset, topOffset, width, lineOfReleasingPoint)
+        return this.coordinatesToHighlight
+    }
+
     /**
      * 
      * @param {Number} firstVisibleLine 
@@ -243,8 +265,6 @@ export default class LineColoriser {
      * @returns 
      */
     coloriseLinesForBottomInBetweenFirstAndLastVisibleLines(firstVisibleLine, lastVisibleLine, lastTextLine) {
-        const line = document.getElementById(String(lastVisibleLine))
-        const content = document.getElementById('line-content')
         this.coordinatesToHighlight.clear()
         const lineOfStartingPoint = Number(this.startingPoint.lineId)
         const lineOfEndingPoint = Number(this.endingPoint.lineId)
@@ -299,16 +319,19 @@ export default class LineColoriser {
     _coloriseBetweenTwoLines(firstLine, lastLine) {
         for (let index = firstLine; index <= lastLine; index++) {
             const lineElement = document.getElementById(String(index))
-            const coordinates = this._calculateCoordinatesForLineAtIndex(lineElement)
-            this.coordinatesToHighlight.set(index, coordinates)
-            if (index == lastLine) {
-                this.endingMarkedPoint = new MarkedPoint(
-                    coordinates.top,
-                    0,
-                    coordinates.width,
-                    index
-                )
+            if (lineElement) {
+                const coordinates = this._calculateCoordinatesForLineAtIndex(lineElement)
+                this.coordinatesToHighlight.set(index, coordinates)
+                if (index == lastLine) {
+                    this.endingMarkedPoint = new MarkedPoint(
+                        coordinates.top,
+                        0,
+                        coordinates.width,
+                        index
+                    )
+                }
             }
+
         }
     }
 

@@ -29,6 +29,14 @@ export default class Highlighter {
         this.lineHeight = 28.8
     }
 
+    /**
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     * @param {Array} lines 
+     */
+    selectWholeText(firstVisibleLine, lastVisibleLine, lines) {
+        this.customMarker.buildForWholeTextSelection(firstVisibleLine, lastVisibleLine, lines)
+    }
 
     /**
      * 

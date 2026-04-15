@@ -10,6 +10,20 @@ export default class CustomContentMarker {
     }
 
     /**
+     * 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     * @param {Array} lines
+     */
+    buildForWholeTextSelection(firstVisibleLine, lastVisibleLine, lines) {
+        this.algorithm = new LineColoriser(this.startingPoint, this.releasingPoint, this.contentElement)
+        const multilineCoordinates = this.algorithm.coloriseLinesForWholeTextSelection(firstVisibleLine, lastVisibleLine, lines)
+        multilineCoordinates.forEach((coordinates) => {
+            this._buildLineInMarkerForCoordinates(coordinates)
+        });
+    }
+
+    /**
      * @param {StartingPoint} starintPoint  
      * @param {StartingPoint} releasignPoint
      */

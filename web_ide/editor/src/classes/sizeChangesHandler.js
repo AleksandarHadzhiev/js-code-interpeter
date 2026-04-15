@@ -1,6 +1,11 @@
+import ContentSizeChangesListener from "./contentSizeChangesListener.js"
+
 export default class SizeChangesHandler {
     constructor() {
+        this.listeners = []
         this.mainContainer = document.getElementById('container')
+        const contentSizeChangesListener = new ContentSizeChangesListener(this.mainContainer)
+        this.listeners.push(contentSizeChangesListener)
         this.menuContainer = document.getElementById('menu')
         this.sidebar = document.getElementById('sidebar')
         this.navigationElement = document.getElementById('navigation')
@@ -20,20 +25,22 @@ export default class SizeChangesHandler {
         this.lineContentElement = document.getElementById('line-content')
         this.contentElement = document.getElementById('content')
 
-        this.leftOffsetForContent = this.menuContainer.offsetWidth
+        this.defaultLeftOffsetForContent = this.menuContainer.offsetWidth
 
         this.sidebar.addEventListener('visibilityChanged', () => {
             if (this.sidebar.className == "hidden") {
-                console.log("CHANGED VISIBILITY - HIDDEN")
-                this.leftOffsetForContent = this.menuContainer.offsetWidth
-                console.log(this.leftOffsetForContent)
+                this.leftOffsetForContent = this.defaultLeftOffsetForContent
             }
             else {
-                console.log("CHANGED VISIBILITY - VISIBLE")
-                this.leftOffsetForContent = this.menuContainer.offsetWidth + this.sidebar.offsetWidth
-                console.log(this.leftOffsetForContent)
+                this.leftOffsetForContent = this.defaultLeftOffsetForContent + this.sidebar.offsetWidth
             }
+            this._notifyListeners()
         })
     }
 
+    _notifyListeners() {
+        this.listeners.forEach((listener) => {
+            listener.updateLeftOffsetWithNewOffset(this.leftOffsetForContent)
+        })
+    }
 }

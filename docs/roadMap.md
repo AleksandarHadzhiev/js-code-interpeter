@@ -3,6 +3,7 @@
 # Table of Contents
 1. [Process](#process)
 2. [Version History](#version-history)
+   - [Version 1.3.0](#version-130)
    - [Version 1.2.3](#version-123)
    - [Version 1.2.2](#version-122)
    - [Version 1.2.1](#version-121)
@@ -29,11 +30,13 @@ The version aim to resemble iterations with one or more big goals which are the 
 
 Order of versions - from newest to oldest.
 
+### Version.1.3.0
+
+- menu screen which shows the file which is currently being worked on.
+
 ### Version 1.2.3
 
 - integrate ctrl + z operations for returning previous state of code
-- integrate whole text selection on ctrl + a
-- integrate saving text directly on ctrl + x and removing it from content
 
 ### Version 1.2.2
 

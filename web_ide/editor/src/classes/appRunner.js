@@ -22,6 +22,10 @@ export default class AppRunner {
     }
 
     loadLines() {
-        this.linesLoader.loadLines(null)
+        this.linesLoader.loadLines(this._updateWidths)
+    }
+
+    _updateWidths() {
+        console.log("UPDATE WIDTHS")
     }
 }

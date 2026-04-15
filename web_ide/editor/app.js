@@ -152,7 +152,8 @@ function scrollHorizontal(event) {
 function displayHighlightIfThereIsSelectedText() {
     const markerElement = document.getElementById('marker')
     if (markerElement) {
-        textSelection.display(linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
+        if (markerElement.childNodes.length > 0)
+            textSelection.display(linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
     }
 }
 

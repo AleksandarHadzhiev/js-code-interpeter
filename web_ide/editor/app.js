@@ -538,6 +538,7 @@ writerElement.addEventListener('input', (event) => {
 
 writerElement.addEventListener('keydown', (event) => {
     const isSelectingTheWholeText = event.ctrlKey && event.key.toLowerCase() == "a"
+    const ixRemovingTextByCopiingIt = event.ctrlKey && event.key.toLowerCase() == "x"
     if (event.key.toLowerCase() == "backspace") {
         const selectedText = checkIfThereIsMarker()
         writerHandler.removeText(selectedText)
@@ -563,6 +564,27 @@ writerElement.addEventListener('keydown', (event) => {
     else if (isSelectingTheWholeText) {
         buildMarker()
         textSelection.selectWholeText(linesLoader.firstVisibleLine, linesLoader.lastVisibleLine, text)
+    }
+    else if (ixRemovingTextByCopiingIt) {
+        const selectedText = checkIfThereIsMarker()
+        if (selectedText) {
+            navigator.clipboard.writeText(selectedText.text)
+            writerHandler.removeText(selectedText)
+            text = writerHandler.textToWorkWith
+        }
+        else {
+            const caret = document.getElementById('caret')
+            const topOffset = caret.offsetTop
+            const lineId = Math.round(topOffset / 28.8)
+            const lines = text.split('\n')
+            const textToCopy = lines[lineId]
+            navigator.clipboard.writeText(textToCopy)
+            const newLines = lines.splice(lineId, 1)
+            text = lines.join('\n')
+            writerHandler.textToWorkWith = text
+            searchReplaceHandler.updateText(text)
+            codeChangesHistoryHandler.insertChange(text)
+        }
     }
 })
 

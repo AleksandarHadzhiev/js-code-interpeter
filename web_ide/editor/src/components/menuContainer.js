@@ -2,17 +2,11 @@ class CustomMenuContainer extends HTMLElement {
     constructor() {
         super()
         this.elements = []
+        this.sidebarTitle = null
         const explorer = this._buildExplorer()
         this.sidebar = this._buildSidebar()
         this.appendChild(this.sidebar)
         this.appendChild(explorer)
-    }
-
-    _buildSidebar() {
-        const sidebar = document.createElement('div')
-        sidebar.className = 'hidden'
-        sidebar.setAttribute('id', 'sidebar')
-        return sidebar
     }
 
     _buildExplorer() {
@@ -23,7 +17,7 @@ class CustomMenuContainer extends HTMLElement {
         explorer.addEventListener('click', () => {
             explorer.classList.add('selected')
             this._selectElement(explorer.id)
-            this._changeVisibilityOfSidebar()
+            this._changeVisibilityOfSidebar(String(explorer.id).toUpperCase())
         })
         this.elements.push(explorer)
         return explorer
@@ -48,10 +42,40 @@ class CustomMenuContainer extends HTMLElement {
         })
     }
 
-    _changeVisibilityOfSidebar() {
+    /**
+     * 
+     * @param {String} nameOfMenuOption 
+     */
+    _changeVisibilityOfSidebar(nameOfMenuOption) {
         if (this.sidebar.className == "hidden")
             this.sidebar.className = "sidebar"
         else this.sidebar.className = "hidden"
+        this.sidebarTitle = nameOfMenuOption
+    }
+
+    _buildSidebar() {
+        const sidebar = document.createElement('div')
+        sidebar.className = 'hidden'
+        sidebar.setAttribute('id', 'sidebar')
+        const header = this._buildHeaderOfExplorer()
+        sidebar.appendChild(header)
+        return sidebar
+    }
+
+    _buildHeaderOfExplorer() {
+        const header = document.createElement('div')
+        header.className = 'sidebar-header'
+        const title = this._buildTitle()
+        header.appendChild(title)
+        return header
+    }
+
+    _buildTitle() {
+        const title = document.createElement('p')
+        title.textContent = 'EXPLORER'
+        title.id = 'sidebar-title'
+        this.sidebarTitle = title
+        return title
     }
 }
 

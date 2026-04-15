@@ -128,6 +128,7 @@ window.addEventListener('wheel', (event) => {
 })
 
 function scrollVertical(event) {
+    buildMarker()
     const offsetTop = offsetCalculator.calculateOffsetBasedOnDeltaYOfMouseEvent(event.deltaY)
     loaderHandler.scrollWithOffset(offsetTop)
     const percentage = loaderHandler.getPercentageOfScroll()
@@ -173,6 +174,7 @@ scrollbarAreaElementVertical.addEventListener('mousemove', (event) => {
  * @param {MouseEvent} event 
  */
 function verticalScrolling(event) {
+    buildMarker()
     barVerticalHandler.scrollWithOffset(event.clientY - scrollbarVerticalTopOffset)
     const percentage = barVerticalHandler.getPercentageOfScroll()
     loaderHandler.scrollWithPercentage(percentage)

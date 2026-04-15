@@ -65,6 +65,7 @@ html::selection {
 }
 
 .view-container {
+    background-color: black;
     display: block;
     position: relative;
     width: 100%;

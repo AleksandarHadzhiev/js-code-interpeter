@@ -50,6 +50,7 @@ class CustomMenuContainer extends HTMLElement {
         if (this.sidebar.className == "hidden")
             this.sidebar.className = "sidebar"
         else this.sidebar.className = "hidden"
+        this.sidebar.dispatchEvent(new Event('visibilityChanged'))
         this.sidebarTitle = nameOfMenuOption
     }
 

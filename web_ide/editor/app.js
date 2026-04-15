@@ -131,7 +131,6 @@ window.addEventListener('wheel', (event) => {
 })
 
 function scrollVertical(event) {
-    buildMarker()
     const offsetTop = offsetCalculator.calculateOffsetBasedOnDeltaYOfMouseEvent(event.deltaY)
     loaderHandler.scrollWithOffset(offsetTop)
     const percentage = loaderHandler.getPercentageOfScroll()
@@ -150,10 +149,10 @@ function scrollHorizontal(event) {
 }
 
 function displayHighlightIfThereIsSelectedText() {
+    buildMarker()
     const markerElement = document.getElementById('marker')
     if (markerElement) {
-        if (markerElement.childNodes.length > 0)
-            textSelection.display(linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
+        textSelection.display(linesLoader.firstVisibleLine, linesLoader.lastVisibleLine)
     }
 }
 
@@ -178,7 +177,6 @@ scrollbarAreaElementVertical.addEventListener('mousemove', (event) => {
  * @param {MouseEvent} event 
  */
 function verticalScrolling(event) {
-    buildMarker()
     barVerticalHandler.scrollWithOffset(event.clientY - scrollbarVerticalTopOffset)
     const percentage = barVerticalHandler.getPercentageOfScroll()
     loaderHandler.scrollWithPercentage(percentage)
@@ -420,7 +418,8 @@ function buildMarker() {
 }
 
 mainContainer.addEventListener('mousedown', (event) => {
-    removeExistingHighlighter()
+    if (isTextSelecting == false && barHorizontalIsSelected == false && barVerticalIsSelected == false)
+        removeExistingHighlighter()
 })
 
 function removeExistingHighlighter() {

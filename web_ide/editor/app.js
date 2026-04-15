@@ -16,17 +16,15 @@ import SearchReplaceHandler from "./src/classes/searchReplace/searchReplaceHandl
 import WriterHandler from "./src/classes/writerHandler.js"
 import CodeChangesHistoryHandler from "./src/classes/codeChangesHistoryHandler.js"
 import SizeChangesHandler from "./src/classes/sizesUpdateMechanisms/sizeChangesHandler.js"
+import ContentPicker from "./src/classes/contentPicker.js"
 
-import { textToWorkWith, shortText } from "./textToWorkWith.js"
+
 import CaretBuilder from "./src/classes/selectionMechanisms/caretBuilder.js"
-const listOfPossibleLinesToDisplay = String(textToWorkWith).split('\n')
-let text = textToWorkWith
 const mainContainer = document.getElementById('container')
 const menuContainer = document.getElementById('menu')
 const navigationElement = document.getElementById('navigation')
 const loaderElement = document.getElementById('loader')
 const writerElement = document.getElementById('writer')
-const sidebar = document.getElementById('sidebar')
 
 const scrollbarElementVertical = document.getElementById('scrollbar-vertical')
 const scrollbarAreaElementVertical = document.getElementById('scrollable-area-vertical')
@@ -46,6 +44,9 @@ const scrollbarVerticalHeight = scrollbarElementVertical.offsetHeight
 const scrollbarVerticalTopOffset = navigationElement.offsetHeight
 const barVerticalHeight = barVerticalElement.offsetHeight
 
+const contentPicker = new ContentPicker()
+let text = contentPicker.pickTextFromFileWithName('app.js')
+const listOfPossibleLinesToDisplay = String(text).split('\n')
 
 let isWriting = false
 let intervalId = null
@@ -78,20 +79,20 @@ let isTextSelecting = false
 let startingRange = null
 let pageYMousePosition = 0
 
-const codeChangesHistoryHandler = new CodeChangesHistoryHandler(textToWorkWith)
+const codeChangesHistoryHandler = new CodeChangesHistoryHandler(text)
 const contentScrollingHandler = new ContentScrollingHandler(lineContentWidth, scrollbarHorizontalLeftOffset, lineNumerationWidth, barVerticalWidth, lineContentElement)
 const textSelection = new TextSelection(scrollbarVerticalTopOffset, lineNumerationWidth, scrollbarVerticalHeight, loaderElement.offsetWidth, contentElement, contentElementOffsetLeft, lines, contentScrollingHandler)
 const barVerticalHandler = new BarVerticalHandler(scrollbarVerticalHeight, barVerticalHeight, barVerticalElement)
 const barHorizontalHandler = new BarHorizontalHandler(scrollbarWidth, barHorizontalWidth, barHorizontalElement)
 const loaderHandler = new LoaderHandler(loaderHeight, scrollbarVerticalHeight, loaderElement)
 const offsetCalculator = new OffsetCalculator()
-const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement, contentElement, listOfPossibleLinesToDisplay, lineHeightInPixels, textToWorkWith)
+const linesLoader = new LinesLoader(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement, contentElement, listOfPossibleLinesToDisplay, lineHeightInPixels, text)
 const textSelectionScrolling = new TextSelectionScrolling(barVerticalHandler, loaderHandler, linesLoader)
 const scrollOncaretMovement = new ScrollOnCaretMovement(loaderHandler, barVerticalHandler, linesLoader, contentScrollingHandler, barHorizontalHandler)
 const caretMover = new CaretMover(scrollOncaretMovement, lineContentElement)
 const caretBuidler = new CaretBuilder()
-const searchReplaceHandler = new SearchReplaceHandler(linesLoader, textToWorkWith, loaderHandler, barVerticalHandler, barHorizontalHandler, contentScrollingHandler, codeChangesHistoryHandler)
-const writerHandler = new WriterHandler(textToWorkWith, contentElement, searchReplaceHandler, caretBuidler, codeChangesHistoryHandler)
+const searchReplaceHandler = new SearchReplaceHandler(linesLoader, text, loaderHandler, barVerticalHandler, barHorizontalHandler, contentScrollingHandler, codeChangesHistoryHandler)
+const writerHandler = new WriterHandler(text, contentElement, searchReplaceHandler, caretBuidler, codeChangesHistoryHandler)
 const sizeChangesHandler = new SizeChangesHandler(textSelection)
 
 function displayVerticalScrollbar() {
@@ -434,7 +435,7 @@ window.addEventListener('keydown', (event) => {
     if (event.ctrlKey && isClickingF) {
         event.preventDefault()
         if (document.getElementById('marker')) {
-            const selectedText = textSelection.selectTextOnCopyCommand(textToWorkWith).text
+            const selectedText = textSelection.selectTextOnCopyCommand(text).text
             searchReplaceHandler.setSelectedText(selectedText)
             searchReplaceHandler.setTextToSearchField()
         }
@@ -442,7 +443,7 @@ window.addEventListener('keydown', (event) => {
     }
     else if (isCopiingText) {
         event.preventDefault()
-        const selectedText = textSelection.selectTextOnCopyCommand(textToWorkWith).text
+        const selectedText = textSelection.selectTextOnCopyCommand(text).text
         searchReplaceHandler.setSelectedText(selectedText)
     }
     else handleCaretMovement(event)

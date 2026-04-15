@@ -94,6 +94,7 @@ export default class WriterHandler {
      * @param {{text: String, starting: Number, ending: Number}} selectedText
      */
     removeTextOnCtrlX(selectedText) {
+        this.codeChangesHistoryHandler.updateFirstPositionOfCaret()
         if (selectedText) {
             navigator.clipboard.writeText(selectedText.text)
             this._replaceTextBetweenIndexes(selectedText, "")

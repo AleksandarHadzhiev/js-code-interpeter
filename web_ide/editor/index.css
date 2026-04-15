@@ -458,10 +458,11 @@ html::selection {
     height: 100%;
     background-color: rgb(47, 47, 47);
     z-index: 1;
+    display: flex;
 }
 
 .sidebar-header {
-    width: 100%;
+    width: 95%;
     height: 35px;
     display: flex;
     flex-direction: row;
@@ -475,4 +476,14 @@ html::selection {
     color: rgb(235, 235, 235);
     padding-left: 25px;
     padding-top: 7.5px;
+}
+
+#resize-dragger {
+    width: 5%;
+    height: 100%;
+}
+
+#resize-dragger:hover {
+    background-color: rgb(28, 28, 211);
+    cursor: e-resize;
 }

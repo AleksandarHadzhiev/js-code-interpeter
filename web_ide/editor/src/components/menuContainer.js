@@ -59,7 +59,9 @@ class CustomMenuContainer extends HTMLElement {
         sidebar.className = 'hidden'
         sidebar.setAttribute('id', 'sidebar')
         const header = this._buildHeaderOfExplorer()
+        const resizeDragger = this._buildResizeDragger()
         sidebar.appendChild(header)
+        sidebar.appendChild(resizeDragger)
         return sidebar
     }
 
@@ -77,6 +79,12 @@ class CustomMenuContainer extends HTMLElement {
         title.id = 'sidebar-title'
         this.sidebarTitle = title
         return title
+    }
+
+    _buildResizeDragger() {
+        const resizeDragger = document.createElement('div')
+        resizeDragger.id = 'resize-dragger'
+        return resizeDragger
     }
 }
 

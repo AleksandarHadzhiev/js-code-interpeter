@@ -28,6 +28,8 @@ body {
     overflow: hidden;
 }
 
+
+
 html::selection {
     background-color: transparent;
 }
@@ -70,6 +72,33 @@ html::selection {
     position: relative;
     width: 100%;
     height: 100%;
+}
+
+.empty-screen {
+    position: absolute;
+    left: var(--width-for-menu);
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(100% - var(--width-for-menu));
+    height: 100%;
+}
+
+#start-app {
+    font-size: 24px;
+    background-color: transparent;
+    width: 300px;
+    height: 65px;
+    color: white;
+    border: white 2px solid;
+    border-radius: 15px;
+}
+
+#start-app:hover {
+    background-color: white;
+    color: black;
+    box-shadow: 1px 1px 1px 1px white;
 }
 
 .menu {

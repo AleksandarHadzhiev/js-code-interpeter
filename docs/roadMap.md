@@ -32,6 +32,8 @@ Order of versions - from newest to oldest.
 ### Version 1.2.3
 
 - integrate ctrl + z operations for returning previous state of code
+- integrate whole text selection on ctrl + a
+- integrate saving text directly on ctrl + x and removing it from content
 
 ### Version 1.2.2
 

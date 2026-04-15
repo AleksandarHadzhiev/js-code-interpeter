@@ -448,3 +448,12 @@ html::selection {
     background-color: rgb(215, 215, 215);
     border-left: white 5px solid;
 }
+
+.sidebar {
+    position: absolute;
+    left: var(--width-for-menu);
+    width: 250px;
+    height: 100%;
+    background-color: rgb(47, 47, 47);
+    z-index: 1;
+}

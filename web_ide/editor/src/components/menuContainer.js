@@ -3,7 +3,16 @@ class CustomMenuContainer extends HTMLElement {
         super()
         this.elements = []
         const explorer = this._buildExplorer()
+        this.sidebar = this._buildSidebar()
+        this.appendChild(this.sidebar)
         this.appendChild(explorer)
+    }
+
+    _buildSidebar() {
+        const sidebar = document.createElement('div')
+        sidebar.className = 'hidden'
+        sidebar.setAttribute('id', 'sidebar')
+        return sidebar
     }
 
     _buildExplorer() {
@@ -18,6 +27,10 @@ class CustomMenuContainer extends HTMLElement {
                     element.classList.remove('selected')
                 }
             })
+
+            if (this.sidebar.className == "hidden")
+                this.sidebar.className = "sidebar"
+            else this.sidebar.className = "hidden"
         })
         this.elements.push(explorer)
         return explorer

@@ -585,3 +585,11 @@ function checkIfThereIsMarker() {
     }
     return null
 }
+
+const startApp = document.getElementById('start-app')
+
+startApp.addEventListener('click', () => {
+    const emptyScreen = document.getElementById('empty-screen')
+    mainContainer.className = 'editor'
+    emptyScreen.className = 'hidden'
+})

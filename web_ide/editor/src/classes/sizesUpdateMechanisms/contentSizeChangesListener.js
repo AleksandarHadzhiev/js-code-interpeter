@@ -11,8 +11,12 @@ export default class ContentSizeChangesListener {
     /**
      * 
      * @param {Number} newLeftOffsetForContent 
+     * @param {*} width 
      */
-    updateLeftOffsetWithNewOffset(newLeftOffsetForContent) {
-        this.contentElement.style = `left: ${newLeftOffsetForContent}px;`
+    updateLeftOffsetWithNewOffset(newLeftOffsetForContent, width) {
+        this.contentElement.style = `
+        left: ${newLeftOffsetForContent}px;
+        width:${width}px;
+        `
     }
 }

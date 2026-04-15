@@ -15,7 +15,7 @@ import LineSelector from "./src/classes/selectionMechanisms/lineSelector.js"
 import SearchReplaceHandler from "./src/classes/searchReplace/searchReplaceHandler.js"
 import WriterHandler from "./src/classes/writerHandler.js"
 import CodeChangesHistoryHandler from "./src/classes/codeChangesHistoryHandler.js"
-import SizeChangesHandler from "./src/classes/sizeChangesHandler.js"
+import SizeChangesHandler from "./src/classes/sizesUpdateMechanisms/sizeChangesHandler.js"
 
 import { textToWorkWith, shortText } from "./textToWorkWith.js"
 import CaretBuilder from "./src/classes/selectionMechanisms/caretBuilder.js"

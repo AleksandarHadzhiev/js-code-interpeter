@@ -1,9 +1,13 @@
+import TextSelection from "../selectionMechanisms/textSelection.js"
 import ContentSizeChangesListener from "./contentSizeChangesListener.js"
-import ScrollbarHorizontalSizeChangesListener from "./scrollbarHorizontalSizeChangesListener.js"
 
 export default class SizeChangesHandler {
-    constructor() {
-        this.listeners = []
+    /**
+     * 
+     * @param {TextSelection} textSelection 
+     */
+    constructor(textSelection) {
+        this.listeners = [textSelection]
         this.mainContainer = document.getElementById('container')
         this.screen = document.getElementById('screen')
         this._addListeners()

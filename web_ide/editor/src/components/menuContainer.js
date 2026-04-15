@@ -60,7 +60,9 @@ class CustomMenuContainer extends HTMLElement {
         sidebar.setAttribute('id', 'sidebar')
         const header = this._buildHeaderOfExplorer()
         const resizeDragger = this._buildResizeDragger()
+        const file = this._buildFile()
         sidebar.appendChild(header)
+        sidebar.appendChild(file)
         sidebar.appendChild(resizeDragger)
         return sidebar
     }
@@ -79,6 +81,22 @@ class CustomMenuContainer extends HTMLElement {
         title.id = 'sidebar-title'
         this.sidebarTitle = title
         return title
+    }
+
+    _buildFile() {
+        const file = document.createElement('div')
+        file.className = 'file'
+        file.id = 'index-js'
+        const fileName = this._buildFileName()
+        file.appendChild(fileName)
+        return file
+    }
+
+    _buildFileName() {
+        const fileName = document.createElement('p')
+        fileName.className = 'file-name'
+        fileName.textContent = 'index.js'
+        return fileName
     }
 
     _buildResizeDragger() {

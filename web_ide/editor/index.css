@@ -470,6 +470,20 @@ html::selection {
     justify-content: space-between;
 }
 
+.file {
+    width: 95%;
+    height: 35px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.file-name {
+    font-size: 24px;
+    color: white;
+}
+
 #sidebar-title {
     width: 80%;
     height: 100%;

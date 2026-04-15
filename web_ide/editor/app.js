@@ -19,7 +19,7 @@ import CodeChangesHistoryHandler from "./src/classes/codeChangesHistoryHandler.j
 import { textToWorkWith, shortText } from "./textToWorkWith.js"
 import CaretBuilder from "./src/classes/selectionMechanisms/caretBuilder.js"
 const listOfPossibleLinesToDisplay = String(textToWorkWith).split('\n')
-
+let text = textToWorkWith
 const mainContainer = document.getElementById('container')
 const menuContainer = document.getElementById('menu')
 const navigationElement = document.getElementById('navigation')
@@ -128,6 +128,7 @@ window.addEventListener('wheel', (event) => {
 })
 
 function scrollVertical(event) {
+    buildMarker()
     const offsetTop = offsetCalculator.calculateOffsetBasedOnDeltaYOfMouseEvent(event.deltaY)
     loaderHandler.scrollWithOffset(offsetTop)
     const percentage = loaderHandler.getPercentageOfScroll()
@@ -173,6 +174,7 @@ scrollbarAreaElementVertical.addEventListener('mousemove', (event) => {
  * @param {MouseEvent} event 
  */
 function verticalScrolling(event) {
+    buildMarker()
     barVerticalHandler.scrollWithOffset(event.clientY - scrollbarVerticalTopOffset)
     const percentage = barVerticalHandler.getPercentageOfScroll()
     loaderHandler.scrollWithPercentage(percentage)
@@ -201,9 +203,6 @@ function horizontalScrolling(event) {
 }
 
 window.addEventListener('mousedown', (event) => {
-    console.log(event.target)
-    console.log(event.currentTarget)
-
     if (event.target.id != 'search-field' && event.target.id != 'replace-field')
         isWriting = true
     else isWriting = false
@@ -422,24 +421,25 @@ mainContainer.addEventListener('mousedown', (event) => {
 
 function removeExistingHighlighter() {
     const markerElement = document.getElementById('marker')
-    if (markerElement) markerElement.remove()
+    if (markerElement)
+        markerElement.remove()
 }
 
 window.addEventListener('keydown', (event) => {
-    const isClickingF = event.key == "f" || event.key == "F"
-    const isCopiingText = event.key == "c" || event.key == "C"
+    const isClickingF = event.key.toLowerCase() == "f"
+    const isCopiingText = event.ctrlKey && event.key.toLowerCase() == "c"
     if (event.ctrlKey && isClickingF) {
         event.preventDefault()
         if (document.getElementById('marker')) {
-            const selectedText = textSelection.selectTextOnCopyCommand(textToWorkWith)
+            const selectedText = textSelection.selectTextOnCopyCommand(textToWorkWith).text
             searchReplaceHandler.setSelectedText(selectedText)
             searchReplaceHandler.setTextToSearchField()
         }
         searchReplaceHandler.changeVisibility()
     }
-    else if (event.ctrlKey && isCopiingText) {
+    else if (isCopiingText) {
         event.preventDefault()
-        const selectedText = textSelection.selectTextOnCopyCommand(textToWorkWith)
+        const selectedText = textSelection.selectTextOnCopyCommand(textToWorkWith).text
         searchReplaceHandler.setSelectedText(selectedText)
     }
     else handleCaretMovement(event)
@@ -532,28 +532,43 @@ writerElement.addEventListener('input', (event) => {
     if (event.data != null) {
         const selectedText = checkIfThereIsMarker()
         writerHandler.insertText(event.data, selectedText)
+        text = writerHandler.textToWorkWith
     }
 })
 
 writerElement.addEventListener('keydown', (event) => {
-
+    const isSelectingTheWholeText = event.ctrlKey && event.key.toLowerCase() == "a"
+    const ixRemovingTextByCopiingIt = event.ctrlKey && event.key.toLowerCase() == "x"
     if (event.key.toLowerCase() == "backspace") {
         const selectedText = checkIfThereIsMarker()
         writerHandler.removeText(selectedText)
+        text = writerHandler.textToWorkWith
     }
     else if (event.key.toLowerCase() == "enter") {
         const selectedText = checkIfThereIsMarker()
         writerHandler.insertText('\n', selectedText)
+        text = writerHandler.textToWorkWith
     }
     else if (event.key.toLowerCase() == "z" && event.ctrlKey && event.shiftKey) {
         const oldText = codeChangesHistoryHandler.goForward()
         writerHandler.textToWorkWith = oldText
         searchReplaceHandler.updateText(oldText)
+        text = writerHandler.textToWorkWith
     }
     else if (event.key.toLowerCase() == "z" && event.ctrlKey) {
         const oldText = codeChangesHistoryHandler.goBack()
         writerHandler.textToWorkWith = oldText
         searchReplaceHandler.updateText(oldText)
+        text = writerHandler.textToWorkWith
+    }
+    else if (isSelectingTheWholeText) {
+        buildMarker()
+        textSelection.selectWholeText(linesLoader.firstVisibleLine, linesLoader.lastVisibleLine, text)
+    }
+    else if (ixRemovingTextByCopiingIt) {
+        const selectedText = checkIfThereIsMarker()
+        writerHandler.removeTextOnCtrlX(selectedText)
+        text = writerHandler.textToWorkWith
     }
 })
 
@@ -561,7 +576,7 @@ function checkIfThereIsMarker() {
     const marker = document.getElementById('marker')
     let selectedText = ""
     if (marker) {
-        selectedText = textSelection.selectTextOnCopyCommand(textToWorkWith)
+        selectedText = textSelection.selectTextOnCopyCommand(text)
         return selectedText
     }
     return null

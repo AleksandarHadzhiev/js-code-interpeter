@@ -26,6 +26,7 @@ The current version of the project is `1.2.3` and is in the process of becoming 
 **Newly added**
    - keep changes history and switch between on ctrl + z operations.
    - whole text selection on ctrl + a
+   - add text to clipboard and remove it from content on ctrl + x
 
 **Supported functionality untill now**:
    - Insert/Remove/Change text based on caret position when it is related to text selection

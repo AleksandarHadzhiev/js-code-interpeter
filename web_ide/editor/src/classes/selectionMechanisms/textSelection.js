@@ -35,12 +35,21 @@ export default class TextSelection {
         this.selectedText = ""
         this.textFetcher = new TextFetcher(this.highlighter, this.contentElement)
     }
+    /**
+     * 
+     * @param {Number} firstVisibleLine 
+     * @param {Number} lastVisibleLine 
+     * @param {String} text 
+     */
+    selectWholeText(firstVisibleLine, lastVisibleLine, text) {
+        const lines = text.split('\n')
+        this.highlighter.selectWholeText(firstVisibleLine, lastVisibleLine, lines)
+    }
 
     /**
      * @param {String} fullText 
      */
     selectTextOnCopyCommand(fullText) {
-
         const fetchedText = this.textFetcher.selectTextFromFullText(fullText)
         this.selectedText = fetchedText.text
         navigator.clipboard.writeText(this.selectedText)

@@ -41,7 +41,7 @@ export default class SearchHandler {
 
         })
         this.searchField.addEventListener('keydown', (event) => {
-            const isPastingText = event.key == "v" || event.key == "V"
+            const isPastingText = event.key.toLowerCase() == "v"
             if (event.ctrlKey && isPastingText) {
                 event.preventDefault()
                 this.currentPosition = "No"

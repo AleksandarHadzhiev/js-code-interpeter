@@ -88,4 +88,28 @@ export default class WriterHandler {
         const marker = document.getElementById('marker')
         if (marker) marker.remove()
     }
+
+    /**
+     * 
+     * @param {{text: String, starting: Number, ending: Number}} selectedText
+     */
+    removeTextOnCtrlX(selectedText) {
+        this.codeChangesHistoryHandler.updateFirstPositionOfCaret()
+        if (selectedText) {
+            navigator.clipboard.writeText(selectedText.text)
+            this._replaceTextBetweenIndexes(selectedText, "")
+        }
+        else {
+            const topOffset = this.caret.offsetTop
+            const lineId = Math.round(topOffset / 28.8)
+            const lines = this.textToWorkWith.split('\n')
+            const textToCopy = lines[lineId]
+            navigator.clipboard.writeText(textToCopy)
+            lines.splice(lineId, 1)
+            const newText = lines.join('\n')
+            this.textToWorkWith = newText
+            this.searchReplaceHandler.updateText(newText)
+        }
+        this.codeChangesHistoryHandler.insertChange(this.textToWorkWith)
+    }
 }

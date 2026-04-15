@@ -17,7 +17,7 @@ export default class ReplaceHandler {
             this.textToReplaceWith = String(this.replaceField.value)
         })
         this.replaceField.addEventListener('keydown', (event) => {
-            const isPasting = event.key == "f" || event.key == "F"
+            const isPasting = event.key.toLowerCase() == "f"
             if (event.ctrlKey && isPasting) {
                 this.replaceField.textContent = this.selectedText
                 this.textToReplaceWith = String(this.selectedText)

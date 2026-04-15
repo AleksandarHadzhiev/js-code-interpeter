@@ -461,8 +461,14 @@ html::selection {
     display: flex;
 }
 
-.sidebar-header {
+.sidebar-content {
     width: 95%;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    width: 100%;
     height: 35px;
     display: flex;
     flex-direction: row;
@@ -471,7 +477,7 @@ html::selection {
 }
 
 .file {
-    width: 95%;
+    width: 100%;
     height: 35px;
     display: flex;
     flex-direction: row;
@@ -480,8 +486,18 @@ html::selection {
 }
 
 .file-name {
-    font-size: 24px;
-    color: white;
+    font-size: 16px;
+    width: 100%;
+    height: 100%;
+    color: rgb(235, 235, 235);
+    padding-left: 25px;
+    padding-top: 7.5px;
+}
+
+.file:hover {
+    background-color: rgb(103, 103, 103);
+    width: calc(100% + 10px);
+    height: 25px;
 }
 
 #sidebar-title {
@@ -493,7 +509,7 @@ html::selection {
 }
 
 #resize-dragger {
-    width: 5%;
+    width: 10px;
     height: 100%;
 }
 

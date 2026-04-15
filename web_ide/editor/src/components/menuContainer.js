@@ -58,13 +58,21 @@ class CustomMenuContainer extends HTMLElement {
         const sidebar = document.createElement('div')
         sidebar.className = 'hidden'
         sidebar.setAttribute('id', 'sidebar')
-        const header = this._buildHeaderOfExplorer()
         const resizeDragger = this._buildResizeDragger()
-        const file = this._buildFile()
-        sidebar.appendChild(header)
-        sidebar.appendChild(file)
+        const sidebarContent = this._buildContentOfSidebar()
+        sidebar.appendChild(sidebarContent)
         sidebar.appendChild(resizeDragger)
         return sidebar
+    }
+
+    _buildContentOfSidebar() {
+        const sidebarContent = document.createElement('div')
+        sidebarContent.className = 'sidebar-content'
+        const header = this._buildHeaderOfExplorer()
+        const file = this._buildFile()
+        sidebarContent.appendChild(header)
+        sidebarContent.appendChild(file)
+        return sidebarContent
     }
 
     _buildHeaderOfExplorer() {

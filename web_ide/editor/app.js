@@ -15,6 +15,7 @@ import LineSelector from "./src/classes/selectionMechanisms/lineSelector.js"
 import SearchReplaceHandler from "./src/classes/searchReplace/searchReplaceHandler.js"
 import WriterHandler from "./src/classes/writerHandler.js"
 import CodeChangesHistoryHandler from "./src/classes/codeChangesHistoryHandler.js"
+import SizeChangesHandler from "./src/classes/sizeChangesHandler.js"
 
 import { textToWorkWith, shortText } from "./textToWorkWith.js"
 import CaretBuilder from "./src/classes/selectionMechanisms/caretBuilder.js"
@@ -25,6 +26,7 @@ const menuContainer = document.getElementById('menu')
 const navigationElement = document.getElementById('navigation')
 const loaderElement = document.getElementById('loader')
 const writerElement = document.getElementById('writer')
+const sidebar = document.getElementById('sidebar')
 
 const scrollbarElementVertical = document.getElementById('scrollbar-vertical')
 const scrollbarAreaElementVertical = document.getElementById('scrollable-area-vertical')
@@ -90,6 +92,7 @@ const caretMover = new CaretMover(scrollOncaretMovement, lineContentElement)
 const caretBuidler = new CaretBuilder()
 const searchReplaceHandler = new SearchReplaceHandler(linesLoader, textToWorkWith, loaderHandler, barVerticalHandler, barHorizontalHandler, contentScrollingHandler, codeChangesHistoryHandler)
 const writerHandler = new WriterHandler(textToWorkWith, contentElement, searchReplaceHandler, caretBuidler, codeChangesHistoryHandler)
+const sizeChangesHandler = new SizeChangesHandler()
 
 function displayVerticalScrollbar() {
     if (loaderHeight > mainContainer.offsetHeight) {

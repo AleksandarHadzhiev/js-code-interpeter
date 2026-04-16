@@ -1,4 +1,5 @@
 import LinesLoader from "./scrollingMechanisms/LinesLoader.js"
+import SizeChangesHandler from "./sizesUpdateMechanisms/sizeChangesHandler.js"
 
 export default class FileRunner {
     /**
@@ -19,6 +20,7 @@ export default class FileRunner {
             this.listOfPossibleLinesToDisplay, this.minLineHeight,
             this.text
         )
+        this.sizeChangesHandler = new SizeChangesHandler(this.minLineHeight, this.amountOfLines)
     }
 
     loadLines() {

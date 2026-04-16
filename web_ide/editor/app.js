@@ -17,7 +17,6 @@
 // import CodeChangesHistoryHandler from "./src/classes/codeChangesHistoryHandler.js"
 // import SizeChangesHandler from "./src/classes/sizesUpdateMechanisms/sizeChangesHandler.js"
 
-
 // import CaretBuilder from "./src/classes/selectionMechanisms/caretBuilder.js"
 // const mainContainer = document.getElementById('container')
 // const menuContainer = document.getElementById('menu')

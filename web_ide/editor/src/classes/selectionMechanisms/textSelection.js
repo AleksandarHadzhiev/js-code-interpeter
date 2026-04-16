@@ -43,7 +43,6 @@ export default class TextSelection {
      */
     updateLeftOffsetWithNewOffset(leftOffsetForContent, widthForContent) {
         this.contentElementOffsetLeft = leftOffsetForContent + this.lineNumerationScrollWidth
-
     }
 
     /**

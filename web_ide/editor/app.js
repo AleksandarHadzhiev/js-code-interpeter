@@ -16,8 +16,7 @@
 // import WriterHandler from "./src/classes/writerHandler.js"
 // import CodeChangesHistoryHandler from "./src/classes/codeChangesHistoryHandler.js"
 // import SizeChangesHandler from "./src/classes/sizesUpdateMechanisms/sizeChangesHandler.js"
-import ContentPicker from "./src/classes/contentPicker.js"
-import AppRunner from "./src/classes/appRunner.js"
+
 
 // import CaretBuilder from "./src/classes/selectionMechanisms/caretBuilder.js"
 // const mainContainer = document.getElementById('container')
@@ -44,7 +43,6 @@ import AppRunner from "./src/classes/appRunner.js"
 // const scrollbarVerticalTopOffset = navigationElement.offsetHeight
 // const barVerticalHeight = barVerticalElement.offsetHeight
 
-const contentPicker = new ContentPicker()
 // let text = contentPicker.pickTextFromFileWithName('app.js')
 // const listOfPossibleLinesToDisplay = String(text).split('\n')
 // console.log(text)
@@ -587,8 +585,15 @@ const contentPicker = new ContentPicker()
 //     return null
 // }
 
+import ContentPicker from "./src/classes/contentPicker.js"
+import AppRunner from "./src/classes/appRunner.js"
+import FileRunner from "./src/classes/fileRunner.js"
+
 const startApp = document.getElementById('start-app')
 const mainContainer = document.getElementById('container')
+
+const contentPicker = new ContentPicker()
+
 startApp.addEventListener('click', () => {
     const text = contentPicker.pickTextFromFileWithName('app.js')
     const emptyScreen = document.getElementById('empty-screen')

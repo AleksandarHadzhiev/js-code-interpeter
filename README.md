@@ -25,6 +25,7 @@ The current version of the project is `1.3.1` and is in the process of becoming 
 
 **Newly added**
    - loading the text which to display on the screen based on a file
+   - button to boot up the app and only then load code
 
 **Supported functionality untill now**:
    - menu which shows the file you are working on.

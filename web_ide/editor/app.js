@@ -585,21 +585,16 @@
 //     return null
 // }
 
-import ContentPicker from "./src/classes/contentPicker.js"
 import AppRunner from "./src/classes/appRunner.js"
-import FileRunner from "./src/classes/fileRunner.js"
 
 const startApp = document.getElementById('start-app')
 const mainContainer = document.getElementById('container')
 
-const contentPicker = new ContentPicker()
+const appRunner = new AppRunner()
 
 startApp.addEventListener('click', () => {
-    const text = contentPicker.pickTextFromFileWithName('app.js')
     const emptyScreen = document.getElementById('empty-screen')
-    const appRunner = new AppRunner(text)
     mainContainer.className = 'editor'
     emptyScreen.className = 'hidden'
-
-    appRunner.loadLines()
+    appRunner.runFile('app.js')
 })

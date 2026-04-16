@@ -1,31 +1,21 @@
-import LinesLoader from "./scrollingMechanisms/LinesLoader.js"
+import FileRunner from "./fileRunner.js"
+import ContentPicker from "./contentPicker.js"
 
 export default class AppRunner {
+
+    constructor() {
+        this.fileRunners = new Map()
+        this.contentPicker = new ContentPicker()
+    }
+
     /**
-     * 
-     * @param {String} text 
+     * @param {String} fileName
      */
-    constructor(text) {
-        this.lineNumerationElement = document.getElementById('line-numeration')
-        this.lineContentElement = document.getElementById('line-content')
-        this.contentElement = document.getElementById('content')
-        this.minLineHeight = 28.8
-        this.listOfPossibleLinesToDisplay = text.split('\n')
-        this.amountOfLines = this.listOfPossibleLinesToDisplay.length
-        this.text = text
-        this.linesLoader = new LinesLoader(
-            this.amountOfLines, this.lineNumerationElement,
-            this.lineContentElement, this.contentElement,
-            this.listOfPossibleLinesToDisplay, this.minLineHeight,
-            this.text
-        )
+    runFile(fileName) {
+        const text = this.contentPicker.pickTextFromFileWithName(fileName)
+        const fileRunner = new FileRunner(text)
+        this.fileRunners.set(fileName, fileRunner)
+        fileRunner.loadLines()
     }
 
-    loadLines() {
-        this.linesLoader.loadLines(this._updateWidths)
-    }
-
-    _updateWidths() {
-        console.log("UPDATE WIDTHS")
-    }
 }

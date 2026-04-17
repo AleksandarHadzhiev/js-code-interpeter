@@ -70,9 +70,11 @@ class CustomMenuContainer extends HTMLElement {
         const sidebarContent = document.createElement('div')
         sidebarContent.className = 'sidebar-content'
         const header = this._buildHeaderOfExplorer()
-        const file = this._buildFile()
+        const indexJs = this._buildFileIndexJs()
+        const appJS = this._buildFileAppJs()
         sidebarContent.appendChild(header)
-        sidebarContent.appendChild(file)
+        sidebarContent.appendChild(indexJs)
+        sidebarContent.appendChild(appJS)
         return sidebarContent
     }
 
@@ -92,7 +94,7 @@ class CustomMenuContainer extends HTMLElement {
         return title
     }
 
-    _buildFile() {
+    _buildFileIndexJs() {
         const file = document.createElement('div')
         file.className = 'file'
         file.id = 'index-js'
@@ -103,15 +105,38 @@ class CustomMenuContainer extends HTMLElement {
             }
             ))
         })
-        const fileName = this._buildFileName()
+        const fileName = this._buildFileNameInfexJS()
         file.appendChild(fileName)
         return file
     }
 
-    _buildFileName() {
+    _buildFileNameInfexJS() {
         const fileName = document.createElement('p')
         fileName.className = 'file-name'
         fileName.textContent = 'index.js'
+        return fileName
+    }
+
+    _buildFileAppJs() {
+        const file = document.createElement('div')
+        file.className = 'file'
+        file.id = 'app-js'
+        file.addEventListener('click', () => {
+            this.screen.dispatchEvent(new CustomEvent(
+                "runFile", {
+                "detail": { 'fileName': 'app.js' }
+            }
+            ))
+        })
+        const fileName = this._buildFileNameAppJS()
+        file.appendChild(fileName)
+        return file
+    }
+
+    _buildFileNameAppJS() {
+        const fileName = document.createElement('p')
+        fileName.className = 'file-name'
+        fileName.textContent = 'app.js'
         return fileName
     }
 

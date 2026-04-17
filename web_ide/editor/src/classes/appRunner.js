@@ -12,9 +12,15 @@ export default class AppRunner {
      * @param {String} fileName
      */
     runFile(fileName) {
-        const text = this.contentPicker.pickTextFromFileWithName(fileName)
-        const fileRunner = new FileRunner(text)
-        this.fileRunners.set(fileName, fileRunner)
+        let fileRunner = null
+        if (this.fileRunners.get(fileName)) {
+            fileRunner = this.fileRunners.get(fileName)
+        }
+        else {
+            const text = this.contentPicker.pickTextFromFileWithName(fileName)
+            fileRunner = new FileRunner(text)
+            this.fileRunners.set(fileName, fileRunner)
+        }
         fileRunner.loadLines()
     }
 

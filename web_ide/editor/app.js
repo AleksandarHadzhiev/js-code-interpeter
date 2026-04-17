@@ -585,15 +585,15 @@
 // }
 
 import AppRunner from "./src/classes/appRunner.js"
+import SizeChangesHandler from "./src/classes/sizesUpdateMechanisms/sizeChangesHandler.js"
 
-const startApp = document.getElementById('start-app')
-const mainContainer = document.getElementById('container')
+const screen = document.getElementById('screen')
 
 const appRunner = new AppRunner()
+const sizeChangesHandler = new SizeChangesHandler(28.8, 2000)
 
-startApp.addEventListener('click', () => {
-    const emptyScreen = document.getElementById('empty-screen')
-    mainContainer.className = 'editor'
-    emptyScreen.className = 'hidden'
-    appRunner.runFile('app.js')
+screen.addEventListener('runFile', (event) => {
+    const fileName = event.detail.fileName
+    appRunner.runFile(fileName)
 })
+

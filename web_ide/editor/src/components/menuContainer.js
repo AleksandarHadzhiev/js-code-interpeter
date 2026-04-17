@@ -1,6 +1,7 @@
 class CustomMenuContainer extends HTMLElement {
     constructor() {
         super()
+        this.screen = document.getElementById('screen')
         this.elements = []
         this.sidebarTitle = null
         const explorer = this._buildExplorer()
@@ -95,6 +96,13 @@ class CustomMenuContainer extends HTMLElement {
         const file = document.createElement('div')
         file.className = 'file'
         file.id = 'index-js'
+        file.addEventListener('click', () => {
+            this.screen.dispatchEvent(new CustomEvent(
+                "runFile", {
+                "detail": { 'fileName': 'index.js' }
+            }
+            ))
+        })
         const fileName = this._buildFileName()
         file.appendChild(fileName)
         return file

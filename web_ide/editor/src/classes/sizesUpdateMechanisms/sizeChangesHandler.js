@@ -65,16 +65,16 @@ export default class SizeChangesHandler {
 
     _addListeners() {
         const contentSizeChangesListener = new ContentSizeChangesListener(this.mainContainer)
-        const loaderHandler = new LoaderHandler(this.loaderHeight, this.editorHeight, this.loaderElement)
-        const textSelection = new TextSelection(
-            this.contentOffsetTop, this.totalWidthOfScreen,
-            this.editorHeight, this.widthForContent,
-            this.contentElement, this.defaultLeftOffsetForContent,
-            this.maxLines, null
-        )
+        // const loaderHandler = new LoaderHandler(this.loaderHeight, this.editorHeight, this.loaderElement)
+        // const textSelection = new TextSelection(
+        //     this.contentOffsetTop, this.totalWidthOfScreen,
+        //     this.editorHeight, this.widthForContent,
+        //     this.contentElement, this.defaultLeftOffsetForContent,
+        //     this.maxLines, null
+        // )
         this.listeners.push(contentSizeChangesListener)
-        this.listeners.push(loaderHandler)
-        this.listeners.push(textSelection)
+        // this.listeners.push(loaderHandler)
+        // this.listeners.push(textSelection)
     }
 
     _updateWithWidth(width) {

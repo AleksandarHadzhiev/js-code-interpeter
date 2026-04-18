@@ -12,7 +12,7 @@ export default class FileRunner {
         this.contentElement = document.getElementById('content')
         this.minLineHeight = 28.8
         this.listOfPossibleLinesToDisplay = text.split('\n')
-        this.amountOfLines = this.listOfPossibleLinesToDisplay.length
+        this.amountOfLines = Math.round(this.contentElement.offsetHeight / 28.8)
         this.text = text
         this.linesLoader = new LinesLoader(
             this.amountOfLines, this.lineNumerationElement,

@@ -585,12 +585,8 @@
 // }
 
 import AppRunner from "./src/classes/appRunner.js"
-import SizeChangesHandler from "./src/classes/sizesUpdateMechanisms/sizeChangesHandler.js"
-
 const screen = document.getElementById('screen')
-
 const appRunner = new AppRunner()
-const sizeChangesHandler = new SizeChangesHandler(28.8, 2000)
 
 screen.addEventListener('runFile', (event) => {
     const fileName = event.detail.fileName

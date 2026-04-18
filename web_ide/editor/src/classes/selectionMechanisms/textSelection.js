@@ -36,6 +36,7 @@ export default class TextSelection {
         this.selectedText = ""
         this.textFetcher = new TextFetcher(this.highlighter, this.contentElement)
     }
+
     /**
      * 
      * @param {Number} leftOffsetForContent 

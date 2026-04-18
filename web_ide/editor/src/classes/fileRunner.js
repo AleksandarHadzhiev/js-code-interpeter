@@ -1,5 +1,5 @@
 import LinesLoader from "./scrollingMechanisms/LinesLoader.js"
-import SizeChangesHandler from "./sizesUpdateMechanisms/sizeChangesHandler.js"
+import CaretTracker from "./caretTracker.js"
 
 export default class FileRunner {
     /**
@@ -20,7 +20,9 @@ export default class FileRunner {
             this.listOfPossibleLinesToDisplay, this.minLineHeight,
             this.text
         )
-        this.sizeChangesHandler = new SizeChangesHandler(this.minLineHeight, this.amountOfLines)
+        this.caretTracker = new CaretTracker(
+            this.contentElement, this.minLineHeight, this.amountOfLines, this.linesLoader
+        )
     }
 
     loadLines() {

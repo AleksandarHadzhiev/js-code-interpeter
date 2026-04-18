@@ -29,7 +29,6 @@ export default class SizeChangesHandler {
         this.maxVisibleLinesOnScreen = Math.ceil(this.editorHeight / minLineHeight)
         let loaderHeightInLines = lines > this.maxVisibleLinesOnScreen - 1 ? (lines + this.maxVisibleLinesOnScreen - 1) : lines
         this.loaderHeight = loaderHeightInLines * minLineHeight
-        this._addListeners()
         this.sidebar.addEventListener('visibilityChanged', () => {
             this._updateWithWidth(this.sidebar.offsetWidth)
             this._notifyListeners()
@@ -38,7 +37,6 @@ export default class SizeChangesHandler {
         this.resizeDragger.addEventListener('mousedown', () => {
             this.isResizing = true
         })
-
         window.addEventListener('mousemove', (event) => {
             if (this.isResizing) {
                 const width = event.pageX - this.defaultLeftOffsetForContent
@@ -63,18 +61,9 @@ export default class SizeChangesHandler {
 
     }
 
-    _addListeners() {
-        const contentSizeChangesListener = new ContentSizeChangesListener(this.mainContainer)
-        // const loaderHandler = new LoaderHandler(this.loaderHeight, this.editorHeight, this.loaderElement)
-        // const textSelection = new TextSelection(
-        //     this.contentOffsetTop, this.totalWidthOfScreen,
-        //     this.editorHeight, this.widthForContent,
-        //     this.contentElement, this.defaultLeftOffsetForContent,
-        //     this.maxLines, null
-        // )
-        this.listeners.push(contentSizeChangesListener)
-        // this.listeners.push(loaderHandler)
-        // this.listeners.push(textSelection)
+
+    addListener(listener) {
+        this.listeners.push(listener)
     }
 
     _updateWithWidth(width) {

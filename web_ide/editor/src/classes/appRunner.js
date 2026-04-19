@@ -1,10 +1,15 @@
 import FileRunner from "./fileRunner.js"
 import ContentPicker from "./contentPicker.js"
+import SizeChangesHandler from "./sizesUpdateMechanisms/sizeChangesHandler.js"
 
 export default class AppRunner {
 
-    constructor() {
+    /**
+     * @param {SizeChangesHandler} sizeChangesHandler 
+     */
+    constructor(sizeChangesHandler) {
         this.fileRunners = new Map()
+        this.sizeChangesHandler = sizeChangesHandler
         this.contentPicker = new ContentPicker()
     }
 

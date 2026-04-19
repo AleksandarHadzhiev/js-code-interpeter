@@ -585,8 +585,15 @@
 // }
 
 import AppRunner from "./src/classes/appRunner.js"
+import TextSelectionTracker from "./src/classes/selectionMechanisms/textSelectionTracker.js"
+import ContentSizeChangesListener from "./src/classes/sizesUpdateMechanisms/contentSizeChangesListener.js"
+import SizeChangesHandler from "./src/classes/sizesUpdateMechanisms/sizeChangesHandler.js"
 const screen = document.getElementById('screen')
-const appRunner = new AppRunner()
+const sizeChangesHandler = new SizeChangesHandler()
+const appRunner = new AppRunner(sizeChangesHandler)
+const textSelectionTracker = new TextSelectionTracker()
+sizeChangesHandler.addListener(textSelectionTracker)
+sizeChangesHandler.addListener(new ContentSizeChangesListener(sizeChangesHandler.contentElement))
 
 screen.addEventListener('runFile', (event) => {
     const fileName = event.detail.fileName

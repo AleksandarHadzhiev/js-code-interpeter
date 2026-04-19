@@ -1,35 +1,22 @@
-import TextSelection from "../selectionMechanisms/textSelection.js"
-import ContentSizeChangesListener from "./contentSizeChangesListener.js"
-import LoaderHandler from "../scrollingMechanisms/LoaderHandler.js"
-
 export default class SizeChangesHandler {
-    /**
-     * 
-     * @param {Number} minLineHeight 
-     * @param {Number} lines 
-     */
-    constructor(minLineHeight, lines) {
+    constructor() {
         this.listeners = []
-        this.maxLines = lines
         this.mainContainer = document.getElementById('container')
         this.screen = document.getElementById('screen')
-        this.menuContainer = document.getElementById('menu')
         this.sidebar = document.getElementById('sidebar')
         this.contentElement = document.getElementById('content')
         this.resizeDragger = document.getElementById('resize-dragger')
         this.navigationElement = document.getElementById('navigation')
         this.loaderElement = document.getElementById('loader')
-        this.defaultLeftOffsetForContent = this.menuContainer.offsetWidth
+        this.defaultLeftOffsetForContent = 0
         this.leftOffsetForContent = this.defaultLeftOffsetForContent
         this.defaultWidthForContent = this.screen.offsetWidth - this.defaultLeftOffsetForContent
         this.widthForContent = this.defaultWidthForContent
         this.totalWidthOfScreen = this.mainContainer.offsetWidth
         this.contentOffsetTop = this.navigationElement.offsetHeight
         this.editorHeight = this.mainContainer.offsetHeight - this.contentOffsetTop
-        this.maxVisibleLinesOnScreen = Math.ceil(this.editorHeight / minLineHeight)
-        let loaderHeightInLines = lines > this.maxVisibleLinesOnScreen - 1 ? (lines + this.maxVisibleLinesOnScreen - 1) : lines
-        this.loaderHeight = loaderHeightInLines * minLineHeight
         this.sidebar.addEventListener('visibilityChanged', () => {
+            console.log('here')
             this._updateWithWidth(this.sidebar.offsetWidth)
             this._notifyListeners()
         })
@@ -61,7 +48,6 @@ export default class SizeChangesHandler {
 
     }
 
-
     addListener(listener) {
         this.listeners.push(listener)
     }
@@ -72,9 +58,10 @@ export default class SizeChangesHandler {
             this.widthForContent = this.defaultWidthForContent
         }
         else {
-            this.leftOffsetForContent = this.defaultLeftOffsetForContent + width
+            this.leftOffsetForContent = width
             this.widthForContent = this.defaultWidthForContent - width
         }
+        console.log(width, this.leftOffsetForContent)
         this._notifyListeners()
     }
 

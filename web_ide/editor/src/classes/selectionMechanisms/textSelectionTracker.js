@@ -44,4 +44,8 @@ export default class TextSelectionTracker {
         }
         // this.textSelector.setStartingPoint(this.startingRange)
     }
+
+    updateLeftOffsetWithNewOffset(leftOffsetForContent, widthForContent) {
+        console.log("PASS for NOW")
+    }
 }

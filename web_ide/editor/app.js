@@ -209,7 +209,6 @@
 //     else isWriting = false
 // })
 
-
 // window.addEventListener('mouseup', (event) => {
 //     barVerticalIsSelected = false
 //     barHorizontalIsSelected = false
@@ -588,15 +587,17 @@ import AppRunner from "./src/classes/appRunner.js"
 import TextSelectionTracker from "./src/classes/selectionMechanisms/textSelectionTracker.js"
 import ContentSizeChangesListener from "./src/classes/sizesUpdateMechanisms/contentSizeChangesListener.js"
 import SizeChangesHandler from "./src/classes/sizesUpdateMechanisms/sizeChangesHandler.js"
+import EditorHandler from "./src/classes/editorHandler.js"
+
 const screen = document.getElementById('screen')
+
 const sizeChangesHandler = new SizeChangesHandler()
-const appRunner = new AppRunner(sizeChangesHandler)
-const textSelectionTracker = new TextSelectionTracker()
-sizeChangesHandler.addListener(textSelectionTracker)
-sizeChangesHandler.addListener(new ContentSizeChangesListener(sizeChangesHandler.contentElement))
+const editorHandler = new EditorHandler()
+const appRunner = new AppRunner(sizeChangesHandler, editorHandler)
+sizeChangesHandler.addListener(new ContentSizeChangesListener(sizeChangesHandler.mainContainer))
+sizeChangesHandler.addListener(editorHandler)
 
 screen.addEventListener('runFile', (event) => {
     const fileName = event.detail.fileName
     appRunner.runFile(fileName)
 })
-

@@ -1,16 +1,19 @@
 import FileRunner from "./fileRunner.js"
 import ContentPicker from "./contentPicker.js"
 import SizeChangesHandler from "./sizesUpdateMechanisms/sizeChangesHandler.js"
+import EditorHandler from "./editorHandler.js"
 
 export default class AppRunner {
 
     /**
      * @param {SizeChangesHandler} sizeChangesHandler 
+     * @param {EditorHandler} editorHandler 
      */
-    constructor(sizeChangesHandler) {
+    constructor(sizeChangesHandler, editorHandler) {
         this.fileRunners = new Map()
         this.sizeChangesHandler = sizeChangesHandler
         this.contentPicker = new ContentPicker()
+        this.editorHandler = editorHandler
     }
 
     /**
@@ -27,6 +30,7 @@ export default class AppRunner {
             this.fileRunners.set(fileName, fileRunner)
         }
         fileRunner.loadLines()
+        this.editorHandler.addFile(fileName, fileRunner)
     }
 
 }

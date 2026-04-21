@@ -2,13 +2,14 @@ export default class SizeChangesHandler {
     constructor() {
         this.listeners = []
         this.mainContainer = document.getElementById('container')
+        this.menuContainer = document.getElementById('menu')
         this.screen = document.getElementById('screen')
         this.sidebar = document.getElementById('sidebar')
         this.contentElement = document.getElementById('content')
         this.resizeDragger = document.getElementById('resize-dragger')
         this.navigationElement = document.getElementById('navigation')
         this.loaderElement = document.getElementById('loader')
-        this.defaultLeftOffsetForContent = 0
+        this.defaultLeftOffsetForContent = this.menuContainer.offsetWidth
         this.leftOffsetForContent = this.defaultLeftOffsetForContent
         this.defaultWidthForContent = this.screen.offsetWidth - this.defaultLeftOffsetForContent
         this.widthForContent = this.defaultWidthForContent
@@ -16,7 +17,6 @@ export default class SizeChangesHandler {
         this.contentOffsetTop = this.navigationElement.offsetHeight
         this.editorHeight = this.mainContainer.offsetHeight - this.contentOffsetTop
         this.sidebar.addEventListener('visibilityChanged', () => {
-            console.log('here')
             this._updateWithWidth(this.sidebar.offsetWidth)
             this._notifyListeners()
         })
@@ -33,7 +33,6 @@ export default class SizeChangesHandler {
                     this.sidebar.className = 'sidebar'
                     this.sidebar.style = `width: ${width}px;`
                 }
-                console.log(width)
                 this._updateWithWidth(width)
             }
         })
@@ -55,13 +54,12 @@ export default class SizeChangesHandler {
     _updateWithWidth(width) {
         if (this.sidebar.className == "hidden") {
             this.leftOffsetForContent = this.defaultLeftOffsetForContent
-            this.widthForContent = this.defaultWidthForContent
+            this.widthForContent = this.screen.offsetWidth - this.defaultLeftOffsetForContent
         }
         else {
-            this.leftOffsetForContent = width
-            this.widthForContent = this.defaultWidthForContent - width
+            this.leftOffsetForContent = width + this.defaultLeftOffsetForContent
+            this.widthForContent = this.screen.offsetWidth - this.leftOffsetForContent
         }
-        console.log(width, this.leftOffsetForContent)
         this._notifyListeners()
     }
 

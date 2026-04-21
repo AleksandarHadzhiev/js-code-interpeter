@@ -10,10 +10,10 @@ export default class SizeChangesHandler {
         this.navigationElement = document.getElementById('navigation')
         this.loaderElement = document.getElementById('loader')
         this.defaultLeftOffsetForContent = this.menuContainer.offsetWidth
+        this.totalWidthOfScreen = this.screen.offsetWidth
         this.leftOffsetForContent = this.defaultLeftOffsetForContent
-        this.defaultWidthForContent = this.screen.offsetWidth - this.defaultLeftOffsetForContent
+        this.defaultWidthForContent = this.totalWidthOfScreen - this.defaultLeftOffsetForContent
         this.widthForContent = this.defaultWidthForContent
-        this.totalWidthOfScreen = this.mainContainer.offsetWidth
         this.contentOffsetTop = this.navigationElement.offsetHeight
         this.editorHeight = this.mainContainer.offsetHeight - this.contentOffsetTop
         this.sidebar.addEventListener('visibilityChanged', () => {
@@ -41,10 +41,16 @@ export default class SizeChangesHandler {
             this.isResizing = false
         })
 
-        window.addEventListener('resize', () => {
-            this.totalWidthOfScreen = this.mainContainer.offsetWidth
+        window.addEventListener('resize', (event) => {
+            if (this.screen.offsetWidth - this.leftOffsetForContent > 250) {
+                const totalWidth = this.totalWidthOfScreen
+                const percentage = (this.leftOffsetForContent / totalWidth) * 100
+                this.totalWidthOfScreen = this.screen.offsetWidth
+                const offset = this.totalWidthOfScreen * (percentage / 100)
+                this.widthForContent = this.totalWidthOfScreen - offset
+                this._notifyListeners()
+            }
         })
-
     }
 
     addListener(listener) {
@@ -66,6 +72,12 @@ export default class SizeChangesHandler {
     _notifyListeners() {
         this.listeners.forEach((listener) => {
             listener.updateLeftOffsetWithNewOffset(this.leftOffsetForContent, this.widthForContent)
+        })
+    }
+
+    _notifyForFullResize() {
+        this.listeners.forEach((listener) => {
+            listener.fullResize(this.totalWidthOfScreen, this.editorHeight)
         })
     }
 }

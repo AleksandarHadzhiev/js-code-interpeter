@@ -28,9 +28,9 @@ export default class AppRunner {
             const text = this.contentPicker.pickTextFromFileWithName(fileName)
             fileRunner = new FileRunner(text)
             this.fileRunners.set(fileName, fileRunner)
+            this.sizeChangesHandler.addListener(fileRunner.mousePositionDefiner)
         }
         fileRunner.loadLines()
         this.editorHandler.addFile(fileName, fileRunner)
     }
-
 }

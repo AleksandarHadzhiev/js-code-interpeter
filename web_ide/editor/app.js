@@ -37,7 +37,6 @@
 // const lineContentElement = document.getElementById('line-content')
 // const contentElement = document.getElementById('content')
 
-
 // const scrollbarVerticalHeight = scrollbarElementVertical.offsetHeight
 // const scrollbarVerticalTopOffset = navigationElement.offsetHeight
 // const barVerticalHeight = barVerticalElement.offsetHeight

@@ -42,13 +42,15 @@ export default class SizeChangesHandler {
         })
 
         window.addEventListener('resize', (event) => {
+            this.editorHeight = this.mainContainer.offsetHeight - this.contentOffsetTop
+            console.log(this.editorHeight)
             if (this.screen.offsetWidth - this.leftOffsetForContent > 250) {
                 const totalWidth = this.totalWidthOfScreen
                 const percentage = (this.leftOffsetForContent / totalWidth) * 100
                 this.totalWidthOfScreen = this.screen.offsetWidth
                 const offset = this.totalWidthOfScreen * (percentage / 100)
                 this.widthForContent = this.totalWidthOfScreen - offset
-                this._notifyListeners()
+                this._notifyForFullResize()
             }
         })
     }

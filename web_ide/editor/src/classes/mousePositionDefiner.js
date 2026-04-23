@@ -34,16 +34,13 @@ export default class MousePositionDefiner {
 
     /**
      * 
-     * @param {Number} leftOffset 
      * @param {Number} width 
      * @param {Number} height 
-     * @param {Number} topOffset 
      */
-    updateOnResize(leftOffset, width, height, topOffset) {
-        this.leftOffset = leftOffset
+    fullResize(width, height) {
         this.widthOfScreen = width
         this.height = height
-        this.topOffset = topOffset
+        this.totalWidthOfScreen = this.leftOffset + this.widthOfScreen
     }
 
     /**

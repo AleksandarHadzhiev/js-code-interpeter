@@ -34,6 +34,9 @@ export default class LinesLoader {
 
     updateMaxVisibleLinesOnScreen(newMaxVisibleLinesOnScreen) {
         this.maxVisibleLinesOnScreen = newMaxVisibleLinesOnScreen
+        this.lastVisibleLine = this.firstVisibleLine + this.maxVisibleLinesOnScreen
+        this._reloadLinesForResize()
+        this.previousLastVisibleLine = this.lastVisibleLine
     }
 
     /**

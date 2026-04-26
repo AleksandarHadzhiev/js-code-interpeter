@@ -7,9 +7,10 @@ export default class CodePanel {
      * @param {Number} menuWidth 
      * @param {Number} widthOfScreen 
      */
-    constructor(menu, menuWidth, widthOfScreen) {
-        this.codePanelResizer = new CodePanelResizer(menu, menuWidth, widthOfScreen)
-        this.codeLoader = new CodeLoader()
+    constructor(menu, menuWidth, widthOfScreen, screen) {
+        this.screen = document.getElementById('screen')
+        this.codePanelResizer = new CodePanelResizer(menu, menuWidth, widthOfScreen, screen)
+        this.codeLoader = new CodeLoader(this.screen)
         // for now two certain parts of the code panel are the code loader and the code panel resizer
     }
 }

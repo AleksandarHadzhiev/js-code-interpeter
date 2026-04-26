@@ -1,14 +1,14 @@
-import CodePanelHandler from "./codePanelHandler.js";
-import SidebarHandler from "./sidebarHandler.js";
+import CodePanelResizer from "./codePanelResizer.js";
+import SidebarResizer from "./sidebarResizer.js";
 
 export default class IntegratedDevelopmentEnvironment {
     /**
      * 
-     * @param {SidebarHandler} sidebarHandler 
-     * @param {CodePanelHandler} codePanelHandler 
+     * @param {SidebarResizer} sidebarResizer 
+     * @param {CodePanelResizer} codePanelResizer
      */
-    constructor(sidebarHandler, codePanelHandler) {
-        this.sidebarHandler = sidebarHandler
-        this.codePanelHandler = codePanelHandler
+    constructor(sidebarResizer, codePanelResizer) {
+        this.sidebarResizer = sidebarResizer
+        this.codePanelResizer = codePanelResizer
     }
 }

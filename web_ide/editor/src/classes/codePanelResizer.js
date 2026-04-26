@@ -1,15 +1,17 @@
 export default class CodePanelResizer {
-    constructor() {
+    /**
+     * 
+     * @param {HTMLElement} menuElement 
+     * @param {Number} defaultMenuWidth 
+     * @param {Number} screenWidth 
+     */
+    constructor(menuElement, defaultMenuWidth, screenWidth) {
         this.content = document.getElementById('content')
-        this.screen = document.getElementById('screen')
-        this.menu = document.getElementById('menu')
-        this.defaultMenuWidth = this.menu.offsetWidth
-        this.screenWidth = this.screen.offsetWidth
-        this.defaultWidth = this.screenWidth - this.defaultMenuWidth
+        this.defaultWidth = screenWidth - defaultMenuWidth
         this.width = this.defaultWidth
-        this.menu.addEventListener('resized', (event) => {
-            const leftOffset = event.detail.sidebarWidth - this.defaultMenuWidth
-            this.width = this.screenWidth - leftOffset
+        menuElement.addEventListener('resizing', (event) => {
+            const leftOffset = event.detail.sidebarWidth - defaultMenuWidth
+            this.width = screenWidth - leftOffset
             this.content.style = `
                 left: ${leftOffset}px;
                 width: ${this.width}px;

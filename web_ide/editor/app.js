@@ -587,14 +587,14 @@ function checkIfThereIsMarker() {
 
 import IntegratedDevelopmentEnvironment from "./src/classes/ide.js"
 import SidebarResizer from "./src/classes/sidebarResizer.js"
-import CodePanelResizer from "./src/classes/codePanelResizer.js"
 import ProjectLoader from "./src/classes/projectLoader.js"
+import Editor from "./src/classes/editor.js"
 
 const sidebarResizer = new SidebarResizer()
-const codePanelResizer = new CodePanelResizer()
 const projectLoader = new ProjectLoader("default")
+const editor = new Editor()
 projectLoader.load()
-const ide = new IntegratedDevelopmentEnvironment(sidebarResizer, codePanelResizer)
+const ide = new IntegratedDevelopmentEnvironment(sidebarResizer, editor)
 // class Editor (resizer) => textSelection(resizer)
 // i have the left offset which is equal to the menu.width + sidebar.width
 // default value for it being the menu.width (constant = 75 for now from css)

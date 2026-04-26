@@ -1,21 +1,15 @@
 import { WindowSection, MousePosition } from "./selectionMechanisms/enums.js"
 
 export default class MousePositionDefiner {
-    /**
-     * @param {Number} leftOffset
-     * @param {Number} widthOfScreen  
-     * @param {Number} height 
-     * @param {Number} topOffset
-     * @param {Number} maxLines
-     */
-    constructor(leftOffset, widthOfScreen, height, topOffset, maxLines) {
+    constructor() {
+        this.screen = document.getElementById('screen')
         this.navigationHeight = document.getElementById('navigation').offsetHeight
         this.lineNumerationWidth = 75
-        this.leftOffset = leftOffset
-        this.widthOfScreen = widthOfScreen
-        this.height = height
-        this.lastTextLine = maxLines
-        this.topOffset = topOffset
+        this.leftOffset = 150
+        this.widthOfScreen = this.screen.offsetWidth
+        this.height = this.screen.offsetHeight
+        this.lastTextLine = 2000
+        this.topOffset = this.navigationHeight
         this.windowSectionScrolling = null
         this.mousePosition = null
         this.totalWidthOfScreen = this.leftOffset + this.widthOfScreen
@@ -27,8 +21,8 @@ export default class MousePositionDefiner {
      * @param {Number} width 
      */
     updateLeftOffsetWithNewOffset(newLeftOffsetForContent, width) {
-        this.leftOffset = newLeftOffsetForContent + 75
-        this.widthOfScreen = width - 75
+        this.leftOffset = newLeftOffsetForContent + this.lineNumerationWidth
+        this.widthOfScreen = width - this.lineNumerationWidth
         this.totalWidthOfScreen = this.leftOffset + this.widthOfScreen
     }
 

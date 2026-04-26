@@ -6,7 +6,10 @@ export default class SidebarResizer {
         this.defaultWidthForMenuScreen = this.menuContainer.offsetWidth
         this.widthForMenuScreen = this.defaultWidthForMenuScreen
         this.isResizing = false
-        this.sidebar.addEventListener('visibilityChanged', () => { this._updateWithWidth(this.sidebar.offsetWidth) })
+        this.sidebar.addEventListener('visibilityChanged', () => {
+            this._updateWithWidth(this.sidebar.offsetWidth)
+            this.menuContainer.dispatchEvent(new CustomEvent('resized', { 'detail': { 'sidebarWidth': this.widthForMenuScreen } }))
+        })
         this.resizeDragger.addEventListener('mousedown', () => { this.isResizing = true })
         window.addEventListener('mousemove', (event) => {
             if (this.isResizing) {
@@ -18,14 +21,17 @@ export default class SidebarResizer {
                     this.sidebar.style = `width: ${width}px;`
                 }
                 this._updateWithWidth(width)
+                this.menuContainer.dispatchEvent(new CustomEvent('resizing', { 'detail': { 'sidebarWidth': this.widthForMenuScreen } }))
             }
         })
-        window.addEventListener('mouseup', () => { this.isResizing = false })
+        window.addEventListener('mouseup', () => {
+            this.isResizing = false
+            this.menuContainer.dispatchEvent(new CustomEvent('resized', { 'detail': { 'sidebarWidth': this.widthForMenuScreen } }))
+        })
     }
 
     _updateWithWidth(width) {
         if (this.sidebar.className == "hidden") { this.widthForMenuScreen = this.defaultWidthForMenuScreen }
         else { this.widthForMenuScreen = width + this.defaultWidthForMenuScreen }
-        this.menuContainer.dispatchEvent(new CustomEvent('resized', { 'detail': { 'sidebarWidth': this.widthForMenuScreen } }))
     }
 }

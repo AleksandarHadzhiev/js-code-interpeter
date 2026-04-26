@@ -1,12 +1,13 @@
 import CodePanelResizer from "./codePanelResizer.js";
 import MousePositionDefiner from "./mousePositionDefiner.js";
+import CodePanel from "./codePanel.js";
 export default class Editor {
     constructor() {
         this.menu = document.getElementById('menu')
         this.screen = document.getElementById('screen')
         this.defaultMenuWidth = this.menu.offsetWidth
         this.widthOfScreen = this.screen.offsetWidth
-        this.codePanelResizer = new CodePanelResizer(this.menu, this.defaultMenuWidth, this.widthOfScreen)
+        this.codePanel = new CodePanel(this.menu, this.defaultMenuWidth, this.widthOfScreen)
         this.mousePositionDefiner = new MousePositionDefiner()
         this.menu.addEventListener('resized', (event) => {
             const leftOffset = event.detail.sidebarWidth - this.defaultMenuWidth + 75

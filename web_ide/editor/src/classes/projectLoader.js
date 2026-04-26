@@ -34,7 +34,7 @@ export default class ProjectLoader {
         file.id = fileName
         file.addEventListener('click', () => {
             this.screen.dispatchEvent(new CustomEvent(
-                "runFile", {
+                "loadFile", {
                 "detail": { 'fileName': fileName }
             }
             ))

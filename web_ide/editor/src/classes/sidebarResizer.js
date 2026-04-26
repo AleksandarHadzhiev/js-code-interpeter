@@ -21,7 +21,6 @@ export default class SidebarResizer {
                     this.sidebar.style = `width: ${width}px;`
                 }
                 this._updateWithWidth(width)
-                this.menuContainer.dispatchEvent(new CustomEvent('resizing', { 'detail': { 'sidebarWidth': this.widthForMenuScreen } }))
             }
         })
         window.addEventListener('mouseup', () => {
@@ -33,5 +32,6 @@ export default class SidebarResizer {
     _updateWithWidth(width) {
         if (this.sidebar.className == "hidden") { this.widthForMenuScreen = this.defaultWidthForMenuScreen }
         else { this.widthForMenuScreen = width + this.defaultWidthForMenuScreen }
+        this.menuContainer.dispatchEvent(new CustomEvent('resizing', { 'detail': { 'sidebarWidth': this.widthForMenuScreen } }))
     }
 }

@@ -69,12 +69,9 @@ class CustomMenuContainer extends HTMLElement {
     _buildContentOfSidebar() {
         const sidebarContent = document.createElement('div')
         sidebarContent.className = 'sidebar-content'
+        sidebarContent.setAttribute('id', 'sidebar-content')
         const header = this._buildHeaderOfExplorer()
-        const indexJs = this._buildFileIndexJs()
-        const appJS = this._buildFileAppJs()
         sidebarContent.appendChild(header)
-        sidebarContent.appendChild(indexJs)
-        sidebarContent.appendChild(appJS)
         return sidebarContent
     }
 
@@ -92,52 +89,6 @@ class CustomMenuContainer extends HTMLElement {
         title.id = 'sidebar-title'
         this.sidebarTitle = title
         return title
-    }
-
-    _buildFileIndexJs() {
-        const file = document.createElement('div')
-        file.className = 'file'
-        file.id = 'index-js'
-        file.addEventListener('click', () => {
-            this.screen.dispatchEvent(new CustomEvent(
-                "runFile", {
-                "detail": { 'fileName': 'index.js' }
-            }
-            ))
-        })
-        const fileName = this._buildFileNameInfexJS()
-        file.appendChild(fileName)
-        return file
-    }
-
-    _buildFileNameInfexJS() {
-        const fileName = document.createElement('p')
-        fileName.className = 'file-name'
-        fileName.textContent = 'index.js'
-        return fileName
-    }
-
-    _buildFileAppJs() {
-        const file = document.createElement('div')
-        file.className = 'file'
-        file.id = 'app-js'
-        file.addEventListener('click', () => {
-            this.screen.dispatchEvent(new CustomEvent(
-                "runFile", {
-                "detail": { 'fileName': 'app.js' }
-            }
-            ))
-        })
-        const fileName = this._buildFileNameAppJS()
-        file.appendChild(fileName)
-        return file
-    }
-
-    _buildFileNameAppJS() {
-        const fileName = document.createElement('p')
-        fileName.className = 'file-name'
-        fileName.textContent = 'app.js'
-        return fileName
     }
 
     _buildResizeDragger() {

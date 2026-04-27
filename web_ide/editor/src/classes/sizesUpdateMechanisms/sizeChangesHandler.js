@@ -1,25 +1,21 @@
-import TextSelection from "../selectionMechanisms/textSelection.js"
-import ContentSizeChangesListener from "./contentSizeChangesListener.js"
-
 export default class SizeChangesHandler {
-    /**
-     * 
-     * @param {TextSelection} textSelection 
-     */
-    constructor(textSelection) {
-        this.listeners = [textSelection]
+    constructor() {
+        this.listeners = []
         this.mainContainer = document.getElementById('container')
-        this.screen = document.getElementById('screen')
-        this._addListeners()
-
         this.menuContainer = document.getElementById('menu')
+        this.screen = document.getElementById('screen')
         this.sidebar = document.getElementById('sidebar')
+        this.contentElement = document.getElementById('content')
         this.resizeDragger = document.getElementById('resize-dragger')
-
+        this.navigationElement = document.getElementById('navigation')
+        this.loaderElement = document.getElementById('loader')
         this.defaultLeftOffsetForContent = this.menuContainer.offsetWidth
+        this.totalWidthOfScreen = this.screen.offsetWidth
         this.leftOffsetForContent = this.defaultLeftOffsetForContent
-        this.defaultWidthForContent = this.screen.offsetWidth - this.defaultLeftOffsetForContent
+        this.defaultWidthForContent = this.totalWidthOfScreen - this.defaultLeftOffsetForContent
         this.widthForContent = this.defaultWidthForContent
+        this.contentOffsetTop = this.navigationElement.offsetHeight
+        this.editorHeight = this.mainContainer.offsetHeight - this.contentOffsetTop
         this.sidebar.addEventListener('visibilityChanged', () => {
             this._updateWithWidth(this.sidebar.offsetWidth)
             this._notifyListeners()
@@ -28,7 +24,6 @@ export default class SizeChangesHandler {
         this.resizeDragger.addEventListener('mousedown', () => {
             this.isResizing = true
         })
-
         window.addEventListener('mousemove', (event) => {
             if (this.isResizing) {
                 const width = event.pageX - this.defaultLeftOffsetForContent
@@ -38,7 +33,6 @@ export default class SizeChangesHandler {
                     this.sidebar.className = 'sidebar'
                     this.sidebar.style = `width: ${width}px;`
                 }
-                console.log(width)
                 this._updateWithWidth(width)
             }
         })
@@ -46,23 +40,33 @@ export default class SizeChangesHandler {
         window.addEventListener('mouseup', () => {
             this.isResizing = false
         })
+
+        window.addEventListener('resize', (event) => {
+            this.editorHeight = this.mainContainer.offsetHeight - this.contentOffsetTop
+            console.log(this.editorHeight)
+            if (this.screen.offsetWidth - this.leftOffsetForContent > 250) {
+                const totalWidth = this.totalWidthOfScreen
+                const percentage = (this.leftOffsetForContent / totalWidth) * 100
+                this.totalWidthOfScreen = this.screen.offsetWidth
+                const offset = this.totalWidthOfScreen * (percentage / 100)
+                this.widthForContent = this.totalWidthOfScreen - offset
+                this._notifyForFullResize()
+            }
+        })
     }
 
-    _addListeners() {
-        const contentSizeChangesListener = new ContentSizeChangesListener(this.mainContainer)
-        // const scrollbarHorizontalSizeChangesListener = new ScrollbarHorizontalSizeChangesListener(this.scrollbarElementHorizontal)
-        this.listeners.push(contentSizeChangesListener)
-        // this.listeners.push(scrollbarHorizontalSizeChangesListener)
+    addListener(listener) {
+        this.listeners.push(listener)
     }
 
     _updateWithWidth(width) {
         if (this.sidebar.className == "hidden") {
             this.leftOffsetForContent = this.defaultLeftOffsetForContent
-            this.widthForContent = this.defaultWidthForContent
+            this.widthForContent = this.screen.offsetWidth - this.defaultLeftOffsetForContent
         }
         else {
-            this.leftOffsetForContent = this.defaultLeftOffsetForContent + width
-            this.widthForContent = this.defaultWidthForContent - width
+            this.leftOffsetForContent = width + this.defaultLeftOffsetForContent
+            this.widthForContent = this.screen.offsetWidth - this.leftOffsetForContent
         }
         this._notifyListeners()
     }
@@ -70,6 +74,12 @@ export default class SizeChangesHandler {
     _notifyListeners() {
         this.listeners.forEach((listener) => {
             listener.updateLeftOffsetWithNewOffset(this.leftOffsetForContent, this.widthForContent)
+        })
+    }
+
+    _notifyForFullResize() {
+        this.listeners.forEach((listener) => {
+            listener.fullResize(this.totalWidthOfScreen, this.editorHeight)
         })
     }
 }

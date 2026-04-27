@@ -5,35 +5,38 @@ import LineSelector from "../selectionMechanisms/lineSelector.js"
 export default class LinesLoader {
     /**
      * @param {Number} maxVisibleLinesOnScreen 
-     * @param {HTMLElement} lineNumerationElement  
-     * @param {HTMLElement} lineContentElement  
-     * @param {HTMLElement} contentElement  
-     * @param {Array} lines  
      * @param {Number} minLineHeight  
-     * @param {String} textToWorkWith 
     */
-    constructor(maxVisibleLinesOnScreen, lineNumerationElement, lineContentElement, contentElement, lines, minLineHeight, textToWorkWith) {
+    constructor(maxVisibleLinesOnScreen, minLineHeight) {
+        this.lineNumerationElement = document.getElementById('line-numeration')
+        this.lineContentElement = document.getElementById('line-content')
+        this.contentElement = document.getElementById('content')
         this.firstVisibleLine = 0
         this.lastVisibleLine = this.firstVisibleLine + maxVisibleLinesOnScreen
         this.maxVisibleLinesOnScreen = maxVisibleLinesOnScreen
         this.previousLastVisibleLine = this.lastVisibleLine
-        this.lineNumerationElement = lineNumerationElement
-        this.lineContentElement = lineContentElement
         this.lineHeightInPixels = minLineHeight
-        this.maxLines = lines.length
-        this.contentElement = contentElement
-        this.textToWorkWith = textToWorkWith
-        this.linesToWorkWith = textToWorkWith.split('\n')
+        this.maxLines = 0
+        this.textToWorkWith = ""
+        this.linesToWorkWith = ""
     }
 
-    updateFullContent(newTextToWorkWith) {
-        this.textToWorkWith = newTextToWorkWith
-        this.linesToWorkWith = newTextToWorkWith.split('\n')
+    /**
+     * 
+     * @param {String} text 
+     */
+    loadContentForText(text) {
+        this.textToWorkWith = text
+        this.linesToWorkWith = text.split('\n')
+        this.maxLines = this.linesToWorkWith.length
         this._buildLines()
     }
 
     updateMaxVisibleLinesOnScreen(newMaxVisibleLinesOnScreen) {
         this.maxVisibleLinesOnScreen = newMaxVisibleLinesOnScreen
+        this.lastVisibleLine = this.firstVisibleLine + this.maxVisibleLinesOnScreen
+        this._reloadLinesForResize()
+        this.previousLastVisibleLine = this.lastVisibleLine
     }
 
     /**

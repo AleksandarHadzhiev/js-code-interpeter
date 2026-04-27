@@ -16,8 +16,7 @@
 // import WriterHandler from "./src/classes/writerHandler.js"
 // import CodeChangesHistoryHandler from "./src/classes/codeChangesHistoryHandler.js"
 // import SizeChangesHandler from "./src/classes/sizesUpdateMechanisms/sizeChangesHandler.js"
-import ContentPicker from "./src/classes/contentPicker.js"
-import AppRunner from "./src/classes/appRunner.js"
+// import ContentPicker from "./src/classes/contentPicker.js"
 
 // import CaretBuilder from "./src/classes/selectionMechanisms/caretBuilder.js"
 // const mainContainer = document.getElementById('container')
@@ -39,12 +38,12 @@ import AppRunner from "./src/classes/appRunner.js"
 // const lineContentElement = document.getElementById('line-content')
 // const contentElement = document.getElementById('content')
 
-
 // const scrollbarVerticalHeight = scrollbarElementVertical.offsetHeight
 // const scrollbarVerticalTopOffset = navigationElement.offsetHeight
 // const barVerticalHeight = barVerticalElement.offsetHeight
 
-const contentPicker = new ContentPicker()
+// const contentPicker = new ContentPicker()
+
 // let text = contentPicker.pickTextFromFileWithName('app.js')
 // const listOfPossibleLinesToDisplay = String(text).split('\n')
 // console.log(text)
@@ -175,8 +174,8 @@ const contentPicker = new ContentPicker()
 // })
 
 // /**
-//  * 
-//  * @param {MouseEvent} event 
+//  *
+//  * @param {MouseEvent} event
 //  */
 // function verticalScrolling(event) {
 //     barVerticalHandler.scrollWithOffset(event.clientY - scrollbarVerticalTopOffset)
@@ -195,8 +194,8 @@ const contentPicker = new ContentPicker()
 // })
 
 // /**
-//  * 
-//  * @param {MouseEvent} event 
+//  *
+//  * @param {MouseEvent} event
 //  */
 // function horizontalScrolling(event) {
 //     barHorizontalHandler.scrollWithOffset(event.clientX - scrollbarHorizontalLeftOffset)
@@ -211,7 +210,6 @@ const contentPicker = new ContentPicker()
 //         isWriting = true
 //     else isWriting = false
 // })
-
 
 // window.addEventListener('mouseup', (event) => {
 //     barVerticalIsSelected = false
@@ -252,8 +250,8 @@ const contentPicker = new ContentPicker()
 // })
 
 // /**
-//  * 
-//  * @param {Number} lineId 
+//  *
+//  * @param {Number} lineId
 //  */
 // function buildStartingPoint(lineId) {
 //     const lineElement = document.getElementById(String(lineId))
@@ -288,8 +286,8 @@ const contentPicker = new ContentPicker()
 // })
 
 // /**
-//  * 
-//  * @param {MouseEvent} event 
+//  *
+//  * @param {MouseEvent} event
 //  */
 // function verticalScrollingOnWindowMouseMove(event) {
 //     const widthOfScreen = mainContainer.offsetWidth
@@ -306,8 +304,8 @@ const contentPicker = new ContentPicker()
 // }
 
 // /**
-//  * 
-//  * @param {MouseEvent} event 
+//  *
+//  * @param {MouseEvent} event
 //  */
 // function horizontalScrollingOnWindowMouseMove(event) {
 //     const heightOfScreen = mainContainer.offsetHeight
@@ -338,9 +336,9 @@ const contentPicker = new ContentPicker()
 // }
 
 // /**
-//  * 
-//  * @param {Range} range 
-//  * @param {Event} event 
+//  *
+//  * @param {Range} range
+//  * @param {Event} event
 //  */
 // function selectText(range, event) {
 //     textSelection.setEndingRange(range)
@@ -451,8 +449,8 @@ const contentPicker = new ContentPicker()
 // })
 
 // /**
-//  * 
-//  * @param {MouseEvent} event 
+//  *
+//  * @param {MouseEvent} event
 //  */
 // function handleCaretMovement(event) {
 //     const caret = document.getElementById('caret')
@@ -587,14 +585,9 @@ const contentPicker = new ContentPicker()
 //     return null
 // }
 
-const startApp = document.getElementById('start-app')
-const mainContainer = document.getElementById('container')
-startApp.addEventListener('click', () => {
-    const text = contentPicker.pickTextFromFileWithName('app.js')
-    const emptyScreen = document.getElementById('empty-screen')
-    const appRunner = new AppRunner(text)
-    mainContainer.className = 'editor'
-    emptyScreen.className = 'hidden'
+import IntegratedDevelopmentEnvironment from "./src/classes/ide.js"
+import ProjectLoader from "./src/classes/projectLoader.js"
 
-    appRunner.loadLines()
-})
+const projectLoader = new ProjectLoader("default")
+projectLoader.load()
+const ide = new IntegratedDevelopmentEnvironment()

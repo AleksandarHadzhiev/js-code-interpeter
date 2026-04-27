@@ -311,6 +311,7 @@ html::selection {
 
 .hidden {
     display: none;
+    width: 0px;
 }
 
 #caret-placer {
@@ -484,7 +485,7 @@ html::selection {
 .sidebar {
     position: absolute;
     left: var(--width-for-menu);
-    width: 250px;
+    width: 150px;
     height: 100%;
     background-color: rgb(47, 47, 47);
     z-index: 1;
@@ -492,7 +493,7 @@ html::selection {
 }
 
 .sidebar-content {
-    width: 95%;
+    width: 100%;
     display: flex;
     flex-direction: column;
 }
@@ -508,15 +509,27 @@ html::selection {
 
 .file {
     width: 100%;
-    height: 35px;
+    height: 30px;
     display: flex;
     flex-direction: row;
+    justify-content: start;
     align-items: center;
-    justify-content: space-between;
 }
 
 .file-name {
+    padding-left: 10px;
     font-size: 16px;
+    width: fit-content;
+    height: fit-content;
+    color: rgb(235, 235, 235);
+}
+
+.file:hover {
+    background-color: rgb(103, 103, 103);
+    width: 100%;
+}
+
+#sidebar-title {
     width: 100%;
     height: 100%;
     color: rgb(235, 235, 235);
@@ -524,21 +537,9 @@ html::selection {
     padding-top: 7.5px;
 }
 
-.file:hover {
-    background-color: rgb(103, 103, 103);
-    width: calc(100% + 10px);
-    height: 25px;
-}
-
-#sidebar-title {
-    width: 80%;
-    height: 100%;
-    color: rgb(235, 235, 235);
-    padding-left: 25px;
-    padding-top: 7.5px;
-}
-
 #resize-dragger {
+    position: absolute;
+    right: 0%;
     width: 10px;
     height: 100%;
 }

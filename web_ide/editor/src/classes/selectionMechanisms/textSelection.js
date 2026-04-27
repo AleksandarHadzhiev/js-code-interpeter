@@ -36,6 +36,7 @@ export default class TextSelection {
         this.selectedText = ""
         this.textFetcher = new TextFetcher(this.highlighter, this.contentElement)
     }
+
     /**
      * 
      * @param {Number} leftOffsetForContent 
@@ -43,7 +44,6 @@ export default class TextSelection {
      */
     updateLeftOffsetWithNewOffset(leftOffsetForContent, widthForContent) {
         this.contentElementOffsetLeft = leftOffsetForContent + this.lineNumerationScrollWidth
-
     }
 
     /**

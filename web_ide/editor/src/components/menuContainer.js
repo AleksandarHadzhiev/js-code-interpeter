@@ -1,6 +1,7 @@
 class CustomMenuContainer extends HTMLElement {
     constructor() {
         super()
+        this.screen = document.getElementById('screen')
         this.elements = []
         this.sidebarTitle = null
         const explorer = this._buildExplorer()
@@ -14,11 +15,6 @@ class CustomMenuContainer extends HTMLElement {
         explorer.setAttribute('id', 'explorer')
         const icon = this._buildExplorerIcon()
         explorer.appendChild(icon)
-        explorer.addEventListener('click', () => {
-            explorer.classList.add('selected')
-            this._selectElement(explorer.id)
-            this._changeVisibilityOfSidebar(String(explorer.id).toUpperCase())
-        })
         this.elements.push(explorer)
         return explorer
     }
@@ -29,29 +25,6 @@ class CustomMenuContainer extends HTMLElement {
         icon.src = "./icons/explorer.png"
         icon.alt = 'Files explorer'
         return icon
-    }
-
-    /**
-     * @param {String} idOfClickedElement 
-     */
-    _selectElement(idOfClickedElement) {
-        this.elements.forEach((element) => {
-            if (element.classList.contains("selected") && element.id != idOfClickedElement) {
-                element.classList.remove('selected')
-            }
-        })
-    }
-
-    /**
-     * 
-     * @param {String} nameOfMenuOption 
-     */
-    _changeVisibilityOfSidebar(nameOfMenuOption) {
-        if (this.sidebar.className == "hidden")
-            this.sidebar.className = "sidebar"
-        else this.sidebar.className = "hidden"
-        this.sidebar.dispatchEvent(new Event('visibilityChanged'))
-        this.sidebarTitle = nameOfMenuOption
     }
 
     _buildSidebar() {
@@ -68,10 +41,9 @@ class CustomMenuContainer extends HTMLElement {
     _buildContentOfSidebar() {
         const sidebarContent = document.createElement('div')
         sidebarContent.className = 'sidebar-content'
+        sidebarContent.setAttribute('id', 'sidebar-content')
         const header = this._buildHeaderOfExplorer()
-        const file = this._buildFile()
         sidebarContent.appendChild(header)
-        sidebarContent.appendChild(file)
         return sidebarContent
     }
 
@@ -89,22 +61,6 @@ class CustomMenuContainer extends HTMLElement {
         title.id = 'sidebar-title'
         this.sidebarTitle = title
         return title
-    }
-
-    _buildFile() {
-        const file = document.createElement('div')
-        file.className = 'file'
-        file.id = 'index-js'
-        const fileName = this._buildFileName()
-        file.appendChild(fileName)
-        return file
-    }
-
-    _buildFileName() {
-        const fileName = document.createElement('p')
-        fileName.className = 'file-name'
-        fileName.textContent = 'index.js'
-        return fileName
     }
 
     _buildResizeDragger() {

@@ -15,11 +15,6 @@ class CustomMenuContainer extends HTMLElement {
         explorer.setAttribute('id', 'explorer')
         const icon = this._buildExplorerIcon()
         explorer.appendChild(icon)
-        explorer.addEventListener('click', () => {
-            explorer.classList.add('selected')
-            this._selectElement(explorer.id)
-            this._changeVisibilityOfSidebar(String(explorer.id).toUpperCase())
-        })
         this.elements.push(explorer)
         return explorer
     }
@@ -30,29 +25,6 @@ class CustomMenuContainer extends HTMLElement {
         icon.src = "./icons/explorer.png"
         icon.alt = 'Files explorer'
         return icon
-    }
-
-    /**
-     * @param {String} idOfClickedElement 
-     */
-    _selectElement(idOfClickedElement) {
-        this.elements.forEach((element) => {
-            if (element.classList.contains("selected") && element.id != idOfClickedElement) {
-                element.classList.remove('selected')
-            }
-        })
-    }
-
-    /**
-     * 
-     * @param {String} nameOfMenuOption 
-     */
-    _changeVisibilityOfSidebar(nameOfMenuOption) {
-        if (this.sidebar.className == "hidden")
-            this.sidebar.className = "sidebar"
-        else this.sidebar.className = "hidden"
-        this.sidebar.dispatchEvent(new Event('visibilityChanged'))
-        this.sidebarTitle = nameOfMenuOption
     }
 
     _buildSidebar() {

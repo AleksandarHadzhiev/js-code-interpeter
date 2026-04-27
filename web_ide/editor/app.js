@@ -586,12 +586,8 @@
 // }
 
 import IntegratedDevelopmentEnvironment from "./src/classes/ide.js"
-import SidebarResizer from "./src/classes/sidebarResizer.js"
 import ProjectLoader from "./src/classes/projectLoader.js"
-import Editor from "./src/classes/editor.js"
 
-const sidebarResizer = new SidebarResizer()
 const projectLoader = new ProjectLoader("default")
-const editor = new Editor()
 projectLoader.load()
-const ide = new IntegratedDevelopmentEnvironment(sidebarResizer, editor)
+const ide = new IntegratedDevelopmentEnvironment()

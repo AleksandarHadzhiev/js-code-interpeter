@@ -311,6 +311,7 @@ html::selection {
 
 .hidden {
     display: none;
+    width: 0px;
 }
 
 #caret-placer {
@@ -484,7 +485,7 @@ html::selection {
 .sidebar {
     position: absolute;
     left: var(--width-for-menu);
-    width: 250px;
+    width: 150px;
     height: 100%;
     background-color: rgb(47, 47, 47);
     z-index: 1;

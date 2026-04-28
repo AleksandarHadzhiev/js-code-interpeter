@@ -9,7 +9,7 @@ export default class IntegratedDevelopmentEnvironment {
         this.screen = document.getElementById('screen')
         this.screenWidth = this.screen.offsetWidth
         this.defaultSidebarPanelWidth = this.menuElement.offsetWidth
-        this.resizeDraggerOberver = new ResizeDraggerObserver(this.defaultSidebarPanelWidth)
+        this.resizeDraggerOberver = new ResizeDraggerObserver()
         this.sidebar = new Sidebar(this.menuElement, this.defaultSidebarPanelWidth, this.resizeDraggerOberver)
         this.codePanel = new CodePanel(this.defaultSidebarPanelWidth, this.screenWidth, this.screen, this.resizeDraggerOberver)
     }

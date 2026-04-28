@@ -1,11 +1,6 @@
 export default class ResizeDraggerObserver {
-    /**
-     * 
-     * @param {Number} defaultSidebarWidth 
-     */
-    constructor(defaultSidebarWidth) {
+    constructor() {
         this.resizeListeners = []
-        this.defaultSidebarWidth = defaultSidebarWidth
     }
 
     addResizeListener(resizeListener) {

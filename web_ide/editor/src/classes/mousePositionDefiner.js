@@ -5,15 +5,15 @@ export default class MousePositionDefiner {
      * 
      * @param {Number} lineNumerationWidth 
      * @param {Number} menuWidth 
+     * @param {HTMLElement} screen 
      */
-    constructor(lineNumerationWidth, menuWidth) {
-        this.screen = document.getElementById('screen')
+    constructor(lineNumerationWidth, menuWidth, screen) {
         this.navigationHeight = document.getElementById('navigation').offsetHeight
         this.lineNumerationWidth = lineNumerationWidth
         this.defaultLeftOffset = this.lineNumerationWidth + menuWidth
         this.leftOffset = this.defaultLeftOffset
-        this.widthOfScreen = this.screen.offsetWidth
-        this.height = this.screen.offsetHeight
+        this.widthOfScreen = screen.offsetWidth
+        this.height = screen.offsetHeight
         this.lastTextLine = 2000
         this.topOffset = this.navigationHeight
         this.windowSectionScrolling = null
@@ -26,6 +26,17 @@ export default class MousePositionDefiner {
      */
     updateProportions(width) {
         this.leftOffset = width + this.defaultLeftOffset
+    }
+
+    /**
+     * 
+     * @param {Number} newWidth 
+     * @param {Number} newHeight 
+     */
+    updateScreenSizes(newWidth, newHeight) {
+        this.widthOfScreen = newWidth
+        this.height = newHeight
+        this.totalWidthOfScreen = this.leftOffset + this.widthOfScreen
     }
 
     /**

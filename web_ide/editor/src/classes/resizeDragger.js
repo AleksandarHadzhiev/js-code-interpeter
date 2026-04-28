@@ -1,14 +1,14 @@
-import ResizeObserver from "./resizeObserver.js"
+import ResizeDraggerObserver from "./resizeObserver.js"
 
 export default class ResizeDragger {
     /**
      * 
      * @param {Number} defaultWidthForMenuScreen 
-     * @param {ResizeObserver} resizeObserver 
+     * @param {ResizeDraggerObserver} resizeDraggerObserver 
      * @param {Number} minRequiredSidebarWidthForVisibility 
      */
-    constructor(defaultWidthForMenuScreen, resizeObserver, minRequiredSidebarWidthForVisibility) {
-        this.resizeObserver = resizeObserver
+    constructor(defaultWidthForMenuScreen, resizeDraggerObserver, minRequiredSidebarWidthForVisibility) {
+        this.resizeDraggerObserver = resizeDraggerObserver
         this.sidebar = document.getElementById('sidebar')
         this.resizeDragger = document.getElementById('resize-dragger')
         this.defaultWidthForMenuScreen = defaultWidthForMenuScreen
@@ -21,14 +21,11 @@ export default class ResizeDragger {
                 let width = event.pageX - this.defaultWidthForMenuScreen
                 if (width < minRequiredSidebarWidthForVisibility)
                     width = 0
-                this.resizeObserver.notifyResizeListeners(width)
+                this.resizeDraggerObserver.notifyResizeListeners(width)
             }
         })
         window.addEventListener('mouseup', () => {
             this.isResizing = false
         })
-    }
-
-    _updateWithWidth(width) {
     }
 }

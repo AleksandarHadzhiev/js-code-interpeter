@@ -1,4 +1,4 @@
-export default class ResizeObserver {
+export default class ResizeDraggerObserver {
     /**
      * 
      * @param {Number} defaultSidebarWidth 

@@ -15,10 +15,12 @@ export default class CodePanel {
      */
     constructor(menuWidth, widthOfScreen, screen, resizeDraggerObserver) {
         this.screenResizerObserver = new ScreenResizerObserver()
+        this.screenHeight = screen.offsetHeight
         this.screenResizer = new ScreenResizer(this.screenResizerObserver, screen)
         this.codePanelResizer = new CodePanelResizer(menuWidth, widthOfScreen, screen)
-        this.codeLoader = new CodeLoader(screen)
-        this.editor = new Editor(menuWidth, widthOfScreen, resizeDraggerObserver, screen, this.screenResizerObserver)
+        this.codeLoader = new CodeLoader(screen, this.screenHeight)
+        this.editor = new Editor(menuWidth, widthOfScreen, resizeDraggerObserver, screen, this.screenResizerObserver, this.screenHeight)
         resizeDraggerObserver.addResizeListener(this.codePanelResizer)
+        this.screenResizerObserver.addScreenResizeListener(this.codeLoader)
     }
 }

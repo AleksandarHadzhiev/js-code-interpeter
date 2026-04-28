@@ -12,11 +12,12 @@ export default class Editor { // is code panel part of editor or editor part of 
      * @param {ResizeDraggerObserver} resizeDraggerObserver 
      * @param {HTMLElement} screen 
      * @param {ScreenResizerObserver} screenResizerObserver
+     * @param {Number} screenHeight 
      */
-    constructor(defaultMenuWidth, widthOfScreen, resizeDraggerObserver, screen, screenResizerObserver) {
+    constructor(defaultMenuWidth, widthOfScreen, resizeDraggerObserver, screen, screenResizerObserver, screenHeight) {
         this.lineNumerationElement = document.getElementById('line-numeration')
         this.lineNumerationWidth = this.lineNumerationElement.offsetWidth
-        this.mousePositionDefiner = new MousePositionDefiner(this.lineNumerationWidth, defaultMenuWidth, screen)
+        this.mousePositionDefiner = new MousePositionDefiner(this.lineNumerationWidth, defaultMenuWidth, screen, screenHeight)
         resizeDraggerObserver.addResizeListener(this.mousePositionDefiner)
         screenResizerObserver.addScreenResizeListener(this.mousePositionDefiner)
         window.addEventListener('mousemove', (event) => {

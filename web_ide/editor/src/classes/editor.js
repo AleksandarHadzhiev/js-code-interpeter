@@ -1,21 +1,23 @@
 import CodePanelResizer from "./codePanelResizer.js";
 import MousePositionDefiner from "./mousePositionDefiner.js";
 import CodePanel from "./codePanel.js";
+import ResizeObserver from "./resizeObserver.js";
+
 export default class Editor { // is code panel part of editor or editor part of code panel??
-    constructor() {
-        this.menu = document.getElementById('menu')
-        this.screen = document.getElementById('screen')
-        this.defaultMenuWidth = this.menu.offsetWidth
-        this.widthOfScreen = this.screen.offsetWidth
-        this.codePanel = new CodePanel(this.menu, this.defaultMenuWidth, this.widthOfScreen, this.screen)
-        this.mousePositionDefiner = new MousePositionDefiner()
-        this.menu.addEventListener('resized', (event) => {
-            const leftOffset = event.detail.sidebarWidth - this.defaultMenuWidth + 75
-            const width = this.widthOfScreen - leftOffset
-            this.mousePositionDefiner.updateLeftOffsetWithNewOffset(leftOffset, width)
-        })
+    /**
+     * 
+     * @param {Number} defaultMenuWidth 
+     * @param {Number} widthOfScreen 
+     * @param {ResizeObserver} resizeObserver 
+     */
+    constructor(defaultMenuWidth, widthOfScreen, resizeObserver) {
+        this.lineNumerationElement = document.getElementById('line-numeration')
+        this.lineNumerationWidth = this.lineNumerationElement.offsetWidth
+        this.mousePositionDefiner = new MousePositionDefiner(this.lineNumerationWidth, defaultMenuWidth)
+        resizeObserver.addResizeListener(this.mousePositionDefiner)
         window.addEventListener('mousemove', (event) => {
-            this.mousePositionDefiner.defineMousePosition(event)
+            const mousePosition = this.mousePositionDefiner.defineMousePosition(event)
+            console.log(mousePosition)
         })
     }
 }

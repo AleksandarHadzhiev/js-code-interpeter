@@ -2,7 +2,6 @@ import SizeChangesHandler from "./sizeChangesHandler.js"
 
 export default class ContentSizeChangesListener {
     /**
-     * 
      * @param {SizeChangesHandler} sizeChangesHandler 
      */
     constructor(sizeChangesHandler) {

@@ -20,7 +20,6 @@ export default class CodePanelResizer {
                 left: ${this.leftOffset}px;
                 width: ${this.width}px;
             `
-            screen.dispatchEvent(new Event('resized'))
         })
     }
 

@@ -1,11 +1,17 @@
 import { WindowSection, MousePosition } from "./selectionMechanisms/enums.js"
 
 export default class MousePositionDefiner {
-    constructor() {
+    /**
+     * 
+     * @param {Number} lineNumerationWidth 
+     * @param {Number} menuWidth 
+     */
+    constructor(lineNumerationWidth, menuWidth) {
         this.screen = document.getElementById('screen')
         this.navigationHeight = document.getElementById('navigation').offsetHeight
-        this.lineNumerationWidth = 75
-        this.leftOffset = 150
+        this.lineNumerationWidth = lineNumerationWidth
+        this.defaultLeftOffset = this.lineNumerationWidth + menuWidth
+        this.leftOffset = this.defaultLeftOffset
         this.widthOfScreen = this.screen.offsetWidth
         this.height = this.screen.offsetHeight
         this.lastTextLine = 2000
@@ -14,16 +20,12 @@ export default class MousePositionDefiner {
         this.mousePosition = null
         this.totalWidthOfScreen = this.leftOffset + this.widthOfScreen
     }
-
     /**
      * 
-     * @param {Number} newLeftOffsetForContent 
      * @param {Number} width 
      */
-    updateLeftOffsetWithNewOffset(newLeftOffsetForContent, width) {
-        this.leftOffset = newLeftOffsetForContent + this.lineNumerationWidth
-        this.widthOfScreen = width - this.lineNumerationWidth
-        this.totalWidthOfScreen = this.leftOffset + this.widthOfScreen
+    updateProportions(width) {
+        this.leftOffset = width + this.defaultLeftOffset
     }
 
     /**
@@ -82,7 +84,7 @@ export default class MousePositionDefiner {
             this.windowSectionScrollig = WindowSection.LEFT
             return MousePosition.LEFT
         }
-        else if (mouseXPosition > this.totalWidthOfScreen) {
+        else if (mouseXPosition > this.widthOfScreen) {
             this.windowSectionScrollig = WindowSection.RIGHT
             return MousePosition.RIGHT
         }

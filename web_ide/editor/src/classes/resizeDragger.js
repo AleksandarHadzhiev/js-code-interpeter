@@ -15,7 +15,6 @@ export default class ResizeDragger {
         this.widthForMenuScreen = defaultWidthForMenuScreen
         this.isResizing = false
 
-
         this.resizeDragger.addEventListener('mousedown', () => { this.isResizing = true })
         window.addEventListener('mousemove', (event) => {
             if (this.isResizing) {
@@ -23,7 +22,6 @@ export default class ResizeDragger {
                 if (width < minRequiredSidebarWidthForVisibility)
                     width = 0
                 this.resizeObserver.notifyResizeListeners(width)
-
             }
         })
         window.addEventListener('mouseup', () => {

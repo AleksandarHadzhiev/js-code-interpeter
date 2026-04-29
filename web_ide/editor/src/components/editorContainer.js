@@ -1,6 +1,5 @@
 import CustomHorizontalScrollbar from "./scrollbars/horizontal.js"
 import CustomVerticalScrollbar from "./scrollbars/vertical.js"
-
 class CustomEditorContainer extends HTMLElement {
     constructor() {
         super()

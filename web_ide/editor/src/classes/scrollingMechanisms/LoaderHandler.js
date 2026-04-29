@@ -13,6 +13,15 @@ export default class LoaderHandler {
         this.loaderElement = loaderElement
     }
 
+    /**
+     * 
+     * @param {Number} height 
+     */
+    updateHeight(height) {
+        this.height = height
+        this.maxTopOffset = this._defineMaxTopOffset()
+    }
+
     updateHeights(loaderHeight, scrollbarHeight) {
         this.height = loaderHeight
         this.scrollbarHeight = scrollbarHeight

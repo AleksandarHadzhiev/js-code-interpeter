@@ -7,43 +7,24 @@ import ContentScrollingHandler from "../scrollingMechanisms/ContentScrollingHand
 import TextFetcher from "./textFetcher.js"
 
 
-export default class TextSelection {
+export default class TextSelector { // rename to CodeSelector
     /**
      * 
      * @param {Number} offsetTopOfContentScreen 
-     * @param {Number} lineNumerationScrollWidth 
-     * @param {Number} contentElementScrollHeight 
-     * @param {Number} contentElementScrollWidth
      * @param {HTMLElement} contentElement 
-     * @param {Number} contentElementOffsetLeft 
-     * @param {Number} maxLines 
-     * @param {ContentScrollingHandler} contentScrollHandler
+     * @param {Number} lastTextLine
      */
-    constructor(offsetTopOfContentScreen, lineNumerationScrollWidth, contentElementScrollHeight, contentElementScrollWidth, contentElement, contentElementOffsetLeft, maxLines, contentScrollHandler) {
+    constructor(offsetTopOfContentScreen, contentElement, lastTextLine) {
         this.offsetTopOfContentScreen = offsetTopOfContentScreen
-        this.totalWidthOfScreen = contentElementScrollWidth + lineNumerationScrollWidth
-        this.heightOfElementBasedOnVisibleLinesOnTheScreen = contentElementScrollHeight
         this.windowSectionScrollig = null
         this.mousePosition = null
         this.highlighter = new Highlighter(contentElement)
         this.contentElement = contentElement
         this.loaderOffset = 0
-        this.mouseXPosition = 0
-        this.contentElementOffsetLeft = contentElementOffsetLeft
-        this.lineNumerationScrollWidth = lineNumerationScrollWidth
-        this.lastTextLine = maxLines
-        this.scrollHandler = contentScrollHandler
+        this.xForMouseInEditor = 0
+        this.lastTextLine = lastTextLine
         this.selectedText = ""
         this.textFetcher = new TextFetcher(this.highlighter, this.contentElement)
-    }
-
-    /**
-     * 
-     * @param {Number} leftOffsetForContent 
-     * @param {Number} widthForContent 
-     */
-    updateLeftOffsetWithNewOffset(leftOffsetForContent, widthForContent) {
-        this.contentElementOffsetLeft = leftOffsetForContent + this.lineNumerationScrollWidth
     }
 
     /**
@@ -60,29 +41,11 @@ export default class TextSelection {
     /**
      * @param {String} fullText 
      */
-    selectTextOnCopyCommand(fullText) {
+    selectTextOnCopyCommand(fullText) { // not responsibility of the TextSelector to know the copy command
         const fetchedText = this.textFetcher.selectTextFromFullText(fullText)
         this.selectedText = fetchedText.text
         navigator.clipboard.writeText(this.selectedText)
         return fetchedText
-    }
-
-    /**
-     * 
-     * @param {Number} height 
-     */
-    updateHeightOfElementBasedOnVisibleLinesOnTheScreen(height) {
-        this.heightOfElementBasedOnVisibleLinesOnTheScreen = height
-    }
-
-    /**
-     * 
-     * @param {Number} newWidthOfScreen 
-     * @param {Number} newContentElementLeftOffset 
-     */
-    updateWidths(newWidthOfScreen, newContentElementLeftOffset) {
-        this.totalWidthOfScreen = newWidthOfScreen
-        this.contentElementOffsetLeft = newContentElementLeftOffset
     }
 
     /**
@@ -103,78 +66,19 @@ export default class TextSelection {
 
     /**
      * 
-     * @param {Number} offset 
-     */
-    setLoaderOffset(offset) {
-        this.loaderOffset = offset
-    }
-
-    /**
-     * @param {MouseEvent} event 
-     * @returns {null}
-     */
-    defineMousePosition(event) {
-        this.windowSectionScrollig = WindowSection.CENTRE
-        const mouseYPositionBasedOnPage = event.pageY + this.loaderOffset - this.offsetTopOfContentScreen
-        this.mousePosition = this._defineSectionOfTextSelection(event, mouseYPositionBasedOnPage)
-        return this.mousePosition
-    }
-
-    /**
-     * 
      * @param {Number} pageYMousePosition 
      * @param {Number} firstVisibleLine 
      * @param {Number} lastVisibleLine 
+     * @param {String} mousePosition 
+     * @param {MouseEvent} event 
+     * @param {Number} leftOffset
      */
-    selectText(pageYMousePosition, firstVisibleLine, lastVisibleLine) {
+    selectText(pageYMousePosition, firstVisibleLine, lastVisibleLine, mousePosition, event, leftOffset) {
+        this.xForMouseInEditor = event.pageX - leftOffset
+        this.mousePosition = mousePosition
         const mouseYPositionBasedOnPage = pageYMousePosition + this.loaderOffset - this.offsetTopOfContentScreen
         this._highlightTextBasedOnMousePosition(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)
         this._buildCaretForTextSelection(mouseYPositionBasedOnPage)
-    }
-
-    /**
-    * 
-    * @param {MouseEvent} event 
-    * @param {Number} mouseYPositionBasedOnPage 
-    * @returns {String} the position of the mouse
-    */
-    _defineSectionOfTextSelection(event, mouseYPositionBasedOnPage) {
-        this.mouseXPosition = event.pageX
-        const maxTopOffsetForSelection = this.lastTextLine * 28.8
-        const horizontalScroll = (this.scrollHandler.leftOffset - 75) * -1
-        this.xForMouseInEditor = this.mouseXPosition - this.contentElementOffsetLeft + horizontalScroll
-        const pointWhenBottomBegins = this.heightOfElementBasedOnVisibleLinesOnTheScreen + this.loaderOffset
-        if (mouseYPositionBasedOnPage > maxTopOffsetForSelection) {
-            return MousePosition.BOTTOM
-        }
-        else if (mouseYPositionBasedOnPage == 0 && this.windowSectionScrollig == WindowSection.BOTTOM) {
-            return MousePosition.BOTTOM
-        }
-        else if (mouseYPositionBasedOnPage == 0 && this.windowSectionScrollig == WindowSection.TOP) {
-            return MousePosition.TOP
-        }
-        else if (mouseYPositionBasedOnPage > pointWhenBottomBegins || pointWhenBottomBegins - mouseYPositionBasedOnPage <= 12.4) {
-            this.windowSectionScrollig = WindowSection.BOTTOM
-            return MousePosition.BOTTOM
-        }
-        else if (mouseYPositionBasedOnPage == this.loaderOffset && mouseYPositionBasedOnPage == 0) {
-            this.windowSectionScrollig = WindowSection.TOP
-            return MousePosition.TOP
-        }
-        else if (mouseYPositionBasedOnPage < this.loaderOffset && mouseYPositionBasedOnPage != 0) {
-            this.windowSectionScrollig = WindowSection.TOP
-            return MousePosition.TOP
-        }
-        else if (this.mouseXPosition < this.contentElementOffsetLeft) {
-            this.windowSectionScrollig = WindowSection.LEFT
-            return MousePosition.LEFT
-        }
-        else if (this.mouseXPosition > this.totalWidthOfScreen) {
-            this.windowSectionScrollig = WindowSection.RIGHT
-            return MousePosition.RIGHT
-        }
-        this.windowSectionScrollig = WindowSection.CENTRE
-        return MousePosition.CENTRE
     }
 
     /**
@@ -199,6 +103,7 @@ export default class TextSelection {
             this.highlighter.highlightForMouseInEditorSection(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine, this.xForMouseInEditor)
         }
     }
+
 
     /**
      * 
@@ -297,12 +202,4 @@ export default class TextSelection {
         caretBuilder.buildCaretForTextSelection(point, this.mousePosition, this.xForMouseInEditor)
     }
 
-    /**
-     * 
-     * @param {Number} firstVisibleLine 
-     * @param {Number} lastVisibleLine 
-     */
-    display(firstVisibleLine, lastVisibleLine) {
-        this.highlighter.display(firstVisibleLine, lastVisibleLine)
-    }
 }

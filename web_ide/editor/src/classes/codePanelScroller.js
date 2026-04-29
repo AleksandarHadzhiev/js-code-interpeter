@@ -27,7 +27,9 @@ export default class CodePanelScroller {
         })
     }
 
-
+    updateScreenSizes(newWidth, newHeight) {
+        this.verticalScroller.updateProportions(newHeight, newWidth)
+    }
 
     /**
      * @param {WheelEvent} event 

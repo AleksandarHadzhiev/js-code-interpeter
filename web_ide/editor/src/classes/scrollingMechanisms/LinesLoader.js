@@ -173,7 +173,7 @@ export default class LinesLoader {
     reloadDisplayedLines() {
         if (this.lastVisibleLine > this.previousLastVisibleLine)
             this._refreshlinesOnScrollingDown()
-        else
+        else if (this.lastVisibleLine < this.previousLastVisibleLine)
             this._refreshLinesOnScrollingUp()
     }
 

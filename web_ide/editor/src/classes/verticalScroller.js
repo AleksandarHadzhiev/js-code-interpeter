@@ -52,6 +52,11 @@ export default class VerticalScroller {
         })
     }
 
+    updateProportions(newHeight, newWidth) {
+        this.barVerticalHandler.updateHeight(newHeight)
+        this.screenWidth = newWidth
+    }
+
     /**
      * 
      * @param {Number} offset 

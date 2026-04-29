@@ -12,15 +12,6 @@ export default class CodePanelResizer {
         this.defaultWidth = this.screenWidth - defaultMenuWidth
         this.width = this.defaultWidth
         this.leftOffset = 0
-
-        window.addEventListener('resize', (event) => {
-            this.screenWidth = screen.offsetWidth
-            this.width = this.screenWidth - this.leftOffset
-            this.content.style = `
-                left: ${this.leftOffset}px;
-                width: ${this.width}px;
-            `
-        })
     }
 
     /**
@@ -34,5 +25,13 @@ export default class CodePanelResizer {
                 left: ${this.leftOffset}px;
                 width: ${this.width}px;
             `
+    }
+
+    updateScreenSizes(newWidth, newHeight) {
+        this.width = newWidth - this.leftOffset
+        this.content.style = `
+                left: ${this.leftOffset}px;
+                width: ${this.width}px;
+        `
     }
 }

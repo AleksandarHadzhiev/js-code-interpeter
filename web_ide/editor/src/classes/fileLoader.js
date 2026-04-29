@@ -4,12 +4,13 @@ export default class FileLoader {
     /**
      * 
      * @param {CodeLoader} codeLoader 
+     * @param {HTMLElement} sidebarContent 
      */
-    constructor(codeLoader) {
-        this.sidebarContent = document.getElementById('sidebar-content')
-        this.files = this.sidebarContent.childNodes
+    constructor(codeLoader, sidebarContent) {
+        this.files = sidebarContent.childNodes
         this.codeLoader = codeLoader
         this.files.forEach((file) => {
+            console.log(file)
             file.addEventListener('click', () => {
                 this._loadFileContentOnScreen(file)
             })

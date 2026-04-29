@@ -6,7 +6,7 @@ import ScreenResizer from "./screenResizer.js";
 import ScreenResizerObserver from "./screenResizerObserver.js";
 import CodePanelScroller from "./codePanelScroller.js";
 import LoaderHandler from "./scrollingMechanisms/LoaderHandler.js";
-import FileLoader from "./fileLoader.js";
+import ProjectLoader from "./projectLoader.js";
 
 export default class CodePanel {
     /**
@@ -25,8 +25,8 @@ export default class CodePanel {
         this.codeLoader = new CodeLoader(screen, this.screenHeight, this.loaderElement)
         this.codePanelScroller = new CodePanelScroller(this.codeLoader, this.loaderElement, this.screenHeight)
         this.editor = new Editor(menuWidth, widthOfScreen, resizeDraggerObserver, screen, this.screenResizerObserver, this.screenHeight)
+        this.projectLoader = new ProjectLoader(this.codeLoader)
         resizeDraggerObserver.addResizeListener(this.codePanelResizer)
         this.screenResizerObserver.addScreenResizeListener(this.codeLoader)
-        this.fileLoader = new FileLoader(this.codeLoader)
     }
 }

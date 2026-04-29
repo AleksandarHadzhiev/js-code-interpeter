@@ -1,7 +1,18 @@
+import FileLoader from "./fileLoader.js"
+import CodeLoader from "./codeLoader.js"
+
 export default class ProjectLoader {
-    constructor() {
+    /**
+     * @param {CodeLoader} codeLoader 
+     */
+    constructor(codeLoader) {
+        this.codeLoader = codeLoader
         this.sidebarContent = document.getElementById('sidebar-content')
-        this.screen = document.getElementById('screen')
+        this.projectSelector = document.getElementById('project-selector')
+        this.openProjectButton = document.getElementById('open-project')
+        this.openProjectButton.addEventListener('click', (event) => {
+            this._loadProject('default')
+        })
         this.projectName = ""
     }
 
@@ -9,11 +20,12 @@ export default class ProjectLoader {
      * 
      * @param {String} projectName 
      */
-    loadProject(projectName) {
+    _loadProject(projectName) {
         if (projectName.trim() !== "" && projectName !== this.projectName) {
-            this.sidebarContent.replaceChildren([])
+            this.projectSelector.remove()
             this.projectName = projectName
             this._loadContentIntoSidebar()
+            const fileLoader = new FileLoader(this.codeLoader, this.sidebarContent)
         }
     }
 

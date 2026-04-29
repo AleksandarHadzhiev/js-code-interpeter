@@ -67,6 +67,7 @@ class CustomMenuContainer extends HTMLElement {
 
     _buildProjectSelector() {
         const projectSelector = document.createElement('div')
+        projectSelector.setAttribute('id', 'project-selector')
         projectSelector.style = `
         width: 100%; 
         height: 25%;
@@ -83,6 +84,7 @@ class CustomMenuContainer extends HTMLElement {
 
     _buildOpenProjectButton() {
         const openProject = document.createElement('button')
+        openProject.setAttribute('id', 'open-project')
         openProject.className = 'project-button'
         openProject.textContent = 'Open Project'
         return openProject

@@ -2,17 +2,15 @@ import IntegratedDevelopmentEnvironmentSettings from "./ideSettings.js";
 import ResizeDraggerObserver from "./resizeObserver.js";
 import Sidebar from "./sidebar.js";
 import CodePanel from "./codePanel.js";
-import ProjectLoader from './projectLoader.js'
 
 export default class IntegratedDevelopmentEnvironment {
     constructor() {
-        this.projectLoader = new ProjectLoader()
         this.menuElement = document.getElementById('menu')
         this.screen = document.getElementById('screen')
         this.screenWidth = this.screen.offsetWidth
         this.defaultSidebarPanelWidth = this.menuElement.offsetWidth
         this.resizeDraggerOberver = new ResizeDraggerObserver()
-        this.sidebar = new Sidebar(this.menuElement, this.defaultSidebarPanelWidth, this.resizeDraggerOberver, this.projectLoader)
+        this.sidebar = new Sidebar(this.menuElement, this.defaultSidebarPanelWidth, this.resizeDraggerOberver)
         this.codePanel = new CodePanel(this.defaultSidebarPanelWidth, this.screenWidth, this.screen, this.resizeDraggerOberver)
     }
 }

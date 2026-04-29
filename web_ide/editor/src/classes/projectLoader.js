@@ -32,13 +32,6 @@ export default class ProjectLoader {
         const file = document.createElement('div')
         file.className = 'file'
         file.id = fileName
-        file.addEventListener('click', () => {
-            this.screen.dispatchEvent(new CustomEvent(
-                "loadFile", {
-                "detail": { 'fileName': fileName }
-            }
-            ))
-        })
         const fileNameElement = this._buildFileName(fileName)
         file.appendChild(fileNameElement)
         return file

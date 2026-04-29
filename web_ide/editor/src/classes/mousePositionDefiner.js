@@ -10,8 +10,7 @@ export default class MousePositionDefiner {
      */
     constructor(lineNumerationWidth, menuWidth, screen, screenHeight) {
         this.navigationHeight = document.getElementById('navigation').offsetHeight
-        this.lineNumerationWidth = lineNumerationWidth
-        this.defaultLeftOffset = this.lineNumerationWidth + menuWidth
+        this.defaultLeftOffset = lineNumerationWidth + menuWidth
         this.leftOffset = this.defaultLeftOffset
         this.widthOfScreen = screen.offsetWidth
         this.height = screenHeight

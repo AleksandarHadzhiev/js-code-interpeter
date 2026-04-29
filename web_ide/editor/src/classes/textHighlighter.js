@@ -23,7 +23,7 @@ export default class TextHighlighter {
         this.placer = document.getElementById('caret-placer')
         this.linesLoader = linesLoader
         this.contentElement = contentElement
-        this.mousePositionDefiner = new MousePositionDefiner(this.lineNumerationWidth, defaultMenuWidth, screen, screenHeight)
+        this.mousePositionDefiner = new MousePositionDefiner(lineNumerationWidth, defaultMenuWidth, screen, screenHeight)
         this.textSelector = new TextSelector(offsetTop, this.contentElement, linesLoader.maxLines)
         this.mouseYPosition = 0
         this.startingRange = null

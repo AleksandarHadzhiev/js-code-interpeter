@@ -3,7 +3,7 @@ import { findCaretCurrentPositionInText } from "./calculators/caretLeftOffsetCal
 import CaretBuilder from "./selectionMechanisms/caretBuilder.js"
 import CodeChangesHistoryHandler from "./codeChangesHistoryHandler.js"
 
-export default class WriterHandler {
+export default class CodeWriter {
     /**
      * 
      * @param {String} textToWorkWith 

@@ -12,7 +12,6 @@ export default class ContentSizeChangesListener {
     }
 
     /**
-     * 
      * @param {Number} newLeftOffsetForContent 
      * @param {*} width 
      */

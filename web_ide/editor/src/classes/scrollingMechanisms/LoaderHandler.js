@@ -18,7 +18,6 @@ export default class LoaderHandler {
      * @param {Number} height 
      */
     updateHeight(height) {
-        console.log(height)
         this.height = height
         this.maxTopOffset = this._defineMaxTopOffset()
     }

@@ -54,5 +54,6 @@ export default class CodePanel {
         this.screenResizerObserver.addScreenResizeListener(this.codePanelScroller)
         resizeDraggerObserver.addResizeListener(this.codePanelScroller)
         this.lineContentResizeObserver.addListener(this.lineContentResizer)
+        this.lineContentResizeObserver.addListener(this.codePanelScroller.horizontalScroller)
     }
 }

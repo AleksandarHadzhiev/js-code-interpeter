@@ -53,9 +53,17 @@ export default class HorizontalScroller {
      * @param {Number} deltaX 
      */
     scroll(deltaX) {
-        this.contentScrollingHandler.updateMaxLeftOffset(1050, this.leftOffset, this.barWidth)
         this.contentScrollingHandler.scrollWithOffset(deltaX)
         const percentage = this.contentScrollingHandler.getPerentageOfScroll()
         this.barHorizontalHandler.scrollBasedOnPercentage(percentage)
+    }
+
+    /**
+     * 
+     * @param {Number} newWidth 
+     */
+    updateLineContentWidth(newWidth) {
+        console.log(this.leftOffset)
+        this.contentScrollingHandler.updateMaxLeftOffset(newWidth, this.leftOffset + this.lineNumerationWidth, this.barWidth)
     }
 }

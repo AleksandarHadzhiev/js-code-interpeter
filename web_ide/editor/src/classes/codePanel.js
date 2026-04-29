@@ -28,7 +28,7 @@ export default class CodePanel {
         this.codePanelResizer = new CodePanelResizer(menuWidth, widthOfScreen, screen)
         this.codeLoader = new CodeLoader(screen, this.screenHeight, this.loaderElementResizeObserver)
         this.codePanelScroller = new CodePanelScroller(this.codeLoader, this.loaderElement, this.screenHeight, this.loaderElementResizeObserver)
-        this.editor = new Editor(menuWidth, widthOfScreen, resizeDraggerObserver, screen, this.screenResizerObserver, this.screenHeight)
+        this.editor = new Editor(menuWidth, widthOfScreen, resizeDraggerObserver, screen, this.screenResizerObserver, this.screenHeight, this.codeLoader.linesLoader)
         this.projectLoader = new ProjectLoader(this.codeLoader, this.loaderElementResizeObserver)
         this.loaderElementResizeObserver.addListener(this.loaderElementResizer)
         resizeDraggerObserver.addResizeListener(this.codePanelResizer)

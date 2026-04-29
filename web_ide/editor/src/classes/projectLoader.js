@@ -1,12 +1,15 @@
 import FileLoader from "./fileLoader.js"
 import CodeLoader from "./codeLoader.js"
+import LoaderElementResizeObserver from "./loaderElementResizeObserver.js"
 
 export default class ProjectLoader {
     /**
      * @param {CodeLoader} codeLoader 
+     * @param {LoaderElementResizeObserver} loaderElementResizeObserver 
      */
-    constructor(codeLoader) {
+    constructor(codeLoader, loaderElementResizeObserver) {
         this.codeLoader = codeLoader
+        this.loaderElementResizeObserver = loaderElementResizeObserver
         this.sidebarContent = document.getElementById('sidebar-content')
         this.projectSelector = document.getElementById('project-selector')
         this.openProjectButton = document.getElementById('open-project')
@@ -25,7 +28,7 @@ export default class ProjectLoader {
             this.projectSelector.remove()
             this.projectName = projectName
             this._loadContentIntoSidebar()
-            const fileLoader = new FileLoader(this.codeLoader, this.sidebarContent)
+            const fileLoader = new FileLoader(this.codeLoader, this.sidebarContent, this.loaderElementResizeObserver)
         }
     }
 

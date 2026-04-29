@@ -10,9 +10,9 @@ export default class FileLoader {
         this.files = sidebarContent.childNodes
         this.codeLoader = codeLoader
         this.files.forEach((file) => {
-            console.log(file)
             file.addEventListener('click', () => {
-                this._loadFileContentOnScreen(file)
+                if (file.id != "")
+                    this._loadFileContentOnScreen(file)
             })
         })
     }

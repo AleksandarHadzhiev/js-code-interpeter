@@ -38,4 +38,24 @@ export default class HorizontalScroller {
             lineContentElement
         )
     }
+
+    updateProportions(newWidth) {
+        console.log(newWidth)
+        this.leftOffset = newWidth
+        const scrollbarWidth = this.screenWidth - this.leftOffset - this.lineNumerationWidth
+        this.scrollbarAreaElement.style = `width: ${scrollbarWidth}px; left: ${newWidth}px;`
+        this.barHorizontalHandler.scrollbarWidth = scrollbarWidth
+        this.contentScrollingHandler.leftOffset = this.leftOffset
+    }
+
+    /**
+     * 
+     * @param {Number} deltaX 
+     */
+    scroll(deltaX) {
+        this.contentScrollingHandler.updateMaxLeftOffset(1050, this.leftOffset, this.barWidth)
+        this.contentScrollingHandler.scrollWithOffset(deltaX)
+        const percentage = this.contentScrollingHandler.getPerentageOfScroll()
+        this.barHorizontalHandler.scrollBasedOnPercentage(percentage)
+    }
 }

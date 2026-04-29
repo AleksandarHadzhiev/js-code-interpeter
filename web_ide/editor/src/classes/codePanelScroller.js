@@ -40,6 +40,10 @@ export default class CodePanelScroller {
         })
     }
 
+    updateProportions(newWidth) {
+        this.horizontalScroller.updateProportions(newWidth)
+    }
+
     updateScreenSizes(newWidth, newHeight) {
         this.verticalScroller.updateProportions(newHeight, newWidth)
     }
@@ -56,6 +60,6 @@ export default class CodePanelScroller {
      * @param {WheelEvent} event 
      */
     _scrollHorizontal(event) {
-        console.log(event)
+        this.horizontalScroller.scroll(event.deltaX)
     }
 }

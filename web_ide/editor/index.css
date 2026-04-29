@@ -246,7 +246,7 @@ html::selection {
     width: 100%;
     height: var(--scrollable-area-in-px);
     left: 0%;
-    top: 100%;
+    bottom: 0%;
     background-color: transparent;
     pointer-events: none;
 }
@@ -262,7 +262,7 @@ html::selection {
 
 #bar-horizontal {
     position: absolute;
-    width: 10%;
+    width: 150px;
     height: 100%;
     opacity: 0.5;
     background-color: gray;

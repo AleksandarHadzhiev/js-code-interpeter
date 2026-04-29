@@ -23,6 +23,9 @@ export default class FileLoader {
      */
     _loadFileContentOnScreen(file) {
         const fileName = file.id
-        this.codeLoader.loadContentFromFileWithName(fileName)
+        let longestLine = " * This DTO transfers the data needed to calculate the total left offset of the caret position on the line."
+        if (fileName == 'app.js')
+            longestLine = "This is a long line to be displayed, and for that reason it will have a lot of text inside it."
+        this.codeLoader.loadContentFromFileWithName(fileName, longestLine)
     }
 }

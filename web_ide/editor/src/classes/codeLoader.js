@@ -1,6 +1,8 @@
 import LinesLoader from "./scrollingMechanisms/LinesLoader.js";
 import ContentPicker from './contentPicker.js'
 import LoaderElementResizeObserver from "./loaderElementResizeObserver.js";
+import calculateWidthForText from "./calculators/widthOfTextCalculator.js";
+import LineContentElementResizeObseever from "./lineContentElementResizeObserver.js";
 
 export default class CodeLoader {
     /**
@@ -10,8 +12,9 @@ export default class CodeLoader {
      * @param {LoaderElementResizeObserver} loaderElementResizeObserver
      * @param {HTMLElement} lineNumerationElement
      * @param {HTMLElement} lineContentElement   
+     * @param {LineContentElementResizeObseever} lineElementResizeObserver
      */
-    constructor(screen, screenHeight, loaderElementResizeObserver, lineNumerationElement, lineContentElement) {
+    constructor(screen, screenHeight, loaderElementResizeObserver, lineNumerationElement, lineContentElement, lineElementResizeObserver) {
         this.lineNumerationElement = lineNumerationElement
         this.lineContentElement = lineContentElement
         this.height = 0
@@ -20,16 +23,21 @@ export default class CodeLoader {
         this.loaderElementResizeObserver = loaderElementResizeObserver
         this.maxVisibileLinesOnScreen = Math.round(screenHeight / this.minLineHeight)
         this.linesLoader = new LinesLoader(this.maxVisibileLinesOnScreen, this.minLineHeight, this.lineContentElement, this.lineNumerationElement)
+        this.bufferZoneForLineContent = 150
+        this.lineElementResizeObserver = lineElementResizeObserver
     }
 
     /**
      * 
      * @param {String} fileName 
+     * @param {String} longestLine 
      */
-    loadContentFromFileWithName(fileName) {
+    loadContentFromFileWithName(fileName, longestLine) {
         const text = this.contentPicker.pickTextFromFileWithName(fileName)
         this.linesLoader.loadContentForText(text)
         this.loaderElementResizeObserver.notifyListeners(this.linesLoader.maxLines)
+        const width = calculateWidthForText(this.lineContentElement, longestLine) + this.bufferZoneForLineContent
+        this.lineElementResizeObserver.notifyListeners(width)
     }
 
     /**

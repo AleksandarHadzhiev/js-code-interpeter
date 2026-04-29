@@ -21,10 +21,9 @@ export default class TextSelector { // rename to CodeSelector
         this.highlighter = new Highlighter(contentElement)
         this.contentElement = contentElement
         this.loaderOffset = 0
-        this.mouseXPosition = 0
+        this.xForMouseInEditor = 0
         this.lastTextLine = lastTextLine
         this.selectedText = ""
-        this.mouseXPosition = 0
         this.textFetcher = new TextFetcher(this.highlighter, this.contentElement)
     }
 
@@ -72,9 +71,10 @@ export default class TextSelector { // rename to CodeSelector
      * @param {Number} lastVisibleLine 
      * @param {String} mousePosition 
      * @param {MouseEvent} event 
+     * @param {Number} leftOffset
      */
-    selectText(pageYMousePosition, firstVisibleLine, lastVisibleLine, mousePosition, event) {
-        this.mouseXPosition = event.pageX
+    selectText(pageYMousePosition, firstVisibleLine, lastVisibleLine, mousePosition, event, leftOffset) {
+        this.xForMouseInEditor = event.pageX - leftOffset
         this.mousePosition = mousePosition
         const mouseYPositionBasedOnPage = pageYMousePosition + this.loaderOffset - this.offsetTopOfContentScreen
         this._highlightTextBasedOnMousePosition(mouseYPositionBasedOnPage, firstVisibleLine, lastVisibleLine)

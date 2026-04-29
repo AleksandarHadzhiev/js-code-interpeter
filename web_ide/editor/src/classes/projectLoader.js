@@ -1,16 +1,18 @@
 export default class ProjectLoader {
+    constructor() {
+        this.sidebarContent = document.getElementById('sidebar-content')
+        this.screen = document.getElementById('screen')
+        this.projectName = ""
+    }
+
     /**
      * 
      * @param {String} projectName 
      */
-    constructor(projectName) {
-        this.sidebarContent = document.getElementById('sidebar-content')
-        this.screen = document.getElementById('screen')
-        this.projectName = projectName
-    }
-
-    load() {
-        if (this.projectName.trim() !== "") {
+    loadProject(projectName) {
+        if (projectName.trim() !== "" && projectName !== this.projectName) {
+            this.sidebarContent.replaceChildren([])
+            this.projectName = projectName
             this._loadContentIntoSidebar()
         }
     }

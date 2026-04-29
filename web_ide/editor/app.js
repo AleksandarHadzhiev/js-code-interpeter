@@ -586,8 +586,5 @@
 // }
 
 import IntegratedDevelopmentEnvironment from "./src/classes/ide.js"
-import ProjectLoader from "./src/classes/projectLoader.js"
 
-const projectLoader = new ProjectLoader("default")
-projectLoader.load()
 const ide = new IntegratedDevelopmentEnvironment()

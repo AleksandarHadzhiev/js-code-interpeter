@@ -43,7 +43,9 @@ class CustomMenuContainer extends HTMLElement {
         sidebarContent.className = 'sidebar-content'
         sidebarContent.setAttribute('id', 'sidebar-content')
         const header = this._buildHeaderOfExplorer()
+        const projectSelector = this._buildProjectSelector()
         sidebarContent.appendChild(header)
+        sidebarContent.appendChild(projectSelector)
         return sidebarContent
     }
 
@@ -61,6 +63,36 @@ class CustomMenuContainer extends HTMLElement {
         title.id = 'sidebar-title'
         this.sidebarTitle = title
         return title
+    }
+
+    _buildProjectSelector() {
+        const projectSelector = document.createElement('div')
+        projectSelector.style = `
+        width: 100%; 
+        height: 25%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;`
+        const openProjectButton = this._buildOpenProjectButton()
+        const createProjectButton = this._buildCreateProjectButton()
+        projectSelector.appendChild(openProjectButton)
+        projectSelector.appendChild(createProjectButton)
+        return projectSelector
+    }
+
+    _buildOpenProjectButton() {
+        const openProject = document.createElement('button')
+        openProject.className = 'project-button'
+        openProject.textContent = 'Open Project'
+        return openProject
+    }
+
+    _buildCreateProjectButton() {
+        const createProject = document.createElement('button')
+        createProject.className = 'project-button'
+        createProject.textContent = 'Create Project'
+        return createProject
     }
 
     _buildResizeDragger() {

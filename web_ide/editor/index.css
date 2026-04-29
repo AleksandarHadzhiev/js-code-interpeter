@@ -548,3 +548,17 @@ html::selection {
     background-color: rgb(28, 28, 211);
     cursor: e-resize;
 }
+
+.project-button {
+    width: 75%;
+    height: 25%;
+    text-align: center;
+    border: 1px solid white;
+    border-radius: 5px;
+    color: white;
+    background-color: rgb(52, 96, 255);
+}
+
+.project-button:hover {
+    background-color: rgb(79, 117, 252);
+}

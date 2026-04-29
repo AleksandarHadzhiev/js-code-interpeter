@@ -28,6 +28,7 @@ export default class TextHighlighter {
         this.mouseYPosition = 0
         this.startingRange = null
         this.endingRange = null
+        this.intervalId = null
         resizeDraggerObserver.addResizeListener(this.mousePositionDefiner)
         screenResizerObserver.addScreenResizeListener(this.mousePositionDefiner)
     }

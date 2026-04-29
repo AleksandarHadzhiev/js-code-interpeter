@@ -20,17 +20,26 @@ export default class CodePanel {
      */
     constructor(menuWidth, widthOfScreen, screen, resizeDraggerObserver) {
         this.loaderElement = document.getElementById('loader')
+        this.lineNumerationElement = document.getElementById('line-numeration')
+        this.lineContentElement = document.getElementById('line-content')
+        this.lineContentWidth = this.lineContentElement.offsetWidth
+        this.lineNumerationWidth = this.lineNumerationElement.offsetWidth
         this.screenHeight = screen.offsetHeight
+        this.defaultLeftOffset = menuWidth + this.lineNumerationWidth
         this.loaderElementResizeObserver = new LoaderElementResizeObserver()
         this.screenResizerObserver = new ScreenResizerObserver()
         this.loaderElementResizer = new LoaderElementResizer(this.loaderElement)
         this.screenResizer = new ScreenResizer(this.screenResizerObserver, screen)
         this.codePanelResizer = new CodePanelResizer(menuWidth, widthOfScreen, screen)
-        this.codeLoader = new CodeLoader(screen, this.screenHeight, this.loaderElementResizeObserver)
-        this.codePanelScroller = new CodePanelScroller(this.codeLoader, this.loaderElement, this.screenHeight, this.loaderElementResizeObserver, widthOfScreen)
+        this.codeLoader = new CodeLoader(screen, this.screenHeight, this.loaderElementResizeObserver, this.lineNumerationElement, this.lineContentElement)
+        this.codePanelScroller = new CodePanelScroller(
+            this.codeLoader, this.loaderElement,
+            this.screenHeight, this.loaderElementResizeObserver,
+            widthOfScreen, this.lineContentWidth, menuWidth, this.lineNumerationWidth, this.lineContentElement)
         this.editor = new Editor(menuWidth, widthOfScreen, resizeDraggerObserver, screen, this.screenResizerObserver, this.screenHeight, this.codeLoader.linesLoader)
         this.projectLoader = new ProjectLoader(this.codeLoader, this.loaderElementResizeObserver)
         this.loaderElementResizeObserver.addListener(this.loaderElementResizer)
+        this.loaderElementResizeObserver.addListener(this.codeLoader)
         resizeDraggerObserver.addResizeListener(this.codePanelResizer)
         this.screenResizerObserver.addScreenResizeListener(this.codeLoader)
         this.screenResizerObserver.addScreenResizeListener(this.codePanelResizer)

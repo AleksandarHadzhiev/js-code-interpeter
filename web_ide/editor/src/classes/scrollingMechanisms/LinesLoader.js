@@ -6,10 +6,12 @@ export default class LinesLoader {
     /**
      * @param {Number} maxVisibleLinesOnScreen 
      * @param {Number} minLineHeight  
+     * @param {HTMLElement} lineContentElement
+     * @param {HTMLElement} lineNumerationElement  
     */
-    constructor(maxVisibleLinesOnScreen, minLineHeight) {
-        this.lineNumerationElement = document.getElementById('line-numeration')
-        this.lineContentElement = document.getElementById('line-content')
+    constructor(maxVisibleLinesOnScreen, minLineHeight, lineContentElement, lineNumerationElement) {
+        this.lineContentElement = lineContentElement
+        this.lineNumerationElement = lineNumerationElement
         this.contentElement = document.getElementById('content')
         this.firstVisibleLine = 0
         this.lastVisibleLine = this.firstVisibleLine + maxVisibleLinesOnScreen

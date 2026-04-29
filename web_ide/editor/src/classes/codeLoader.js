@@ -7,16 +7,19 @@ export default class CodeLoader {
      * 
      * @param {HTMLElement} screen 
      * @param {Number} screenHeight 
-     * @param {LoaderElementResizeObserver} loaderElementResizeObserver 
+     * @param {LoaderElementResizeObserver} loaderElementResizeObserver
+     * @param {HTMLElement} lineNumerationElement
+     * @param {HTMLElement} lineContentElement   
      */
-    constructor(screen, screenHeight, loaderElementResizeObserver) {
+    constructor(screen, screenHeight, loaderElementResizeObserver, lineNumerationElement, lineContentElement) {
+        this.lineNumerationElement = lineNumerationElement
+        this.lineContentElement = lineContentElement
         this.height = 0
         this.contentPicker = new ContentPicker()
         this.minLineHeight = 28.8
         this.loaderElementResizeObserver = loaderElementResizeObserver
         this.maxVisibileLinesOnScreen = Math.round(screenHeight / this.minLineHeight)
-        this.linesLoader = new LinesLoader(this.maxVisibileLinesOnScreen, this.minLineHeight)
-        this.loaderElementResizeObserver.addListener(this)
+        this.linesLoader = new LinesLoader(this.maxVisibileLinesOnScreen, this.minLineHeight, this.lineContentElement, this.lineNumerationElement)
     }
 
     /**

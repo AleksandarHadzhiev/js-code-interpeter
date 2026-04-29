@@ -94,13 +94,14 @@ export default class TextHighlighter {
         this.endingRange = range
         this.textSelector.setEndingRange(range)
         const mousePosition = this.mousePositionDefiner.defineMousePosition(event)
-        console.log(mousePosition)
         this.textSelector.selectText(
             this.mouseYPosition,
             this.linesLoader.firstVisibleLine,
             this.linesLoader.lastVisibleLine,
             mousePosition,
             event,
-            this.mousePositionDefiner.leftOffset)
+            this.mousePositionDefiner.leftOffset,
+            this.linesLoader.maxLines
+        )
     }
 }

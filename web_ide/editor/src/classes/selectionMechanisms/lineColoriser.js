@@ -284,6 +284,11 @@ export default class LineColoriser {
             }
             else if (lastVisibleLine > lineOfStartingPoint) {
                 this._defineStartingPointMarkerForStartingPointNotVisibleButEarlierThanReleasePoint(lineOfStartingPoint)
+                this.coordinatesToHighlight.set(this.startingMarkedPoint.lineId, new MarkedLineCoordinates(
+                    this.startingMarkedPoint.left,
+                    this.startingMarkedPoint.top,
+                    this.startingMarkedPoint.width
+                ))
                 this._coloriseBetweenTwoLines(lineOfStartingPoint + 1, lastVisibleLine)
             }
             else if (lastVisibleLine < lineOfStartingPoint) {

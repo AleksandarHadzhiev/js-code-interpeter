@@ -14,13 +14,13 @@ import LineContentElementResizeObseever from "./lineContentElementResizeObserver
 
 export default class CodePanel {
     /**
-     * 
+     * @param {HTMLElement} contentElement
      * @param {Number} menuWidth 
      * @param {Number} widthOfScreen 
      * @param {HTMLElement} screen 
      * @param {ResizeDraggerObserver} resizeDraggerObserver 
      */
-    constructor(menuWidth, widthOfScreen, screen, resizeDraggerObserver) {
+    constructor(contentElement, menuWidth, widthOfScreen, screen, resizeDraggerObserver) {
         this.loaderElement = document.getElementById('loader')
         this.lineNumerationElement = document.getElementById('line-numeration')
         this.lineContentElement = document.getElementById('line-content')
@@ -41,6 +41,7 @@ export default class CodePanel {
             this.screenHeight, this.loaderElementResizeObserver,
             widthOfScreen, this.lineContentWidth, menuWidth, this.lineNumerationWidth, this.lineContentElement)
         this.editor = new Editor(
+            contentElement,
             menuWidth, widthOfScreen,
             resizeDraggerObserver, screen,
             this.screenResizerObserver, this.screenHeight,

@@ -30,7 +30,6 @@ export default class VerticalScroller {
         this.barElement.addEventListener('mousedown', () => {
             this.isScrolling = true
             this.scrollbarAreaElementVertical.style.pointerEvents = "all"
-
         })
 
         window.addEventListener('mousemove', (event) => {
@@ -55,6 +54,7 @@ export default class VerticalScroller {
     updateProportions(newHeight, newWidth) {
         this.barVerticalHandler.updateHeight(newHeight)
         this.screenWidth = newWidth
+        this.scrollbarAreaElementVertical.style = `height: ${newHeight}px`;
     }
 
     /**

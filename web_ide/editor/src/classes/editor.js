@@ -7,7 +7,7 @@ import LineContentElementResizeObseever from "./lineContentElementResizeObserver
 
 export default class Editor {
     /**
-     * 
+     * @param {HTMLElement} contentElement
      * @param {Number} defaultMenuWidth 
      * @param {Number} widthOfScreen 
      * @param {ResizeDraggerObserver} resizeDraggerObserver 
@@ -18,9 +18,18 @@ export default class Editor {
      * @param {HTMLElement} lineContentElement
      * @param {Number} lineNumerationWidth 
      */
-    constructor(defaultMenuWidth, widthOfScreen, resizeDraggerObserver, screen, screenResizerObserver, screenHeight, linesLoader, lineContentElement, lineNumerationWidth) {
+    constructor(contentElement, defaultMenuWidth, widthOfScreen, resizeDraggerObserver, screen, screenResizerObserver, screenHeight, linesLoader, lineContentElement, lineNumerationWidth) {
         this.offsetTop = document.getElementById('navigation').offsetHeight
-        this.textHighlighter = new TextHighlighter(linesLoader, this.offsetTop, this.contentElement, lineNumerationWidth, defaultMenuWidth, screen, screenHeight, resizeDraggerObserver, screenResizerObserver)
+        this.textHighlighter = new TextHighlighter(
+            linesLoader,
+            this.offsetTop,
+            contentElement,
+            lineNumerationWidth,
+            defaultMenuWidth,
+            screen,
+            screenHeight,
+            resizeDraggerObserver,
+            screenResizerObserver)
         this.isSelectingText = false
         lineContentElement.addEventListener('mousedown', (event) => {
             this.isSelectingText = true

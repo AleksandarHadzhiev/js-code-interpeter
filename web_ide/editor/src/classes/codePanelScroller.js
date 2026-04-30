@@ -26,12 +26,13 @@ export default class CodePanelScroller {
         this.offsetCalculator = new OffsetCalculator()
         this.height = screenHeight
         this.codeLoader = codeLoader
+        this.verticalScroller = new VerticalScroller(this.height, this.codeLoader, loaderElement, screenWidth)
+        this.barVerticalWidth = this.verticalScroller.barElement.offsetWidth
         this.horizontalScroller = new HorizontalScroller(
             screenHeight, screenWidth, lineContentWidth,
             leftOffset, lineNumerationWidth,
-            lineContentElement, codeLoader
+            lineContentElement, codeLoader, this.barVerticalWidth
         )
-        this.verticalScroller = new VerticalScroller(this.height, this.codeLoader, loaderElement, screenWidth)
         loaderElementResizeObserver.addListener(this.verticalScroller.loaderHandler)
         window.addEventListener('wheel', (event) => {
             if (event.deltaY != -0)
@@ -46,6 +47,7 @@ export default class CodePanelScroller {
 
     updateScreenSizes(newWidth, newHeight) {
         this.verticalScroller.updateProportions(newHeight, newWidth)
+        this.horizontalScroller.updateProportionsOnResize(newWidth)
     }
 
     /**

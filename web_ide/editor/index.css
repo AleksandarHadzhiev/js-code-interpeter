@@ -209,10 +209,10 @@ html::selection {
 }
 
 .scrollable-area-vertical {
-    position: sticky;
+    position: absolute;
     width: var(--scrollable-area-in-px);
     height: 100%;
-    left: 100%;
+    right: 0%;
     top: 0%;
     background-color: transparent;
     pointer-events: none;
@@ -242,7 +242,7 @@ html::selection {
 }
 
 .scrollable-area-horizontal {
-    position: sticky;
+    position: absolute;
     width: 100%;
     height: var(--scrollable-area-in-px);
     left: 0%;
@@ -254,9 +254,8 @@ html::selection {
 #scrollbar-horizontal {
     pointer-events: all;
     position: sticky;
-    width: calc(100% - var(--width-for-menu) - var(--width-of-vertical-scrollbar));
+    width: calc(100% - var(--width-of-vertical-scrollbar));
     height: 25px;
-    left: var(--width-for-menu);
     top: 100%;
 }
 

@@ -1,34 +1,28 @@
 import CodeLoader from "./codeLoader.js"
 import { BarHorizontalHandler } from "./scrollingMechanisms/BarHandler.js"
 import ContentScrollingHandler from "./scrollingMechanisms/ContentScrollingHandler.js"
+
 export default class HorizontalScroller {
     /**
-     * @param {Number} screenHeight 
+     * @param {Number} menuWidth
      * @param {Number} screenWidth 
      * @param {Number} lineContentWidth 
      * @param {Number} leftOffset 
      * @param {Number} lineNumerationWidth 
      * @param {HTMLElement} lineContentElement 
-     * @param {CodeLoader} codeLoader
      * @param {Number} barVerticalWidth
      */
-    constructor(screenHeight, screenWidth, lineContentWidth, leftOffset, lineNumerationWidth, lineContentElement, codeLoader, barVerticalWidth) {
-        this.height = screenHeight
+    constructor(menuWidth, screenWidth, lineContentWidth, leftOffset, lineNumerationWidth, lineContentElement, barVerticalWidth) {
         this.scrollbarAreaElement = document.getElementById('scrollable-area-horizontal')
         this.scrollbar = document.getElementById('scrollbar-horizontal')
-        this.scrollbarWidth = this.scrollbar.offsetWidth - barVerticalWidth
-        this.scrollableAreaWidth = this.scrollbarAreaElement.offsetWidth - lineNumerationWidth
+        this.scrollbarWidth = this.scrollbar.offsetWidth
         this.barElement = document.getElementById('bar-horizontal')
         this.barWidth = this.barElement.offsetWidth
-        this.codeLoader = codeLoader
         this.screenWidth = screenWidth
         this.isScrolling = false
-        this.lineContentWidth = lineContentWidth
         this.leftOffset = leftOffset
         this.lineNumerationWidth = lineNumerationWidth
-        this.lineContentElement = lineContentElement
-        this.widthNotAllowedForScrollbar = barVerticalWidth
-        console.log(this.scrollableAreaWidth)
+        this.offseLeftForScrollbar = menuWidth + barVerticalWidth
         this.barHorizontalHandler = new BarHorizontalHandler(
             this.scrollbarWidth, this.barWidth, this.barElement
         )
@@ -43,7 +37,7 @@ export default class HorizontalScroller {
 
     updateProportions(newWidth) {
         this.leftOffset = newWidth + this.lineNumerationWidth
-        this.scrollbarWidth = this.screenWidth - this.leftOffset
+        this.scrollbarWidth = this.screenWidth - this.leftOffset - this.offseLeftForScrollbar
         this.scrollbarAreaElement.style = `left: ${this.leftOffset}px; width: ${this.scrollbarWidth}px;`
         this.barHorizontalHandler.updateWidths(this.scrollbarWidth, this.barWidth)
         this.contentScrollingHandler.leftOffset = this.leftOffset
@@ -51,7 +45,7 @@ export default class HorizontalScroller {
 
     updateProportionsOnResize(newWidth) {
         this.screenWidth = newWidth
-        this.scrollbarWidth = this.screenWidth - this.leftOffset - this.lineContentWidth
+        this.scrollbarWidth = this.screenWidth - this.leftOffset - this.offseLeftForScrollbar
         this.scrollbarAreaElement.style = `left: ${this.leftOffset}px; width: ${this.scrollbarWidth}px;`
         this.barHorizontalHandler.updateWidths(this.scrollbarWidth, this.barWidth)
         this.contentScrollingHandler.leftOffset = this.leftOffset

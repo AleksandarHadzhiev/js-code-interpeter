@@ -7,7 +7,7 @@ import HorizontalScroller from "./horizontalScroller.js"
 
 export default class CodePanelScroller {
     /**
-     * 
+     * @param {Number} menuWdith
      * @param {CodeLoader} codeLoader 
      * @param {HTMLElement} loaderElement
      * @param {Number} screenHeight 
@@ -18,7 +18,7 @@ export default class CodePanelScroller {
      * @param {Number} lineNumerationWidth
      * @param {HTMLElement} lineContentElement    
      */
-    constructor(
+    constructor(menuWidth,
         codeLoader, loaderElement,
         screenHeight, loaderElementResizeObserver,
         screenWidth, lineContentWidth, leftOffset,
@@ -29,9 +29,10 @@ export default class CodePanelScroller {
         this.verticalScroller = new VerticalScroller(this.height, this.codeLoader, loaderElement, screenWidth)
         this.barVerticalWidth = this.verticalScroller.barElement.offsetWidth
         this.horizontalScroller = new HorizontalScroller(
-            screenHeight, screenWidth, lineContentWidth,
+            menuWidth,
+            screenWidth, lineContentWidth,
             leftOffset, lineNumerationWidth,
-            lineContentElement, codeLoader, this.barVerticalWidth
+            lineContentElement, this.barVerticalWidth
         )
         loaderElementResizeObserver.addListener(this.verticalScroller.loaderHandler)
         window.addEventListener('wheel', (event) => {

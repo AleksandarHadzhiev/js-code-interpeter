@@ -11,7 +11,6 @@ export default class VerticalScroller {
      * @param {Number} screenWidth 
      */
     constructor(screenHeight, codeLoader, loaderElement, screenWidth) {
-        this.height = screenHeight
         this.scrollbarAreaElementVertical = document.getElementById('scrollable-area-vertical')
         this.widthOfAllowedAreaForScrolling = this.scrollbarAreaElementVertical.offsetWidth
         this.barElement = document.getElementById('bar-vertical')
@@ -21,10 +20,11 @@ export default class VerticalScroller {
         this.isScrolling = false
 
         this.barVerticalHandler = new BarVerticalHandler(
-            this.height, this.barHeight, this.barElement
+            screenHeight, this.barHeight, this.barElement
         )
+
         this.loaderHandler = new LoaderHandler(
-            codeLoader.height, this.height, loaderElement
+            codeLoader.height, screenHeight, loaderElement
         )
 
         this.barElement.addEventListener('mousedown', () => {
@@ -42,7 +42,6 @@ export default class VerticalScroller {
                 else if (isAllowedInsideOfScreen)
                     this._scrollOnBarMovement(event)
             }
-
         })
 
         window.addEventListener('mouseup', () => {
@@ -55,6 +54,15 @@ export default class VerticalScroller {
         this.barVerticalHandler.updateHeight(newHeight)
         this.screenWidth = newWidth
         this.scrollbarAreaElementVertical.style = `height: ${newHeight}px`;
+    }
+
+    updateProportionsOnResize(newHeight) {
+        console.log(newHeight)
+        console.log(this.loaderHandler.height)
+        this.barVerticalHandler.barHeight = this.barElement.offsetHeight
+        this.barVerticalHandler.updateHeight(newHeight)
+        this.scrollbarAreaElementVertical.style = `height: ${newHeight}px`;
+        this.loaderHandler.updateHeights(this.loaderHandler.height, newHeight)
     }
 
     /**

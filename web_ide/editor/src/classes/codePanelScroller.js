@@ -47,7 +47,7 @@ export default class CodePanelScroller {
     }
 
     updateScreenSizes(newWidth, newHeight) {
-        this.verticalScroller.updateProportions(newHeight, newWidth)
+        this.verticalScroller.updateProportionsOnResize(newHeight)
         this.horizontalScroller.updateProportionsOnResize(newWidth)
     }
 

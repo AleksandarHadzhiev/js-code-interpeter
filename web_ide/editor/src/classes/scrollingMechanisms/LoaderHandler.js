@@ -50,6 +50,6 @@ export default class LoaderHandler {
 
 
     getPercentageOfScroll() {
-        return (this.topOffset / this.height) * 100
+        return (this.topOffset / this.maxTopOffset) * 100
     }
 }

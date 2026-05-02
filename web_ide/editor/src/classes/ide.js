@@ -15,16 +15,3 @@ export default class IntegratedDevelopmentEnvironment {
         this.codePanel = new CodePanel(this.contentElement, this.defaultSidebarPanelWidth, this.screenWidth, this.screen, this.resizeDraggerOberver)
     }
 }
-
-/**
- * What should be the structure of the IDE?
- *  - when user has logged in, it should fetch his preferred settings add attach
- *    them to the IDE.
- *  - the screen is split into two panels:
- *    - sidebar panel
- *    - code panel - look for a better name (interpeter panel?)
- *  - the sidebar panel has a resizing functionality, which requires updates in sizes for both
- *    the sidebar and the code panel
- *  - also via the explorer (page inside the sidebar) the user loads projects and opens files.
- *  - when a file is opened, its content is provided to the code panel
- */ // so is the editor first or is the panel first??

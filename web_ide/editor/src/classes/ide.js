@@ -2,6 +2,10 @@ import IntegratedDevelopmentEnvironmentSettings from "./ideSettings.js";
 import ResizeDraggerObserver from "./resizeObserver.js";
 import Sidebar from "./sidebar.js";
 import CodePanel from "./codePanel.js";
+import FileLoader from "./fileLoader.js";
+import CodePanelResizer from "./codePanelResizer.js";
+import ScreenResizerObserver from "./screenResizerObserver.js";
+import ScreenResizer from "./screenResizer.js";
 
 export default class IntegratedDevelopmentEnvironment {
     constructor() {
@@ -11,7 +15,12 @@ export default class IntegratedDevelopmentEnvironment {
         this.screenWidth = this.screen.offsetWidth
         this.defaultSidebarPanelWidth = this.menuElement.offsetWidth
         this.resizeDraggerOberver = new ResizeDraggerObserver()
+        this.screenResizerObserver = new ScreenResizerObserver()
+        this.screenResizer = new ScreenResizer(this.screenResizerObserver, this.screen)
+        this.codePanelResizer = new CodePanelResizer(this.defaultSidebarPanelWidth, this.screenWidth, screen)
         this.sidebar = new Sidebar(this.menuElement, this.defaultSidebarPanelWidth, this.resizeDraggerOberver)
-        this.codePanel = new CodePanel(this.contentElement, this.defaultSidebarPanelWidth, this.screenWidth, this.screen, this.resizeDraggerOberver)
+        this.resizeDraggerOberver.addResizeListener(this.codePanelResizer)
+        this.screenResizerObserver.addScreenResizeListener(this.codePanelResizer)
+
     }
 }

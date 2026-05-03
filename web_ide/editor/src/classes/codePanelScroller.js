@@ -7,31 +7,29 @@ import HorizontalScroller from "./horizontalScroller.js"
 
 export default class CodePanelScroller {
     /**
-     * @param {Number} menuWdith
-     * @param {CodeLoader} codeLoader 
+     * 
+     * @param {Number} menuWidth
+     * @param {CodeLoader} codeLoader
      * @param {HTMLElement} loaderElement
-     * @param {Number} screenHeight 
-     * @param {LoaderElementResizeObserver} loaderElementResizeObserver 
-     * @param {Number} screenWidth 
+     * @param {Number} screenHeight
+     * @param {LoaderElementResizeObserver} loaderElementResizeObserver
+     * @param {Number} screenWidth
      * @param {Number} lineContentWidth
-     * @param {Number} leftOffset
      * @param {Number} lineNumerationWidth
-     * @param {HTMLElement} lineContentElement    
+     * @param {HTMLElement} lineContentElement
      */
     constructor(menuWidth,
         codeLoader, loaderElement,
         screenHeight, loaderElementResizeObserver,
-        screenWidth, lineContentWidth, leftOffset,
+        screenWidth, lineContentWidth,
         lineNumerationWidth, lineContentElement) {
         this.offsetCalculator = new OffsetCalculator()
-        this.height = screenHeight
-        this.codeLoader = codeLoader
-        this.verticalScroller = new VerticalScroller(this.height, this.codeLoader, loaderElement, screenWidth)
+        this.verticalScroller = new VerticalScroller(screenHeight, codeLoader, loaderElement, screenWidth)
         this.barVerticalWidth = this.verticalScroller.barElement.offsetWidth
         this.horizontalScroller = new HorizontalScroller(
             menuWidth,
             screenWidth, lineContentWidth,
-            leftOffset, lineNumerationWidth,
+            lineNumerationWidth,
             lineContentElement, this.barVerticalWidth
         )
         loaderElementResizeObserver.addListener(this.verticalScroller.loaderHandler)

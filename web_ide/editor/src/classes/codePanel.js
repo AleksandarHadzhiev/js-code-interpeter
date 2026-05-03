@@ -14,13 +14,14 @@ import LineContentElementResizeObseever from "./lineContentElementResizeObserver
 
 export default class CodePanel {
     /**
-     * @param {HTMLElement} contentElement
      * @param {Number} menuWidth 
-     * @param {Number} widthOfScreen 
-     * @param {HTMLElement} screen 
      * @param {ResizeDraggerObserver} resizeDraggerObserver 
+     * @param {ScreenResizerObserver} screenResizerObserver
      */
-    constructor(contentElement, menuWidth, widthOfScreen, screen, resizeDraggerObserver) {
+    constructor(menuWidth, resizeDraggerObserver, screenResizerObserver) {
+        this.screen = document.getElementById('screen')
+        this.contentElement = document.getElementById('content')
+        this.screenWidth = this.screen.offsetWidth
         this.loaderElement = document.getElementById('loader')
         this.lineNumerationElement = document.getElementById('line-numeration')
         this.lineContentElement = document.getElementById('line-content')
@@ -28,32 +29,25 @@ export default class CodePanel {
         this.lineContentResizeObserver = new LineContentElementResizeObseever()
         this.lineContentWidth = this.lineContentElement.offsetWidth
         this.lineNumerationWidth = this.lineNumerationElement.offsetWidth
-        this.screenHeight = screen.offsetHeight
-        this.defaultLeftOffset = menuWidth + this.lineNumerationWidth
+        this.screenHeight = this.screen.offsetHeight
         this.loaderElementResizeObserver = new LoaderElementResizeObserver()
-        this.screenResizerObserver = new ScreenResizerObserver()
         this.loaderElementResizer = new LoaderElementResizer(this.loaderElement)
-        this.screenResizer = new ScreenResizer(this.screenResizerObserver, screen)
-        this.codePanelResizer = new CodePanelResizer(menuWidth, widthOfScreen, screen)
-        this.codeLoader = new CodeLoader(screen, this.screenHeight, this.loaderElementResizeObserver, this.lineNumerationElement, this.lineContentElement, this.lineContentResizeObserver)
+        this.codeLoader = new CodeLoader(this.screen, this.screenHeight,
+            this.loaderElementResizeObserver, this.lineNumerationElement,
+            this.lineContentElement, this.lineContentResizeObserver)
         this.codePanelScroller = new CodePanelScroller(
-            menuWidth,
-            this.codeLoader, this.loaderElement,
-            this.screenHeight, this.loaderElementResizeObserver,
-            widthOfScreen, this.lineContentWidth, menuWidth, this.lineNumerationWidth, this.lineContentElement)
+            menuWidth, this.codeLoader, this.loaderElement, this.screenHeight,
+            this.loaderElementResizeObserver, this.screenWidth, this.lineContentWidth,
+            this.lineNumerationWidth, this.lineContentElement)
         this.editor = new Editor(
-            contentElement,
-            menuWidth, widthOfScreen,
-            resizeDraggerObserver, screen,
-            this.screenResizerObserver, this.screenHeight,
+            this.contentElement, menuWidth, this.screenWidth, resizeDraggerObserver,
+            screen, this.screenResizerObserver, this.screenHeight,
             this.codeLoader.linesLoader, this.lineContentElement, this.lineNumerationWidth)
         this.projectLoader = new ProjectLoader(this.codeLoader, this.loaderElementResizeObserver)
         this.loaderElementResizeObserver.addListener(this.loaderElementResizer)
         this.loaderElementResizeObserver.addListener(this.codeLoader)
-        resizeDraggerObserver.addResizeListener(this.codePanelResizer)
-        this.screenResizerObserver.addScreenResizeListener(this.codeLoader)
-        this.screenResizerObserver.addScreenResizeListener(this.codePanelResizer)
-        this.screenResizerObserver.addScreenResizeListener(this.codePanelScroller)
+        screenResizerObserver.addScreenResizeListener(this.codeLoader)
+        screenResizerObserver.addScreenResizeListener(this.codePanelScroller)
         resizeDraggerObserver.addResizeListener(this.codePanelScroller)
         this.lineContentResizeObserver.addListener(this.lineContentResizer)
         this.lineContentResizeObserver.addListener(this.codePanelScroller.horizontalScroller)

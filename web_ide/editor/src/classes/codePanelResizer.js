@@ -29,6 +29,7 @@ export default class CodePanelResizer {
 
     updateScreenSizes(newWidth, newHeight) {
         this.width = newWidth - this.leftOffset
+        this.screenWidth = newWidth
         this.content.style = `
                 left: ${this.leftOffset}px;
                 width: ${this.width}px;

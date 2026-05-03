@@ -6,7 +6,6 @@ import LineContentElementResizeObseever from "./lineContentElementResizeObserver
 
 export default class CodeLoader {
     /**
-     * 
      * @param {HTMLElement} screen 
      * @param {Number} screenHeight 
      * @param {LoaderElementResizeObserver} loaderElementResizeObserver

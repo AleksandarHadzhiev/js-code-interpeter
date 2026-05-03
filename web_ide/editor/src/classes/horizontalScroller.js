@@ -7,20 +7,18 @@ export default class HorizontalScroller {
      * @param {Number} menuWidth
      * @param {Number} screenWidth 
      * @param {Number} lineContentWidth 
-     * @param {Number} leftOffset 
      * @param {Number} lineNumerationWidth 
      * @param {HTMLElement} lineContentElement 
      * @param {Number} barVerticalWidth
      */
-    constructor(menuWidth, screenWidth, lineContentWidth, leftOffset, lineNumerationWidth, lineContentElement, barVerticalWidth) {
+    constructor(menuWidth, screenWidth, lineContentWidth, lineNumerationWidth, lineContentElement, barVerticalWidth) {
         this.scrollbarAreaElement = document.getElementById('scrollable-area-horizontal')
-        this.scrollbar = document.getElementById('scrollbar-horizontal')
-        this.scrollbarWidth = this.scrollbar.offsetWidth
+        this.scrollbarWidth = document.getElementById('scrollbar-horizontal').offsetWidth
         this.barElement = document.getElementById('bar-horizontal')
         this.barWidth = this.barElement.offsetWidth
         this.screenWidth = screenWidth
         this.isScrolling = false
-        this.leftOffset = leftOffset
+        this.leftOffset = menuWidth
         this.lineNumerationWidth = lineNumerationWidth
         this.offseLeftForScrollbar = menuWidth + barVerticalWidth
         this.barHorizontalHandler = new BarHorizontalHandler(
@@ -28,7 +26,7 @@ export default class HorizontalScroller {
         )
         this.contentScrollingHandler = new ContentScrollingHandler(
             lineContentWidth,
-            leftOffset,
+            this.leftOffset,
             lineNumerationWidth,
             this.barWidth,
             lineContentElement

@@ -2,10 +2,12 @@ import ResizeDraggerObserver from "./resizeObserver.js";
 import ScreenResizerObserver from "./screenResizerObserver.js";
 import LinesLoader from "./scrollingMechanisms/LinesLoader.js";
 import TextHighlighter from "./textHighlighter.js";
+import LineContentElementResizer from "./lineContentElementResizer.js";
+import LineContentElementResizeObseever from "./lineContentElementResizeObserver.js";
 
 export default class Editor {
     /**
-     * 
+     * @param {HTMLElement} contentElement
      * @param {Number} defaultMenuWidth 
      * @param {Number} widthOfScreen 
      * @param {ResizeDraggerObserver} resizeDraggerObserver 
@@ -13,17 +15,23 @@ export default class Editor {
      * @param {ScreenResizerObserver} screenResizerObserver
      * @param {Number} screenHeight 
      * @param {LinesLoader} linesLoader 
+     * @param {HTMLElement} lineContentElement
+     * @param {Number} lineNumerationWidth 
      */
-    constructor(defaultMenuWidth, widthOfScreen, resizeDraggerObserver, screen, screenResizerObserver, screenHeight, linesLoader) {
-        this.lineContentElement = document.getElementById('line-content')
-        this.lineNumerationElement = document.getElementById('line-numeration')
-        this.contentElement = document.getElementById('content')
+    constructor(contentElement, defaultMenuWidth, widthOfScreen, resizeDraggerObserver, screen, screenResizerObserver, screenHeight, linesLoader, lineContentElement, lineNumerationWidth) {
         this.offsetTop = document.getElementById('navigation').offsetHeight
-        this.lineNumerationWidth = this.lineNumerationElement.offsetWidth
-        this.textHighlighter = new TextHighlighter(linesLoader, this.offsetTop, this.contentElement, this.lineNumerationWidth, defaultMenuWidth, screen, screenHeight, resizeDraggerObserver, screenResizerObserver)
+        this.textHighlighter = new TextHighlighter(
+            linesLoader,
+            this.offsetTop,
+            contentElement,
+            lineNumerationWidth,
+            defaultMenuWidth,
+            screen,
+            screenHeight,
+            resizeDraggerObserver,
+            screenResizerObserver)
         this.isSelectingText = false
-
-        this.lineContentElement.addEventListener('mousedown', (event) => {
+        lineContentElement.addEventListener('mousedown', (event) => {
             this.isSelectingText = true
         })
 

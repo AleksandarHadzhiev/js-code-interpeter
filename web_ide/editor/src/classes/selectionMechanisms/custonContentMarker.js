@@ -73,7 +73,6 @@ export default class CustomContentMarker {
      */
     buildForBottomSection(firstVisibleLine, lastVisibleLine, lastTextLine) {
         const marker = document.getElementById('marker')
-
         this.algorithm = new LineColoriser(this.startingPoint, this.releasingPoint, this.contentElement)
         const multilineCoordinates = this.algorithm.coloriseLinesForBottomInBetweenFirstAndLastVisibleLines(firstVisibleLine, lastVisibleLine, lastTextLine)
         multilineCoordinates.forEach((coordinates) => {

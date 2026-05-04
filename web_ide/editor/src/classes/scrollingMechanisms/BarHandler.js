@@ -15,6 +15,16 @@ export class BarVerticalHandler {
         this.percentageOfScroll = 0
     }
 
+    /**
+ * 
+ * @param {Number} height 
+ */
+    updateHeight(height) {
+        this.scrollbarHeight = height
+        this.maxTopOffset = this._defineMaxTopOffsetForBar()
+    }
+
+
     updateHeights(scrollbarHeight, barHeight) {
         this.scrollbarHeight = scrollbarHeight
         this.barHeight = barHeight

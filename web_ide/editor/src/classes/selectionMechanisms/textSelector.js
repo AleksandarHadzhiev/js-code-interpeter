@@ -7,7 +7,7 @@ import ContentScrollingHandler from "../scrollingMechanisms/ContentScrollingHand
 import TextFetcher from "./textFetcher.js"
 
 
-export default class TextSelector { // rename to CodeSelector
+export default class TextSelector {
     /**
      * 
      * @param {Number} offsetTopOfContentScreen 
@@ -72,8 +72,10 @@ export default class TextSelector { // rename to CodeSelector
      * @param {String} mousePosition 
      * @param {MouseEvent} event 
      * @param {Number} leftOffset
+     * @param {Number} lastTextLine
      */
-    selectText(pageYMousePosition, firstVisibleLine, lastVisibleLine, mousePosition, event, leftOffset) {
+    selectText(pageYMousePosition, firstVisibleLine, lastVisibleLine, mousePosition, event, leftOffset, lastTextLine) {
+        this.lastTextLine = lastTextLine
         this.xForMouseInEditor = event.pageX - leftOffset
         this.mousePosition = mousePosition
         const mouseYPositionBasedOnPage = pageYMousePosition + this.loaderOffset - this.offsetTopOfContentScreen

@@ -34,7 +34,7 @@ export default class CodePanel {
         this.loaderElementResizeObserver = new LoaderElementResizeObserver()
         this.loaderElementResizer = new LoaderElementResizer(this.loaderElement)
         this.screenResizer = new ScreenResizer(screenResizerObserver, this.screen)
-        this.codePanelScrollerLoader = new codePanelScrollerLoader(this.screenWidth, this.screenHeight, this.screenHeight, this.screenWidth)
+        this.codePanelScrollerLoader = new codePanelScrollerLoader(menuWidth, this.lineNumerationWidth, this.screenWidth, this.screenHeight, this.screenHeight, this.screenWidth)
         this.codePanelResizer = new CodePanelResizer(menuWidth, this.screenWidth, this.screen)
         this.codeLoader = new CodeLoader(this.screen, this.screenHeight,
             this.loaderElementResizeObserver, this.lineNumerationElement,

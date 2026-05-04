@@ -17,12 +17,8 @@ export default class IntegratedDevelopmentEnvironment {
         this.defaultSidebarPanelWidth = this.menuElement.offsetWidth
         this.resizeDraggerOberver = new ResizeDraggerObserver()
         this.screenResizerObserver = new ScreenResizerObserver()
-        this.screenResizer = new ScreenResizer(this.screenResizerObserver, this.screen)
-        this.codePanelResizer = new CodePanelResizer(this.defaultSidebarPanelWidth, this.screenWidth, screen)
-        this.fileLoaderObserver = new FileLoaderObserver(null)
+        this.codePanel = new CodePanel(this.defaultSidebarPanelWidth, this.resizeDraggerOberver, this.screenResizerObserver)
+        this.fileLoaderObserver = new FileLoaderObserver(this.codePanel)
         this.sidebar = new Sidebar(this.fileLoaderObserver, this.menuElement, this.defaultSidebarPanelWidth, this.resizeDraggerOberver)
-        this.resizeDraggerOberver.addResizeListener(this.codePanelResizer)
-        this.screenResizerObserver.addScreenResizeListener(this.codePanelResizer)
-
     }
 }

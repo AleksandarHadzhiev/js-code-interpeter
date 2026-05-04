@@ -16,6 +16,6 @@ export default class FileLoaderObserver {
      */
     updateCodePanelOnLoadingNewFile(projectFile) {
         console.log(projectFile)
-        // this.codePanel.updateForFile(projectFile)
+        this.codePanel.updateForFile(projectFile)
     }
 } 

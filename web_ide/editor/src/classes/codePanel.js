@@ -6,11 +6,11 @@ import ScreenResizer from "./screenResizer.js";
 import ScreenResizerObserver from "./screenResizerObserver.js";
 import CodePanelScroller from "./codePanelScroller.js";
 import LoaderHandler from "./scrollingMechanisms/LoaderHandler.js";
-import ProjectLoader from "./projectLoader.js";
 import LoaderElementResizeObserver from "./loaderElementResizeObserver.js";
 import LoaderElementResizer from "./loaderElementResizer.js";
 import LineContentElementResizer from "./lineContentElementResizer.js";
 import LineContentElementResizeObseever from "./lineContentElementResizeObserver.js";
+import ProjectFile from "./projectFile.js";
 
 export default class CodePanel {
     /**
@@ -32,24 +32,36 @@ export default class CodePanel {
         this.screenHeight = this.screen.offsetHeight
         this.loaderElementResizeObserver = new LoaderElementResizeObserver()
         this.loaderElementResizer = new LoaderElementResizer(this.loaderElement)
+        this.screenResizer = new ScreenResizer(screenResizerObserver, this.screen)
+        this.codePanelResizer = new CodePanelResizer(menuWidth, this.screenWidth, this.screen)
         this.codeLoader = new CodeLoader(this.screen, this.screenHeight,
             this.loaderElementResizeObserver, this.lineNumerationElement,
             this.lineContentElement, this.lineContentResizeObserver)
-        this.codePanelScroller = new CodePanelScroller(
-            menuWidth, this.codeLoader, this.loaderElement, this.screenHeight,
-            this.loaderElementResizeObserver, this.screenWidth, this.lineContentWidth,
-            this.lineNumerationWidth, this.lineContentElement)
+        // this.codePanelScroller = new CodePanelScroller(
+        //     menuWidth, this.codeLoader, this.loaderElement, this.screenHeight,
+        //     this.loaderElementResizeObserver, this.screenWidth, this.lineContentWidth,
+        //     this.lineNumerationWidth, this.lineContentElement)
         this.editor = new Editor(
             this.contentElement, menuWidth, this.screenWidth, resizeDraggerObserver,
-            screen, this.screenResizerObserver, this.screenHeight,
+            screen, screenResizerObserver, this.screenHeight,
             this.codeLoader.linesLoader, this.lineContentElement, this.lineNumerationWidth)
-        this.projectLoader = new ProjectLoader(this.codeLoader, this.loaderElementResizeObserver)
         this.loaderElementResizeObserver.addListener(this.loaderElementResizer)
         this.loaderElementResizeObserver.addListener(this.codeLoader)
         screenResizerObserver.addScreenResizeListener(this.codeLoader)
-        screenResizerObserver.addScreenResizeListener(this.codePanelScroller)
-        resizeDraggerObserver.addResizeListener(this.codePanelScroller)
+        // screenResizerObserver.addScreenResizeListener(this.codePanelScroller)
+        // resizeDraggerObserver.addResizeListener(this.codePanelScroller)
         this.lineContentResizeObserver.addListener(this.lineContentResizer)
-        this.lineContentResizeObserver.addListener(this.codePanelScroller.horizontalScroller)
+        // this.lineContentResizeObserver.addListener(this.codePanelScroller.horizontalScroller)
+        resizeDraggerObserver.addResizeListener(this.codePanelResizer)
+        screenResizerObserver.addScreenResizeListener(this.codePanelResizer)
+
+    }
+
+    /**
+     * 
+     * @param {ProjectFile} projectFile 
+     */
+    updateForFile(projectFile) {
+        this.codeLoader.loadContentFromFileWithName(projectFile.name, projectFile.longestLine)
     }
 }

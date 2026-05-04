@@ -35,6 +35,5 @@ export default class FileLoader {
             longestLine = "This is a long line to be displayed, and for that reason it will have a lot of text inside it."
         const projectFile = new ProjectFile(fileName, longestLine, "js")
         this.fileLoaderObserver.updateCodePanelOnLoadingNewFile(projectFile)
-        // this.codeLoader.loadContentFromFileWithName(fileName, longestLine)
     }
 }

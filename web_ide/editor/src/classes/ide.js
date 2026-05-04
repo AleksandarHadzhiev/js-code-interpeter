@@ -6,6 +6,7 @@ import FileLoader from "./fileLoader.js";
 import CodePanelResizer from "./codePanelResizer.js";
 import ScreenResizerObserver from "./screenResizerObserver.js";
 import ScreenResizer from "./screenResizer.js";
+import FileLoaderObserver from "./fileLoaderObserver.js";
 
 export default class IntegratedDevelopmentEnvironment {
     constructor() {
@@ -18,7 +19,8 @@ export default class IntegratedDevelopmentEnvironment {
         this.screenResizerObserver = new ScreenResizerObserver()
         this.screenResizer = new ScreenResizer(this.screenResizerObserver, this.screen)
         this.codePanelResizer = new CodePanelResizer(this.defaultSidebarPanelWidth, this.screenWidth, screen)
-        this.sidebar = new Sidebar(this.menuElement, this.defaultSidebarPanelWidth, this.resizeDraggerOberver)
+        this.fileLoaderObserver = new FileLoaderObserver(null)
+        this.sidebar = new Sidebar(this.fileLoaderObserver, this.menuElement, this.defaultSidebarPanelWidth, this.resizeDraggerOberver)
         this.resizeDraggerOberver.addResizeListener(this.codePanelResizer)
         this.screenResizerObserver.addScreenResizeListener(this.codePanelResizer)
 

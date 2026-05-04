@@ -18,12 +18,13 @@ class CustomEditorContainer extends HTMLElement {
     _buildEditorView() {
         const editorView = document.createElement('div')
         editorView.classList.add('editor-view')
+        editorView.setAttribute('id', 'editor-view')
         const interpreterScreen = this._buildInterpeterScreen()
-        const scrollableAreaVertical = new CustomVerticalScrollbar().buildScrollableAreaVertical()
-        const scrollbarAreaHorizontal = new CustomHorizontalScrollbar().buildScrollableAreaHorizontal()
+        // const scrollableAreaVertical = new CustomVerticalScrollbar().buildScrollableAreaVertical()
+        // const scrollbarAreaHorizontal = new CustomHorizontalScrollbar().buildScrollableAreaHorizontal()
         editorView.appendChild(interpreterScreen)
-        editorView.appendChild(scrollableAreaVertical)
-        editorView.appendChild(scrollbarAreaHorizontal)
+        // editorView.appendChild(scrollableAreaVertical)
+        // editorView.appendChild(scrollbarAreaHorizontal)
         return editorView
     }
 

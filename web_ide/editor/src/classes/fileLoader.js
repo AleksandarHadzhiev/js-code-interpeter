@@ -1,7 +1,14 @@
 import CodeLoader from "./codeLoader.js"
+import ProjectFile from "./projectFile.js"
+import FileLoaderObserver from "./fileLoaderObserver.js"
 
 export default class FileLoader {
-    constructor() {
+    /**
+     * 
+     * @param {FileLoaderObserver} fileLoaderObserver 
+     */
+    constructor(fileLoaderObserver) {
+        this.fileLoaderObserver = fileLoaderObserver
     }
 
     /**
@@ -23,10 +30,11 @@ export default class FileLoader {
      */
     _loadFileContentOnScreen(file) {
         const fileName = file.id
-        console.log(fileName)
         let longestLine = " * This DTO transfers the data needed to calculate the total left offset of the caret position on the line."
         if (fileName == 'app.js')
             longestLine = "This is a long line to be displayed, and for that reason it will have a lot of text inside it."
+        const projectFile = new ProjectFile(fileName, longestLine, "js")
+        this.fileLoaderObserver.updateCodePanelOnLoadingNewFile(projectFile)
         // this.codeLoader.loadContentFromFileWithName(fileName, longestLine)
     }
 }

@@ -27,7 +27,6 @@ export default class CodeLoader {
     }
 
     /**
-     * 
      * @param {String} fileName 
      * @param {String} longestLine 
      */

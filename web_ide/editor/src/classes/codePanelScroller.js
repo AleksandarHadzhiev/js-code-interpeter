@@ -7,7 +7,6 @@ import HorizontalScroller from "./horizontalScroller.js"
 
 export default class CodePanelScroller {
     /**
-     * 
      * @param {Number} menuWidth
      * @param {CodeLoader} codeLoader
      * @param {HTMLElement} loaderElement
